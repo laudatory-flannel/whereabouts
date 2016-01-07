@@ -45,7 +45,7 @@ var utils = {
     });
   },
 
-  // get active events
+  // get active events -- Verified
   getActiveEvents: function(cb) {
     var query = {'active': true};
     Event.find(query, function(err, events){
