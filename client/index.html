@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Greenfield</title>
-    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
   </head>
   <body>
     <h1>Greenfield</h1>
@@ -16,13 +16,21 @@
  
     <div ng-view></div>
 
-    <script src="lib/angular/angular.js"></script>
-    <script src="lib/angular-route/angular-route.js"></script>
+    <!-- Angular -->
+    <!-- <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script> -->
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-route/angular-route.js"></script>
+    <!-- <script src="../bower_components/angular-mocks/angular-mocks.js"></script> -->
     
-    <script src="app/event/event.js"></script>
+    <!-- App files -->
+    <script src="services/services.js"></script>
     <script src="app/auth/auth.js"></script>
+    <script src="app/event/event.js"></script>
     <script src="app/home/home.js"></script>
     <script src="app/app.js"></script>
-    <script src="Services/services.js"></script>
+
+    <!-- External APIs -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBD2V3S0YNeUESwl6xl7al7v6NTDtCzDRQ"></script>
   </body>
 </html>
