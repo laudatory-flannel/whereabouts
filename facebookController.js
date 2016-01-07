@@ -1,5 +1,5 @@
 angular.module('facebook', [])
-.controller('facebookController', function($scope, $window) {
+.controller('facebookController', function($scope) {
   $scope.getUserData = function() {
     FB.api('/me', function(response) {
       console.log("user info:", response);
@@ -17,7 +17,6 @@ angular.module('facebook', [])
       console.log("auth response:", response);
     });
   };
-
   $scope.login = function() {
     FB.getLoginStatus(function(response) {
       console.log(response)
@@ -34,10 +33,4 @@ angular.module('facebook', [])
   $scope.logout = function() {
     FB.logout();
   };
-
-  $scope.storeLocation = function (lat, long){
-
-    $window.localStorage.setItem('Flannel.latitude', lat);
-    $window.localStorage.setItem('Flannel.longitude', long);        
-  }
 });
