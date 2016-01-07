@@ -33,37 +33,33 @@ var utils = {
     });
   },
 
-  // input event to db
-  addEventToDb: function(eventObj) {
-    var query = {'title':eventObj.title};
-    var data = {
-        $set: {
-          eventObj
-        }
-    }
+  // input event to db -- Verified
+  addEventToDb: function(eventObj, cb) {
 
-    Event.findOneAndUpdate(query, data, {upsert:true, 'new': true}, function(err, result){
+    Event.create(eventObj, function(err, result){
       if (err) {
         console.log(err);
-        return res.send(500, { error: err });
+        return cb(err);
       }
+      return cb(null, result);
     });
   },
 
   // get active events
-  getActiveEvents: function() {
+  getActiveEvents: function(cb) {
     var query = {'active': true};
-    return Event.find(query, function(err, events){
+    Event.find(query, function(err, events){
       if (err) {
         console.log(err);
-        return res.send(500, { error: err });
+        return cb(err);
       }
+      return cb(null, events);
     });
 
   },
 
   // handle event expiration
-  expireEvents: function() {
+  expireEvents: function(cb) {
     var currentTime = new Date(Date.now());
 
     // grabs all events where endedAt is less than current time
@@ -78,9 +74,9 @@ var utils = {
     Event.update(query, data, {multi: true}, function(err, results) { // may need upsert or new options
       if (err) {
         console.log(err);
-      } else {
-        console.log('active events updated!');
-      }
+        return cb(err);
+      } 
+      return cb(null, results);
     });
 
   }
