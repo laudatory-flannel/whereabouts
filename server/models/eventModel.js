@@ -1,4 +1,4 @@
-var mongoose = require('../config/db');
+var mongoose = require('../config/database');
 
 var EventSchema = new mongoose.Schema({
  // _id: no need to include _id in schema, should auto  http://stackoverflow.com/questions/11604928/is-there-a-way-to-auto-generate-objectid-when-a-mongoose-model-is-newed
@@ -8,7 +8,15 @@ var EventSchema = new mongoose.Schema({
  createdAt: { type: Date, default: new Date(Date.now()) },
  endedAt: { type: Date, default: new Date(Date.now()) },
  active: Boolean,
- location: String
+ location: {
+    type: { 
+      type: String,
+      default: 'Point'
+    }, 
+    coordinates: [Number]
+  } // http://cannoneyed.github.io/geojson/
 });
+
+EventSchema.index({ location : '2dsphere' });
 
 module.exports = mongoose.model('Event', EventSchema);
