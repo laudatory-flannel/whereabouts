@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+    <script src="services.js"></script>
+    <script src="homeModule.js"></script>
+    <script src="facebookController.js"></script>
+    <script src="mapController.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBD2V3S0YNeUESwl6xl7al7v6NTDtCzDRQ"></script>
+  </head>
+  <body ng-app="homeModule">
+    <div ng-controller="mapController">
+      <img class="loading" src="loading.gif" ng-show="loading">
+      <div id="map"></div>
+    </div>
+
+    <div ng-controller="facebookController">
+      <button ng-click="login()">Log in to Facebook</button>
+      <button ng-click="logout()">Log out</button>
+    </div>
+  </body>
+</html>
