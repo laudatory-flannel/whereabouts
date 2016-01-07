@@ -1,8 +1,48 @@
 html, body {
   height: 100%;
   margin: 0;
-  padding: 0; 
+  padding: 0;
+  font-family: "Book Antiqua";
 }
+
+button {
+  font-family: "Trebuchet MS";
+}
+
+/* ---- Auth page ---- */
+div.auth {
+  background-image: url('../img/coffee.jpg');
+  height: 600px;
+}
+
+.landingHeader {
+  font-size: 48px;
+  color: white;
+  width: 400px;
+  margin: auto;
+  line-height: 600px;
+}
+
+.login {
+  font-size: 12px;
+  color: blue;
+  width: 150px;
+  margin: 0 auto;
+  /*position: absolute;
+  top: 400px;
+  left: 250px;*/
+  background-color: white;
+  line-height: 25px;
+  /*box-shadow: none;*/
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+/* ---- Home page ---- */
 
 #map {
   height: 500px;
