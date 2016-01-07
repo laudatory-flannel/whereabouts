@@ -1,7 +1,12 @@
+// .controller('HomeController', function ($scope, $window, $location, Services) {
+   
+// });
+
 // random default location in Berkeley, CA
 var DEFAULT_POSITION = [ 30, -120 ];
 
-homeModule.controller('mapController', function($scope, localStorage) {
+angular.module('greenfield.home', ['greenfield.services'])
+.controller('HomeController', function($scope, localStorage) {
   $scope.map; // google map object
   $scope.loading; // boolean for whether map is loading
   $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]

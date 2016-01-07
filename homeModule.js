@@ -1,1 +1,0 @@
-var homeModule = angular.module('homeModule', ['services']);

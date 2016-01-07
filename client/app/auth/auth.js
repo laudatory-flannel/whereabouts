@@ -1,4 +1,10 @@
-homeModule.controller('facebookController', function($scope) {
+angular.module('greenfield.auth', [])
+// .controller('AuthController', function ($scope, $window, $location, Services) {
+   
+// });
+
+//this is currently a copy of facebookController, but will end up taking care of only auth
+.controller('AuthController', function($scope) {
   $scope.initialize = function() {
     //initialize facebook stuff for authentication/api
     window.fbAsyncInit = function() {
