@@ -1,5 +1,5 @@
 angular.module('facebook', [])
-.controller('facebookController', function($scope) {
+.controller('facebookController', function($scope, $window) {
   $scope.getUserData = function() {
     FB.api('/me', function(response) {
       console.log("user info:", response);
