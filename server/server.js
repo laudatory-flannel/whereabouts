@@ -3,6 +3,7 @@ var database = require('./config/database.js');
 
 var app = express();
 
+require('./routes.js')(app, express);
 // require stuff;
 
 // require('')(app, express);
