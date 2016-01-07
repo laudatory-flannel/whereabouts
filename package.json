@@ -23,7 +23,9 @@
     "should": "8.0.2"
   },
   "dependencies": {
+    "body-parser": "^1.14.2",
     "express": "4.4.5",
+    "jwt-simple": "^0.4.0",
     "mongoose": "4.3.4",
     "request": "2.36.0"
   }
