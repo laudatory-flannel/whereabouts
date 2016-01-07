@@ -1,43 +1,49 @@
-//random default location: in Berkeley, CA
-var DEFAULT_LATITUDE = 30;
-var DEFAULT_LONGITUDE = -120;
+// random default location in Berkeley, CA
+var DEFAULT_POSITION = [ 30, -120 ];
 
 homeModule.controller('mapController', function($scope, localStorage) {
-  $scope.map;
-  $scope.loading;
+  $scope.map; // google map object
+  $scope.loading; // boolean for whether map is loading
+  $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
 
-  $scope.getLocationLocally = function() {
-    $scope.latitude = parseFloat(localStorage.get('flannel.latitude')) || DEFAULT_LATITUDE;
-    $scope.longitude = parseFloat(localStorage.get('flannel.longitude')) || DEFAULT_LONGITUDE;
-    // console.log("got location locally:", $scope.latitude, $scope.longitude);
+  // Sets $scope position
+  $scope.setScopePosition = function(position) {
+    $scope.position[0] = position[0] || DEFAULT_POSITION[0];
+    $scope.position[1] = position[1] || DEFAULT_POSITION[1];
+  };
+  
+  // Gets/Sets position from localStorage
+  // Allows for faster load of map, since using getRealLocation can take a few seconds 
+  $scope.getLocalPosition = function() {
+    return [ parseFloat(localStorage.get('flannel.latitude')),
+             parseFloat(localStorage.get('flannel.longitude')) ];
+  };
+  $scope.setLocalPosition = function (position){
+    localStorage.set('flannel.latitude', position[0]);
+    localStorage.set('flannel.longitude', position[1]);
   };
 
-  $scope.storeLocationLocally = function (latitude, longitude){
-    localStorage.set('flannel.latitude', latitude);
-    localStorage.set('flannel.longitude', longitude);
-  };
-
-  $scope.getLocationActually = function(callback) {
-    var successCallback = function(position) {
-      $scope.latitude = position.coords.latitude;
-      $scope.longitude = position.coords.longitude;
-      // console.log("got location actually:", $scope.latitude, $scope.longitude);
-      $scope.storeLocationLocally($scope.latitude, $scope.longitude);
-      callback();
-    };
+  // Gets actual position, passes to callback
+  $scope.getRealLocation = function(callback) {
+    var successCallback = function(positionObj) {
+      // positionObj's format is native to navigator.geolocation.getCurrentPosition
+      var position = [ positionObj.coords.latitude, positionObj.coords.longitude ];
+      callback(position);
+    }
     var errorCallback = function(error) {
       console.log("Failed to get geolocation:", error.code);
     };
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   };
 
+  // Renders map in $('#map') DOM element, based on $scope position
   $scope.renderMap = function() {
-    $scope.$apply(function() { //$apply lets angular know we've updated $scope properties
+    $scope.$apply(function() {
+      // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
       $scope.loading = false;
     });
-    //console.log($scope.loading);
     $scope.map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: $scope.latitude, lng: $scope.longitude},
+      center: {lat: $scope.position[0], lng: $scope.position[1]},
       zoom: 14,
       minZoom: 14,
       maxZoom: 14,
@@ -51,12 +57,16 @@ homeModule.controller('mapController', function($scope, localStorage) {
   $scope.initMap = function() {
     $scope.loading = true;
     
-    //first render a guess for the location
-    //$scope.getLocationLocally();
+    // Render a possibly-reasonable guess for the location
+    //$scope.setScopePosition($scope.getLocalPosition());
     //$scope.renderMap();
 
-    //then render the actual location once it is read (since it may take a couple seconds)
-    $scope.getLocationActually($scope.renderMap);
+    // Render the actual location, once it is found
+    $scope.getRealLocation(function(position) {
+      $scope.setScopePosition(position);
+      $scope.setLocalPosition(position);
+      $scope.renderMap();
+    });
   };
 
   $scope.initMap();
