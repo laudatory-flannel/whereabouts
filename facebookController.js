@@ -17,6 +17,7 @@ angular.module('facebook', [])
       console.log("auth response:", response);
     });
   };
+
   $scope.login = function() {
     FB.getLoginStatus(function(response) {
       console.log(response)
