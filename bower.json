@@ -1,0 +1,21 @@
+{
+  "name": "laudatory-flannel",
+  "version": "0.0.0",
+  "homepage": "https://github.com/gloriama/laudatory-flannel",
+  "authors": [
+    "Hack Reactor Students <accounts@hackreactor.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.8",
+    "angular-route": "~1.4.8",
+    "angular-mocks": "~1.4.8"
+  }
+}
