@@ -1,21 +1,30 @@
 {
   "name": "laudatory-flannel",
   "version": "1.1.0",
-  "contributors": ["Rachel RoseFigura", 
-  "Max O'Connell", 
-  "Greg Domorski", 
-  "Gloria Ma"],
+  "contributors": [
+    "Rachel RoseFigura",
+    "Max O'Connell",
+    "Greg Domorski",
+    "Gloria Ma"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/laudatory-flannel/laudatory-flannel"
   },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register \"test/**/*.coffee\""
+  },
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
+    "coffee-script": "1.10.0",
+    "expect.js": "0.3.1",
+    "mocha": "2.3.4",
+    "should": "8.0.2"
   },
   "dependencies": {
-    "express": "^4.4.5",
-    "mongoose": "^4.1.0",
-    "request": "^2.36.0"
+    "express": "4.4.5",
+    "mongoose": "4.3.4",
+    "request": "2.36.0"
   }
 }
