@@ -4,6 +4,7 @@ var DEFAULT_LONGITUDE = -120;
 
 homeModule.controller('mapController', function($scope, localStorage) {
   $scope.map;
+  $scope.loading;
 
   $scope.getLocationLocally = function() {
     $scope.latitude = parseFloat(localStorage.get('flannel.latitude')) || DEFAULT_LATITUDE;
@@ -31,6 +32,10 @@ homeModule.controller('mapController', function($scope, localStorage) {
   };
 
   $scope.renderMap = function() {
+    $scope.$apply(function() { //$apply lets angular know we've updated $scope properties
+      $scope.loading = false;
+    });
+    //console.log($scope.loading);
     $scope.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: $scope.latitude, lng: $scope.longitude},
       zoom: 14,
@@ -44,9 +49,11 @@ homeModule.controller('mapController', function($scope, localStorage) {
   }
 
   $scope.initMap = function() {
+    $scope.loading = true;
+    
     //first render a guess for the location
-    $scope.getLocationLocally();
-    $scope.renderMap();
+    //$scope.getLocationLocally();
+    //$scope.renderMap();
 
     //then render the actual location once it is read (since it may take a couple seconds)
     $scope.getLocationActually($scope.renderMap);
