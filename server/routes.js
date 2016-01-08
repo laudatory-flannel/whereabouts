@@ -1,5 +1,5 @@
 var bodyparser = require('body-parser');
-var database = require('./config/database.js');
+var helpers = require('./controllers/helpers.js');
 var jwt = require('jwt-simple');
 
 
@@ -7,7 +7,10 @@ module.exports = function(app, express) {
 	app.use('/', express.static('../Client'));
 // Get requests
 	app.get('/events', function(req, res){
-		database.getActiveEvents().then(function(data){
+		helpers.getActiveEvents(function(err, data){
+			if (err) {
+				console.log(err);
+			}
 			res.json(data);
 		});
 	});
@@ -18,14 +21,18 @@ module.exports = function(app, express) {
 	app.post('/auth', function(req, res){
 		// if logged in with facebook
 		//create token
+
+		// what is being sent from the client?
+		var user = req.body; //?
 		var token = jwt.encode(user, 'candyvan');
-		database.getUserByName(req.body.name, function(err, result){
-			if(result === null){
-				database.addUserToDb(req.body, function(err, result){
+
+		helpers.getUserByName(user.name, function(err, result){
+			if(result === null || result.length === 0){
+				helpers.addUserToDb(user, function(err, result){
 					if(err){
 						console.log(err);
 						res.status(500);
-						res.redirect('/auth');
+						res.json(result);
 					} else {
 						res.json({token: token});
 					}
@@ -42,8 +49,13 @@ module.exports = function(app, express) {
 	app.post('/events', function(req, res){
 		//AUTHENTICATION HERE
 		//if auth
-		database.addEventToDb(req.body);
-		res.redirect('/home');
+		helpers.addEventToDb(req.body, function(err, result) {
+			if (err) {
+				console.log(err);
+				res.status(500);
+			}
+			res.json(result);`
+		});
 	});
 
 };
