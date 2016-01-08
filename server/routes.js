@@ -42,7 +42,6 @@ module.exports = function(app, express) {
 			}
 		});
 		// else redirect
-		res.redirect('/auth');
 	});
 
 	//Logging in/authentication
