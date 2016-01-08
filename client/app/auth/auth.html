@@ -1,9 +1,15 @@
 <div class="auth" ng-controller="AuthController">
  	<!-- <h1>Authentication</h1> -->
-  <h1 class="landingHeader">Find your friends</h1>
-  <button class="login" ng-click="login()">
-    Log in to Facebook
-    <img class="icon" src="img/facebookIcon.ico">
-  </button>
-  <button ng-click="logout()">Log out</button>
+  <header class="primary-header container group">
+    <h1 class="logo">
+      Find your friends
+    </h1>
+  </header>
+  <div class="container group">
+    <button class="btn btn-alt" ng-click="login()">
+      Log in to Facebook
+      <!-- <img class="icon" src="img/facebookIcon.ico"> -->
+    </button>
+    <button class="btn btn-alt" ng-click="logout()">Log out</button>
+  </div>
 </div>

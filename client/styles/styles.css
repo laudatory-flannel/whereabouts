@@ -2,11 +2,11 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Book Antiqua";
+  background: white;
 }
 
-button {
-  font-family: "Trebuchet MS";
+h1, h2, h3, h4 {
+  color: black;
 }
 
 /* ---- Auth page ---- */
@@ -40,6 +40,10 @@ div.auth {
   width: 25px;
   height: 25px;
   vertical-align: middle;
+}
+
+.logo {
+  color: white;
 }
 
 /* ---- Home page ---- */
