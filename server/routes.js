@@ -4,7 +4,7 @@ var jwt = require('jwt-simple');
 
 
 module.exports = function(app, express) {
-	app.use('/', express.static('../Client'));
+	app.use(express.static(__dirname + '/../client'));
 // Get requests
 	app.get('/events', function(req, res){
 		helpers.getActiveEvents(function(err, data){
