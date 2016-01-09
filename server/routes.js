@@ -4,7 +4,7 @@ var jwt = require('jwt-simple');
 
 
 module.exports = function(app, express) {
-	app.use('/', express.static('../Client'));
+	app.use(express.static(__dirname + '/../client'));
 // Get requests
 	app.get('/events', function(req, res){
 		helpers.getActiveEvents(function(err, data){
@@ -53,7 +53,7 @@ module.exports = function(app, express) {
 				console.log(err);
 				res.status(500);
 			}
-			res.json(result);`
+			res.json(result);
 		});
 	});
 
