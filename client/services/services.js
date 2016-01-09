@@ -21,7 +21,7 @@ angular.module('greenfield.services', [])
     get: get,
     set: set
   };
-});
+})
 .factory('HTTP', function($http) {
   var sendRequest = function(method, url, data) {
     var options = {
