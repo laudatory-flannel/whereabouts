@@ -12,7 +12,8 @@
     "url": "https://github.com/laudatory-flannel/laudatory-flannel"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register \"test/**/*.coffee\""
+    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register \"test/**/*.coffee\"",
+    "start": "nodemon server/server.js"
   },
   "license": "UNLICENSED",
   "private": true,
