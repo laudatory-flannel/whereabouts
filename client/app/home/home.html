@@ -1,16 +1,12 @@
 <div ng-controller='HomeController'>
   <div id='home'>
-    <!-- <h1>Welcome to the Candy Van!</h1> -->
     <img class="loading" src="img/loading.gif" ng-show="loading">
     <div id="map"></div>
     <div>
       <div class='largeText'>Events near you:</div>
-
-
-
+      <button ng-click="newMarker()"> Add Marker </button>
     </div>
   </div>
-
 </div>
 <!-- <!doctype html>
 <html>
