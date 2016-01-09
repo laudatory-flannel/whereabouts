@@ -1,5 +1,6 @@
 angular.module('greenfield', [
   'greenfield.auth',
+  'greenfield.friends',
   'greenfield.home',
   'ngRoute'])
 .config(function ($routeProvider, $httpProvider) {
@@ -20,6 +21,11 @@ angular.module('greenfield', [
     .when('/event', {
       templateUrl: 'app/event/event.html',
       controller: 'EventController',
+      authenticate: true
+    })
+    .when('/friends', {
+      templateUrl: 'app/friends/friends.html',
+      controller: 'FriendsController',
       authenticate: true
     })
     .when('/logout', {

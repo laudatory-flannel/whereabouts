@@ -1,0 +1,20 @@
+<div ng-controller='FriendsController'>
+  <!-- <h1>Friends for {{ user.name }}</h1> -->
+
+  <!-- Add friend -->
+ 	<!-- <h1>Create an Event!</h1> -->
+  Friend Id: <input ng-model="newFriendId" />
+  <button ng-click="add(newFriendId)">Add new friend</button>
+
+  <!-- View friends -->
+  <table>
+    <tr>
+      <th>Id (internal to app)</th>
+      <th>Name</th>
+    </tr>
+    <tr ng-repeat="friend in friends">
+      <td>{{ friend._id }}</td>
+      <td>{{ friend.name }}</td>
+    </tr>
+  </table>
+</div>
