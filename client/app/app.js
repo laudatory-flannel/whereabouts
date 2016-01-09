@@ -22,6 +22,11 @@ angular.module('greenfield', [
       controller: 'EventController',
       authenticate: true
     })
+    .when('/friends', {
+      templateUrl: 'app/friends/friends.html',
+      controller: 'FriendsController',
+      authenticate: true
+    })
     .when('/logout', {
       templateUrl: 'app/auth/auth.html',
       controller: 'AuthController'
