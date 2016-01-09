@@ -53,7 +53,7 @@ module.exports = function(app, express) {
 				console.log(err);
 				res.status(500);
 			}
-			res.json(result);`
+			res.json(result);
 		});
 	});
 
