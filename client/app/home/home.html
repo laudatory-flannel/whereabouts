@@ -3,8 +3,24 @@
     <img class="loading" src="img/loading.gif" ng-show="loading">
     <div id="map"></div>
     <div>
+    <br>
       <div class='largeText'>Events near you:</div>
-      <button ng-click="showGymMarkers()"> Add Marker </button>
+      <div>
+      <ul>
+        <li ng-repeat="data in allLocations"> 
+        <p>
+        <p>
+        {{data.personname}}, 
+        <br>
+        {{data.description}}
+        <br>
+        Will be here until {{data.timeuntil}}
+        <button ng>Get event info</button>
+        </li>
+
+
+      </ul>
+      </div>
     </div>
   </div>
 </div>

@@ -11,6 +11,7 @@ angular.module('greenfield.home', ['greenfield.services'])
   $scope.loading; // boolean for whether map is loading
   $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
   $scope.allEvents;
+  $scope.allLocations;
 
   // Sets $scope position
   $scope.setScopePosition = function(position) {
@@ -70,22 +71,41 @@ angular.module('greenfield.home', ['greenfield.services'])
 
   $scope.findEvents();
 
+    var allLocations = [
+    {
+      personname: "Greg Domorski",
+      description: "I'm Starbucks Bros!",
+      timeuntil: "8 p.m.",
+      latitude: 37.793686,
+      longitude: -122.401268
+    },
+    {
+      personname: "Max O'Connell",
+      description: "I'm at SF GreenSpace HACKING! YEAH HACK REACTOR",
+      timeuntil: "10 p.m.",
+      latitude: 37.786710,
+      longitude: -122.400831
+    }  
+    ];
+
     var myLocations = [
       ['<h4> My People</h4>', 37.793686, -122.401268],
       ['<h4>My People</h4>', 37.789911, -122.402327],
     ];
 
+    $scope.allLocations = allLocations;
+
     var infowindow = new google.maps.InfoWindow({maxWidth: 160});
-    for (var i = 0; i < myLocations.length; i++) {  
+    for (var i = 0; i < allLocations.length; i++) {  
       var postMarker = new google.maps.Marker({
-        position: new google.maps.LatLng(37.781950, -122.418097), 
+        position: new google.maps.LatLng(allLocations[i].latitude, allLocations[i].longitude), 
         animation: google.maps.Animation.DROP,
-        map: $scope.map,
+        map: $scope.map
       });
       
       google.maps.event.addListener(postMarker, 'click', (function(postMarker, i) {
         return function() {
-          infowindow.setContent(myLocations[i][0]);
+          infowindow.setContent(allLocations[i].personname);
           infowindow.open($scope.map, postMarker);
         };
       })(postMarker, i));
