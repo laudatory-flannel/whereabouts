@@ -48,14 +48,24 @@ var utils = {
   // get active events -- Verified
   getActiveEvents: function(cb) {
     var query = {'active': true};
-    Event.find(query, function(err, events){
+    Event.find(query, function(err, events) {
       if (err) {
         console.log(err);
         return cb(err);
       }
       return cb(null, events);
     });
+  },
 
+  // get event by id -- NOT VERIFIED
+  getEventById: function(id, cb) {
+    Event.findById(id, function(err, event) {
+      if(err) {
+        console.log(err);
+        return cb(err);
+      }
+      return cb(null, event);
+    });
   },
 
   // handle event expiration
