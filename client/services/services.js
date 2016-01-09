@@ -4,7 +4,6 @@ angular.module('greenfield.services', [])
   var example = function () {
 
   };
-
   return {
     example: example
   };
