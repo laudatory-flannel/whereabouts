@@ -6,15 +6,37 @@ var jwt = require('jwt-simple');
 module.exports = function(app, express) {
 	app.use(express.static(__dirname + '/../client'));
 // Get requests
+	// Get events
 	app.get('/events', function(req, res){
 		helpers.getActiveEvents(function(err, data){
 			if (err) {
-				console.log(err);
+				res.send(500);
+			} else {
+				res.json(data);
 			}
-			res.json(data);
 		});
 	});
 
+	// Get event by id
+	app.get('/events/:id', function(req, res){
+		helpers.getEventById(req.params.id, function(err, data) {
+			if (err) {
+				res.send(500);
+			} else {
+				res.json(data);
+			}
+		});
+	});
+
+	app.get('/users/:id/friends', function(req, res){
+		helpers.getUserById(req.params.id, function(err, data) {
+			if (err) {
+				res.send(500);
+			} else {
+				res.json(data.friends);
+			}
+		})
+	});
 
 // Post requests
 	//Posting new event
@@ -30,9 +52,7 @@ module.exports = function(app, express) {
 			if(result === null || result.length === 0){
 				helpers.addUserToDb(user, function(err, result){
 					if(err){
-						console.log(err);
-						res.status(500);
-						res.json(result);
+						res.send(500);
 					} else {
 						res.json({token: token});
 					}
@@ -50,10 +70,10 @@ module.exports = function(app, express) {
 		//if auth
 		helpers.addEventToDb(req.body, function(err, result) {
 			if (err) {
-				console.log(err);
-				res.status(500);
+				res.send(500);
+			} else {
+				res.json(result);
 			}
-			res.json(result);
 		});
 	});
 
