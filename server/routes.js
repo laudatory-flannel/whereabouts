@@ -28,6 +28,16 @@ module.exports = function(app, express) {
 		});
 	});
 
+	app.get('/users/:id/friends', function(req, res){
+		helpers.getUserById(req.params.id, function(err, data) {
+			if (err) {
+				res.send(500);
+			} else {
+				res.json(data.friends);
+			}
+		})
+	});
+
 // Post requests
 	//Posting new event
 	app.post('/auth', function(req, res){

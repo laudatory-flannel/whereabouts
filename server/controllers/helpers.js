@@ -33,9 +33,21 @@ var utils = {
     });
   },
 
+  // ^ These should be re-factored into one function later.  
+
+  // get user based on id
+  getUserById: function(id, cb) {
+    User.findById(id, function(err, user) {
+      if(err) {
+        console.log(err);
+        return cb(err);
+      }
+      return cb(null, user);
+    });
+  },
+
   // input event to db -- Verified
   addEventToDb: function(eventObj, cb) {
-
     Event.create(eventObj, function(err, result){
       if (err) {
         console.log(err);
@@ -57,7 +69,7 @@ var utils = {
     });
   },
 
-  // get event by id -- NOT VERIFIED
+  // get event by id -- Verified
   getEventById: function(id, cb) {
     Event.findById(id, function(err, event) {
       if(err) {
