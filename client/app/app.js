@@ -1,6 +1,7 @@
 angular.module('greenfield', [
   'greenfield.auth',
   'greenfield.home',
+  'greenfield.event',
   'ngRoute'])
 .config(function ($routeProvider, $httpProvider) {
   $routeProvider
