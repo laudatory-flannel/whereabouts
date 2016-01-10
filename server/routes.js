@@ -33,7 +33,7 @@ module.exports = function(app, express) {
 			if (err) {
 				res.send(500);
 			} else {
-				res.json(data);
+				data === null ? res.json({message: "Error: Events not found."}) : res.json(data);
 			}
 		});
 	});
@@ -44,7 +44,7 @@ module.exports = function(app, express) {
 			if (err) {
 				res.send(500);
 			} else {
-				res.json(data);
+				data === null ? res.json({message: "Error: Users not found."}) : res.json(data);			
 			}
 		});
 	});
@@ -55,7 +55,7 @@ module.exports = function(app, express) {
 			if (err) {
 				res.send(500);
 			} else {
-				res.json(data);
+				data === null ? res.json({message: "Error: Event not found."}) : res.json(data);
 			}
 		});
 	});
@@ -77,7 +77,7 @@ module.exports = function(app, express) {
 			if (err) {
 				res.send(500);
 			} else {
-				res.json(data.friends);
+				data === null ? res.json({message: "Error: User not found."}) : res.json(data.friends);
 			}
 		})
 	});
@@ -133,7 +133,7 @@ module.exports = function(app, express) {
 
 	//Add new friend to user's friends.
 	app.post('/users/:id/friends', function(req, res) {
-		helpers.updateUserFriends(req.params.id, req.body, '$push', function (err, data) {
+		helpers.updateUserFriends(req.params.id, req.body.friendId, '$push', function (err, data) {
 			if (err) {
 				res.send(500);
 			} else {
