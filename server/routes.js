@@ -87,8 +87,19 @@ module.exports = function(app, express) {
 	});
 
 	//Add new friend to user's friends.
-	app.post('/users/:id/friends', function(req, res) {
-		helpers.updateUserFriends(req.params.id, req.body, '$push', function (err, data) {
+	// app.post('/users/:id/friends', function(req, res) {
+	// 	helpers.updateUserFriends(req.params.id, req.body, '$push', function (err, data) {
+	// 		if (err) {
+	// 			res.send(500);
+	// 		} else {
+	// 			res.json(data);
+	// 		}
+	// 	});
+	// });
+
+	app.post('/users/:name/friends', function(req, res) {
+		console.log('updating friend', req.params.name, req.body)
+		helpers.updateUserFriends({name: req.params.name}, req.body, '$push', function (err, data) {
 			if (err) {
 				res.send(500);
 			} else {

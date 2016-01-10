@@ -9,12 +9,11 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.user = localStorage.get('flannel.user') || DEFAULT_USER;
   $scope.friends = [];
   $scope.users = [];
-  $scope.friendAdded = false;
 
-  $scope.addFriend = function(friendName) {
-    Friends.addFriend(friendName)
+  $scope.addFriend = function(friend) {
+    Friends.addFriend($scope.user, friend)
     .then(function(data) {
-      $scope.friendAdded = true;
+      $scope.friends.push(friend._id);
     });
   };
 
