@@ -13,11 +13,10 @@
       <option ng-repeat="data in allLocations" value="{{data.latitude}}, {{data.longitude}}">{{data.personname}}</option>
     </select>
 </div>
-
   <div class="box">
     <div id="contactFormContainer">
         <div id="contactForm">
-          <form action="POST">
+          <form action="/events.html" method="POST">
             <fieldset>
                 <label for="Title">Title *</label>
                 <input id="name" type="text" />
