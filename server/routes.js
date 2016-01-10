@@ -4,6 +4,7 @@ var jwt = require('jwt-simple');
 
 
 module.exports = function(app, express) {
+	app.use(bodyparser.json());
 	app.use(express.static(__dirname + '/../client'));
 // Get requests
 	// Get events
@@ -28,6 +29,7 @@ module.exports = function(app, express) {
 		});
 	});
 
+	// Get users' friends array
 	app.get('/users/:id/friends', function(req, res){
 		helpers.getUserById(req.params.id, function(err, data) {
 			if (err) {
@@ -43,25 +45,33 @@ module.exports = function(app, express) {
 	app.post('/auth', function(req, res){
 		// if logged in with facebook
 		//create token
-
-		// what is being sent from the client?
-		var user = req.body; //?
+		var user = req.body;
 		var token = jwt.encode(user, 'candyvan');
-
 		helpers.getUserByName(user.name, function(err, result){
 			if(result === null || result.length === 0){
 				helpers.addUserToDb(user, function(err, result){
 					if(err){
 						res.send(500);
 					} else {
-						res.json({token: token});
+						res.json({token: 'token'});
 					}
 				});
 			} else {
-				res.json({token: token});
+				res.json({token: 'token'});
 			}
 		});
 		// else redirect
+	});
+
+	//Add new friend to user's friends.
+	app.post('/users/:id/friends', function(req, res) {
+		helpers.updateUserFriends(req.params.id, req.body, '$push', function (err, data) {
+			if (err) {
+				res.send(500);
+			} else {
+				res.json(data);
+			}
+		});
 	});
 
 	//Logging in/authentication

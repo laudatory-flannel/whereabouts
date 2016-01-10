@@ -1,5 +1,6 @@
 var User = require('../models/userModel.js');
 var Event = require('../models/eventModel.js');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 var utils = {
 
@@ -43,6 +44,18 @@ var utils = {
         return cb(err);
       }
       return cb(null, user);
+    });
+  },
+
+  // This should be re-usable if we create a 'delete friend' method later on. 'Method' can be changed $push ect...
+  updateUserFriends: function (id, friendId, method, cb) {
+    var action = {method: {friends: friendId}};
+    User.findByIdAndUpdate(id, action, function (err, result) {
+      if (err) {
+        console.log(err);
+        return cb(err);
+      }
+      return cb(null, result);
     });
   },
 
