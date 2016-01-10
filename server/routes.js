@@ -86,6 +86,11 @@ module.exports = function(app, express) {
 		var accessToken = req.body.accessToken;
 		var userName = req.body.userName;
 
+		if (!accessToken) {
+			console.log("no access token");
+			res.send(403); // Forbidden
+		}
+
 		// Check if access token is valid by attempting to call Facebook api with it
 		var form = new FormData();
 		form.append('access_token', accessToken);
