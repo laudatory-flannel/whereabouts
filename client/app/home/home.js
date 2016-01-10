@@ -1,7 +1,3 @@
-// .controller('HomeController', function ($scope, $window, $location, Services) {
-   
-// });
-
 // random default location in Berkeley, CA
 var DEFAULT_POSITION = [ 30, -120 ];
 
@@ -67,8 +63,8 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       $scope.loading = false;
     });
 
-    var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
-    var directionsService = new google.maps.DirectionsService();
+      var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
+      var directionsService = new google.maps.DirectionsService();
     $scope.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: $scope.position[0], lng: $scope.position[1]},
       zoom: 14,
@@ -81,7 +77,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     });
 
     directionsDisplay.setMap($scope.map);
-
     directionsDisplay.setPanel(document.getElementById("directions"));
 
     var onChangeHandler = function() {
@@ -126,12 +121,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       longitude: -122.406435
     },    
     ];
-
-    var myLocations = [
-      ['<h4> My People</h4>', 37.793686, -122.401268],
-      ['<h4>My People</h4>', 37.789911, -122.402327],
-    ];
-
 
     $scope.allLocations = allLocations;
 
