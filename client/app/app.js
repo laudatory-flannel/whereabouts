@@ -1,4 +1,5 @@
 angular.module('greenfield', [
+  'greenfield.services',
   'greenfield.auth',
   'greenfield.event',
   'greenfield.friends',
@@ -30,6 +31,21 @@ angular.module('greenfield', [
       controller: 'AuthController'
     });
 
+    // Attaches x-access-token to all outgoing AJAX requests
+    $httpProvider.interceptors.push('AttachTokens');
+})
+.factory('AttachTokens', function(localStorage) {
+  var attach = {
+    request: function(req) {
+      var token = localStorage.get('flannel.token');
+      if (token) {
+        req.headers['x-access-token'] = token;
+      }
+      req.headers['Allow-Control-Allow-Origin'] = '*'; // unclear if necessary
+      return req;
+    }
+  };
+  return attach;
 })
 .run(function ($rootScope, $location, Auth) {
   $rootScope.$on('$routeChangeStart', function(evt, next, current) {
