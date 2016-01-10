@@ -1,5 +1,6 @@
 var bodyParser = require('body-parser');
 var helpers = require('./controllers/helpers.js');
+var request = require('request');
 var jwt = require('jwt-simple');
 var ObjectId = require('mongoose').Types.ObjectId; 
 
@@ -70,30 +71,45 @@ module.exports = function(app, express) {
 // Post requests
 	//Logging in/authentication
 	app.post('/auth', function(req, res){
-		// Check if access token is valid by attempting to call Facebook api with it
 		var accessToken = req.body.accessToken;
 		var userName = req.body.userName;
 
-		// If so, find or create the user by name (can later adjust this to use fb id)
-		// Return the user as a jwt
-		if (accessToken) { // currently not checking validity at all
-			helpers.getUserByName(userName, function(err, user) {
-				if (user) {
-					console.log("found existing user:", user);
-					res.json({ token: jwt.encode(user, 'candyvan') });
-				} else {
-					helpers.addUserToDb({ name: userName }, function(err, user) {
-						if (err) {
-							res.send(500);
-						} else {
-							console.log("created new user:", user);
-							res.json({ token: jwt.encode(user, 'candyvan') });
-						}
-					});
-				}
-			});
-		}
-		// Else redirect
+		// Check if access token is valid by attempting to call Facebook api with it
+		var formData = {
+			access_token: accessToken
+		};
+
+		console.log(formData);
+		request.post({
+			url: 'https://graph.facebook.com/v2.5/me',
+			formData: formData
+		}, function(err, response, body) {
+			// If valid, find or create the user by name (can later adjust this to use fb id)
+			// and return the user as a jwt
+			console.log("body:", body);
+			if (body.success) { // Facebook returns this only if valid
+				console.log("valid facebook token");
+				helpers.getUserByName(userName, function(err, user) {
+					if (user) {
+						console.log("found existing user:", user);
+						res.json({ token: jwt.encode(user, 'candyvan') });
+					} else {
+						helpers.addUserToDb({ name: userName }, function(err, user) {
+							if (err) {
+								res.send(500);
+							} else {
+								console.log("created new user:", user);
+								res.json({ token: jwt.encode(user, 'candyvan') });
+							}
+						});
+					}
+				});
+			// Else redirect
+			} else {
+				console.log("invalid facebook token");
+				res.redirect('/#/auth');
+			}
+		});
 	});
 
 	//Add new friend to user's friends.
