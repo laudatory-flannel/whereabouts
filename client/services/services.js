@@ -4,12 +4,19 @@ angular.module('greenfield.services', [])
   var get = function(key) {
     return $window.localStorage.getItem(key);
   };
+
   var set = function(key, value) {
     return $window.localStorage.setItem(key, value);
   };
+
+  var remove = function(key) {
+    return $window.localStorage.removeItem(key);
+  };
+
   return {
     get: get,
-    set: set
+    set: set,
+    remove: remove
   };
 })
 // Simplifies interaction with $http
@@ -111,13 +118,14 @@ angular.module('greenfield.services', [])
     });
   };
 
-  var logout = function() {
+  var logout = function(successCallback) {
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
         console.log('attempting logout...');
         FB.logout(function(response) {
           if (response.status === 'unknown') {
             console.log('successful logout:', response);
+            successCallback(response);
           } else {
             console.log('failed logout:', response);
           }
@@ -148,5 +156,33 @@ angular.module('greenfield.services', [])
     login: login,
     logout: logout,
     getUserData: getUserData
+  };
+})
+.factory('Auth', function(localStorage, HTTP) {
+  var login = function(data) {
+    return HTTP.sendRequest('POST', '/auth', data)
+    .then(function(response) {
+      var token = response.data.token;
+      if (token) {
+        localStorage.set('flannel.token', token);
+        console.log('saved flannel.token in local storage:', token);
+      }
+      return response;
+    });
+  }
+
+  var logout = function() {
+    localStorage.remove('flannel.token');
+    console.log('removed flannel.token from local storage');
+  }
+
+  var isAuth = function() {
+    return !!localStorage.get('flannel.token');
+  }
+
+  return {
+    login: login,
+    logout: logout,
+    isAuth: isAuth
   };
 });
