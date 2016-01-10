@@ -101,17 +101,17 @@ angular.module('greenfield.services', [])
   var login = function(successCallback) {
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
-        console.log('already logged in:', response);
+        console.log('already logged in to facebook:', response);
         successCallback(response);
       }
       else {
-        console.log('attempting login...');
+        console.log('attempting facebook login...');
         FB.login(function(response) {
           if (response.status === 'connected') {
-            console.log('successful login:', response);
+            console.log('successful facebook login:', response);
             successCallback(response);
           } else {
-            console.log('failed login:', response);
+            console.log('failed facebook login:', response);
           }
         });
       }
@@ -121,17 +121,17 @@ angular.module('greenfield.services', [])
   var logout = function(successCallback) {
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
-        console.log('attempting logout...');
+        console.log('attempting facebook logout...');
         FB.logout(function(response) {
           if (response.status === 'unknown') {
-            console.log('successful logout:', response);
+            console.log('successful facebook logout:', response);
             successCallback(response);
           } else {
-            console.log('failed logout:', response);
+            console.log('failed facebook logout:', response);
           }
         });
       } else {
-        console.log('already logged out:', response);
+        console.log('already logged out of facebook:', response);
       }
     });
   };
@@ -158,22 +158,35 @@ angular.module('greenfield.services', [])
     getUserData: getUserData
   };
 })
-.factory('Auth', function(localStorage, HTTP) {
+.factory('Auth', function($location, localStorage, HTTP) {
   var login = function(data) {
-    return HTTP.sendRequest('POST', '/auth', data)
-    .then(function(response) {
-      var token = response.data.token;
-      if (token) {
-        localStorage.set('flannel.token', token);
-        console.log('saved flannel.token in local storage:', token);
-      }
-      return response;
-    });
+    if (isAuth()) {
+      console.log('already logged into app');
+      $location.path('/home');
+    } else {
+      console.log('attempting app login...');
+      return HTTP.sendRequest('POST', '/auth', data)
+      .then(function(response) {
+        var token = response.data.token;
+        if (token) {
+          console.log('successful app login:', token);
+          localStorage.set('flannel.token', token);
+          $location.path('/home');
+        } else {
+          console.log('failed app login');
+        }
+        return response;
+      });
+    }
   }
 
   var logout = function() {
-    localStorage.remove('flannel.token');
-    console.log('removed flannel.token from local storage');
+    if (isAuth()) {
+      localStorage.remove('flannel.token');
+      console.log('logged out of app');
+    } else {
+      console.log('already logged out of app');
+    }
   }
 
   var isAuth = function() {
