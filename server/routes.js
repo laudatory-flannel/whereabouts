@@ -16,7 +16,7 @@ module.exports = function(app, express) {
 	app.use(bodyParser.urlencoded({extended: true})); // unsure if necessary
   app.use(bodyParser.json());
 
-  app.use(middleware.requestLogger);
+  // app.use(middleware.requestLogger);
   app.use(express.static(__dirname + '/../client'));
 
   // Adds authentication for all protected endpoints
