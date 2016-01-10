@@ -60,7 +60,9 @@ var utils = {
 
   // This should be re-usable if we create a 'delete friend' method later on. 'Method' can be changed $push ect...
   updateUserFriends: function (id, friendId, method, cb) {
-    var action = {method: {friends: friendId}};
+    var action = {}; 
+    action[method] = {friends: friendId};
+    console.log(action);
     User.findByIdAndUpdate(id, action, function (err, result) {
       if (err) {
         console.log(err);
