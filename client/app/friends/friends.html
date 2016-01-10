@@ -2,19 +2,33 @@
   <!-- <h1>Friends for {{ user.name }}</h1> -->
 
   <!-- Add friend -->
- 	<!-- <h1>Create an Event!</h1> -->
+  <h1>Add friend</h1>
   Friend Id: <input ng-model="newFriendId" />
   <button ng-click="add(newFriendId)">Add new friend</button>
 
   <!-- View friends -->
+  <h1>My Friends</h1>
   <table>
     <tr>
       <th>Id (internal to app)</th>
       <th>Name</th>
     </tr>
-    <tr ng-repeat="friend in friends">
-      <td>{{ friend._id }}</td>
-      <td>{{ friend.name }}</td>
+    <tr ng-repeat="user in friends">
+      <td>{{ user._id }}</td>
+      <td>{{ user.name }}</td>
+    </tr>
+  </table>
+
+  <!-- View (all) users -->
+  <h1>All Users</h1>
+  <table>
+    <tr>
+      <th>Id (internal to app)</th>
+      <th>Name</th>
+    </tr>
+    <tr ng-repeat="user in useres">
+      <td>{{ user._id }}</td>
+      <td>{{ user.name }}</td>
     </tr>
   </table>
 </div>
