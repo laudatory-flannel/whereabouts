@@ -59,17 +59,28 @@ var utils = {
   },
 
   // This should be re-usable if we create a 'delete friend' method later on. 'Method' can be changed $push ect...
-  updateUserFriends: function (id, friendId, method, cb) {
-    var action = {}; 
-    action[method] = {friends: friendId};
-    console.log(action);
-    User.findByIdAndUpdate(id, action, function (err, result) {
-      if (err) {
-        console.log(err);
-        return cb(err);
-      }
-      return cb(null, result);
-    });
+
+  // updateUserFriends: function (id, friendId, method, cb) {
+  //   var action = {method: {friends: friendId}};
+  //   User.findByIdAndUpdate(id, action, function (err, result) {
+  //     if (err) {
+  //       console.log(err);
+  //       return cb(err);
+  //     }
+  //     return cb(null, result);
+  //   });
+  // },
+
+    updateUserFriends: function (name, friend, method, cb) {
+      var action = {'$push': {friends: friend._id}};
+
+      User.update(name, action, function (err, result) {
+        if (err) {
+          console.log(err);
+          return cb(err);
+        }
+        return cb(null, result);
+      });
   },
 
   // input event to db -- Verified

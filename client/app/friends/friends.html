@@ -2,16 +2,19 @@
 
   <!-- Add friend -->
   <label>Search Greenfield: <input type="text" ng-model="search"></label>
-  <table id="searchTextResults" ng-show="(filteredUsers = (users | filter:search)) && search.length >= 2">
-    <tr ng-repeat="user in filteredData">
-      <td>{{user.name}}</td>
-    </tr>
-  </table>
+  <form ng-show="(filteredUsers = (users | filter:search)) && search.length >= 2">
+    <table>  
+      <tr ng-repeat="user in filteredUsers">
+        <td ng-click="addFriend(user)">{{user.name}}</td>
+      </tr>
+    </table>
+    <!-- <input type="submit" ng-click="update(user)" value="Save" /> -->
+  </form>
 
   <!-- View friends -->
   <h3>My Friends</h3>
   
-  <div ng-repeat="friend in friends"  >
+  <div ng-repeat="friend in friends">
     <p>{{friend}}</p>
     <!-- <div class= "friend" ng-style= "{'background-image':'url(http://www.helpinghomelesscats.com/images/cat1.jpg)'}">
     </div>  -->
