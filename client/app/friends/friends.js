@@ -11,9 +11,9 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.users = [];
 
   $scope.addFriend = function(friend) {
-    Friends.addFriend($scope.user, friend)
+    Friends.modifyFriends($scope.user, friend, add)
     .then(function(data) {
-      $scope.friends.push(friend._id);
+      $scope.friends.push(friend.name);
     });
   };
 
@@ -30,6 +30,17 @@ angular.module('greenfield.friends', ['greenfield.services'])
       $scope.users = result.data;
     });
   };
+
+  $scope.removeFriend = function(friend) {
+    Friends.removeFriend()
+    .then(function(result) {
+      // for (var i = 0; i < $scope.friends.length; i++) { // do with ids 
+      //   if ($scope.friends[i]._id ==== friend._id) {
+      //     $scope.friends = $scope.friends.splice(i, 1);
+      //   }
+      // }
+    });
+  }
 
   $scope.getAllFriends();
   $scope.getAllUsers();

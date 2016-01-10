@@ -16,6 +16,9 @@
   
   <div ng-repeat="friend in friends">
     <p>{{friend}}</p>
+    <button ng-click="removeFriend(friend)">
+      Remove from Friends
+    </button>
     <!-- <div class= "friend" ng-style= "{'background-image':'url(http://www.helpinghomelesscats.com/images/cat1.jpg)'}">
     </div>  -->
   </div>
