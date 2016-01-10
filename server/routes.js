@@ -124,6 +124,23 @@ module.exports = function(app, express) {
 		});
 	});
 
+	app.post('/checkAuth', function(req, res, next) {
+		var token = req.body.token;
+		if (!token) {
+			next(new Error('No token'));
+		}
+		var user = jwt.decode(token, 'candyvan');
+		helpers.getUserByName(user.name, function(err, user) {
+			if (err) {
+				res.send(500);
+			} else if (user) {
+				res.send(200);
+			} else {
+				res.send(401);
+			}
+		});
+	});
+
 	//Posting new event
 	app.post('/events', function(req, res){
 		//AUTHENTICATION HERE
