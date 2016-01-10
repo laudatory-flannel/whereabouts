@@ -85,7 +85,7 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     document.getElementById('start').addEventListener('change', onChangeHandler);
     document.getElementById('end').addEventListener('change', onChangeHandler);
 
-      $scope.findEvents();
+    $scope.findEvents();
 
     var allLocations = [
     {
@@ -150,9 +150,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
         map: $scope.map,
         icon: 'app/home/currentlocation.png'
       })
-
-    
-
   };
 
   $scope.initMap = function() {
@@ -170,6 +167,12 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     });
   };
 
+  $scope.clearMarkers = function() {
+    for (var i = 0; i < $scope.allLocations.length; i++) {
+       $scope.postMarker[i].setMap(null);
+    }
+  };
+
   $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
     directionsService.route({
       origin: document.getElementById('start').value,
@@ -182,7 +185,7 @@ app.controller('HomeController', function($scope, localStorage, $http) {
         window.alert('Directions request failed due to ' + status);
       }
     });
-  }
+  };
 
   $scope.initMap();
 
