@@ -45,21 +45,34 @@ angular.module('greenfield.auth', [])
   };
 
   $scope.login = function() {
+    // If already logged in, do nothing
     FB.getLoginStatus(function(response) {
-      console.log(response)
       if (response.status === 'connected') {
-        console.log('Logged in.');
-        $scope.getUserData(response.authResponse);
+        console.log('already logged in:', response);
+        //$scope.getUserData(response.authResponse);
         //$scope.getAuthResponse();
       }
+    // Else attempt login
       else {
-        FB.login();
+        console.log('attempting login...');
+        FB.login(function(response) {
+          console.log('attempted log in:', response);
+        });
       }
     });
   };
 
   $scope.logout = function() {
-    FB.logout();
+    FB.getLoginStatus(function(response) {
+      if (response.status === 'connected') {
+        console.log('attempting logout...');
+        FB.logout(function(response) {
+          console.log('attempted log out:', response);
+        });
+      } else {
+        console.log('already logged out:', response);
+      }
+    });
   };
 
   $scope.initialize();
