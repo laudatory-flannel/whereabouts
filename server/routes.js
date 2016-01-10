@@ -1,3 +1,7 @@
+var JWT_SECRET = 'candyvan';
+// currently insecure since this is posted on github
+// we'll change it later, ya rascals!
+
 var bodyParser = require('body-parser');
 var helpers = require('./controllers/helpers.js');
 var request = require('request');
@@ -92,14 +96,14 @@ module.exports = function(app, express) {
 				helpers.getUserByName(userName, function(err, user) {
 					if (user) {
 						console.log("found existing user:", user);
-						res.json({ token: jwt.encode(user, 'candyvan') });
+						res.json({ token: jwt.encode(user, JWT_SECRET) });
 					} else {
 						helpers.addUserToDb({ name: userName }, function(err, user) {
 							if (err) {
 								res.send(500);
 							} else {
 								console.log("created new user:", user);
-								res.json({ token: jwt.encode(user, 'candyvan') });
+								res.json({ token: jwt.encode(user, JWT_SECRET) });
 							}
 						});
 					}
@@ -129,7 +133,7 @@ module.exports = function(app, express) {
 		if (!token) {
 			next(new Error('No token'));
 		}
-		var user = jwt.decode(token, 'candyvan');
+		var user = jwt.decode(token, JWT_SECRET);
 		helpers.getUserByName(user.name, function(err, user) {
 			if (err) {
 				res.send(500);
