@@ -6,6 +6,97 @@
     <link rel="stylesheet" type="text/css" href="styles/reset.css" />
     <link rel="stylesheet" type="text/css" href="styles/shayhowe.css" />
     <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+
+    <style>
+
+    #directions {
+    width: 20%;
+    margin-left: 1%;
+    width:37%;
+    }
+
+     #floating-panel {
+      position: absolute;
+      top: 10px;
+      left: 7%;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+      text-align: center;
+      font-family: 'Roboto','sans-serif';
+      line-height: 30px;
+      padding-left: 10px;
+    }
+
+
+    .box {
+        margin: 0px auto;
+        width:960px;
+        background-color: #ffffff;
+        text-align:left;
+        position: relative;
+        border-width: 1px;
+    }
+
+    .content {
+        padding:10px 30px;
+    }
+
+    #contactFormContainer {
+        position:absolute;
+        left:700px;
+        float:right;
+    }
+    #contactForm {
+        height:375px;
+        width:351px;
+        background-color: navy;
+        display:none;
+    }
+    #contactForm fieldset {
+        padding:30px;
+        border:none;
+    }      
+    #contactForm label {
+        display:block;
+        color: white;
+    }      
+    #contactForm input[type=text] {
+        display:block;
+        border:solid 1px #4d3a24;
+        width:100%;
+        margin-bottom:10px;
+        height:24px;
+    }  
+    #contactForm textarea {
+        display:block;
+        border:solid 1px #4d3a24;
+        width:100%;
+        margin-bottom:10px;
+    }  
+    #contactForm input[type=submit] {
+        background-color:#ffffff;
+        border:solid 1px #000000;
+        color: blue;
+        padding:5px;
+    }                
+    #contactLink {
+        height:40px;
+        width:351px;
+        background-image:url('app/home/create.png');
+        display:block;
+        cursor:pointer;
+    }
+    #messageSent {
+        color:#ff9933;
+        display:none;
+    }
+
+
+    </style>
+
+
   </head>
   <body>
     <!-- <h1>Greenfield</h1>
@@ -18,13 +109,12 @@
  
     <div ng-view></div>
 
->>>>>>> Working on slide
+
     <!-- Angular -->
     <!-- <script src="lib/angular/angular.js"></script>
     <script src="lib/angular-route/angular-route.js"></script> -->
     <script src="lib/jquery/dist/jquery.js"></script>
     <script src="lib/combodate/src/combodate.js"></script>
->>>>>>> Add info box
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular-route/angular-route.js"></script>
     <script src="lib/jquery.min.js"></script>
