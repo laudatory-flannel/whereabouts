@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser');
 var helpers = require('./controllers/helpers.js');
 var request = require('request');
+var FormData = require('form-data');
 var jwt = require('jwt-simple');
 var ObjectId = require('mongoose').Types.ObjectId; 
 
@@ -75,19 +76,18 @@ module.exports = function(app, express) {
 		var userName = req.body.userName;
 
 		// Check if access token is valid by attempting to call Facebook api with it
-		var formData = {
-			access_token: accessToken
-		};
-
-		console.log(formData);
-		request.post({
-			url: 'https://graph.facebook.com/v2.5/me',
-			formData: formData
-		}, function(err, response, body) {
+		var form = new FormData();
+		form.append('access_token', accessToken);
+		form.submit('https://graph.facebook.com/v2.5/me', function(err, fbRes) {
 			// If valid, find or create the user by name (can later adjust this to use fb id)
 			// and return the user as a jwt
-			console.log("body:", body);
-			if (body.success) { // Facebook returns this only if valid
+			var result = '';
+			fbRes.on('data', function(chunk) {
+				result += chunk;
+			})
+			fbRes.on('end', function() {
+				var body = JSON.parse(result);
+				if (body.success) { // Facebook returns this only if valid
 				console.log("valid facebook token");
 				helpers.getUserByName(userName, function(err, user) {
 					if (user) {
@@ -109,6 +109,7 @@ module.exports = function(app, express) {
 				console.log("invalid facebook token");
 				res.redirect('/#/auth');
 			}
+			})
 		});
 	});
 
