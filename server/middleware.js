@@ -4,19 +4,23 @@ var JWT_SECRET = 'candyvan';
 
 var jwt = require('jwt-simple');
 
+exports.requestLogger = function(req, res, next) {
+  console.log(req.path, req.headers['x-access-token']);
+  next();
+};
 exports.authenticate = function(req, res, next) {
-  // try {
+  try {
     var token = req.headers['x-access-token'];
     if (!token) {
       return res.send(403); // Forbidden
     }
     var user = jwt.decode(token, JWT_SECRET);
     req.user = user;
-    console.log("middleware authenticated user:", user);
+    //console.log("middleware authenticated user:", user);
     next();
-  // } catch (error) {
-  //   return next(error);
-  // }
+  } catch (error) {
+    return next(error);
+  }
 };
 
 exports.errorLogger = function(error, req, res, next) {

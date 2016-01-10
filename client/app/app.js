@@ -31,8 +31,9 @@ angular.module('greenfield', [
       controller: 'AuthController'
     });
 
-    // Attaches x-access-token to all outgoing AJAX requests
-    $httpProvider.interceptors.push('AttachTokens');
+    // Attaches x-access-token to outgoing AJAX requests
+    // Unclear why, but does not apply to auxiliary static files requested from server
+    $httpProvider.interceptors.push('AttachTokens'); 
 })
 .factory('AttachTokens', function(localStorage) {
   var attach = {
