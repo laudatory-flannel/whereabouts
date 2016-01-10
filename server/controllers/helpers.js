@@ -1,5 +1,6 @@
 var User = require('../models/userModel.js');
 var Event = require('../models/eventModel.js');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 var utils = {
 
