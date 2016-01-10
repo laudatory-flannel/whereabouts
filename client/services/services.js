@@ -101,17 +101,17 @@ angular.module('greenfield.services', [])
   var login = function(successCallback) {
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
-        console.log('already logged in to facebook:', response);
+        console.log('---already logged in to facebook:', response);
         successCallback(response);
       }
       else {
-        console.log('attempting facebook login...');
+        console.log('---attempting facebook login...');
         FB.login(function(response) {
           if (response.status === 'connected') {
-            console.log('successful facebook login:', response);
+            console.log('---successful facebook login:', response);
             successCallback(response);
           } else {
-            console.log('failed facebook login:', response);
+            console.log('---failed facebook login:', response);
           }
         });
       }
@@ -121,17 +121,17 @@ angular.module('greenfield.services', [])
   var logout = function(successCallback) {
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
-        console.log('attempting facebook logout...');
+        console.log('---attempting facebook logout...');
         FB.logout(function(response) {
           if (response.status === 'unknown') {
-            console.log('successful facebook logout:', response);
+            console.log('---successful facebook logout:', response);
             successCallback(response);
           } else {
-            console.log('failed facebook logout:', response);
+            console.log('---failed facebook logout:', response);
           }
         });
       } else {
-        console.log('already logged out of facebook:', response);
+        console.log('---already logged out of facebook:', response);
       }
     });
   };
@@ -158,36 +158,46 @@ angular.module('greenfield.services', [])
     getUserData: getUserData
   };
 })
-.factory('Auth', function($location, localStorage, HTTP) {
+.factory('Auth', function($location, Facebook, HTTP, localStorage) {
   var login = function(data) {
     if (isAuth()) {
       console.log('already logged into app');
       $location.path('/home');
     } else {
       console.log('attempting app login...');
-      return HTTP.sendRequest('POST', '/auth', data)
-      .then(function(response) {
-        var token = response.data.token;
-        if (token) {
-          console.log('successful app login:', token);
-          localStorage.set('flannel.token', token);
-          $location.path('/home');
-        } else {
-          console.log('failed app login');
-        }
-        return response;
+      Facebook.login(function(loginResponse) {
+        Facebook.getUserData(function(userDataResponse) {
+          var data = {
+            accessToken: loginResponse.authResponse.accessToken,
+            userName: userDataResponse.name
+          };
+          return HTTP.sendRequest('POST', '/auth', data)
+          .then(function(response) {
+            var token = response.data.token;
+            if (token) {
+              console.log('successful app login:', token);
+              localStorage.set('flannel.token', token);
+              $location.path('/home');
+            } else {
+              console.log('failed app login');
+            }
+            return response;
+          });
+        });
       });
     }
-  }
+  };
 
   var logout = function() {
     if (isAuth()) {
       localStorage.remove('flannel.token');
+      $location.path('/auth');
+      Facebook.logout(function() {});
       console.log('logged out of app');
     } else {
       console.log('already logged out of app');
     }
-  }
+  };
 
   var isAuth = function() {
     return !!localStorage.get('flannel.token');
