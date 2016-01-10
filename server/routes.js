@@ -4,6 +4,7 @@ var JWT_SECRET = 'candyvan';
 
 var bodyParser = require('body-parser');
 var helpers = require('./controllers/helpers.js');
+var middleware = require('./middleware.js');
 var request = require('request');
 var FormData = require('form-data');
 var jwt = require('jwt-simple');
@@ -17,7 +18,12 @@ module.exports = function(app, express) {
 
   app.use(express.static(__dirname + '/../client'));
 
-// Get requests
+  // Adds authentication for all protected endpoints
+  // Developer can comment out temporarily for testing purposes
+	app.use('/events', middleware.authenticate);
+	app.use('/users', middleware.authenticate);
+
+	// ---- GET REQUESTS ----
 	// Get events
 	app.get('/events', function(req, res){
 		helpers.getActiveEvents(function(err, data){
@@ -73,7 +79,7 @@ module.exports = function(app, express) {
 		})
 	});
 
-// Post requests
+	// ---- POST REQUESTS ----
 	//Logging in/authentication
 	app.post('/auth', function(req, res){
 		var accessToken = req.body.accessToken;
@@ -147,8 +153,6 @@ module.exports = function(app, express) {
 
 	//Posting new event
 	app.post('/events', function(req, res){
-		//AUTHENTICATION HERE
-		//if auth
 		helpers.addEventToDb(req.body, function(err, result) {
 			if (err) {
 				res.send(500);
@@ -158,4 +162,7 @@ module.exports = function(app, express) {
 		});
 	});
 
+	// Handles errors (from middleware.authentication)
+	app.use(middleware.errorLogger);
+	app.use(middleware.errorHandler);
 };
