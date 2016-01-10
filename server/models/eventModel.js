@@ -10,7 +10,7 @@ var EventSchema = new mongoose.Schema({
  active: Boolean,
  location: {
     type: { 
-      // type: String,
+      type: String,
       default: 'Point'
     }, 
     coordinates: [Number]
