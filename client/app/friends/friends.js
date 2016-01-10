@@ -1,36 +1,34 @@
 //used purely for testing - production code will not utilize a default user
 var DEFAULT_USER = {
-  _id: '12345',
-  name: 'User McUser'
+  _id: '1',
+  name: 'Rachel',
 };
 
 angular.module('greenfield.friends', ['greenfield.services'])
-.controller('FriendsController', function ($scope, localStorage, HTTP) {
+.controller('FriendsController', function ($scope, localStorage, HTTP, Friends) {
   $scope.user = localStorage.get('flannel.user') || DEFAULT_USER;
-  $scope.endpointUrl = '/users/' + $scope.user._id + '/friends';
   $scope.friends = [];
   $scope.users = [];
+  $scope.friendAdded = false;
 
-  $scope.add = function(friendId) {
-    HTTP.sendRequest('POST', $scope.endpointUrl)
-    .then(function(response) {
-      $scope.getAll();
+  $scope.addFriend = function(friendName) {
+    Friends.addFriend(friendName)
+    .then(function(data) {
+      $scope.friendAdded = true;
     });
   };
 
   $scope.getAllFriends = function() {
-    HTTP.sendRequest('GET', $scope.endpointUrl)
-    .then(function(response) {
-      if (response.data) {
-        $scope.friends = response.data;
-      }
-    })
+    Friends.getAllFriends($scope.user.name)
+    .then(function(result) {
+      $scope.friends = result.data;
+    });
   };
 
   $scope.getAllUsers = function() {
-    HTTP.sendRequest('GET', '/users')
-    .then(function(response) {
-      $scope.users = response.data;
+    Friends.getAllUsers()
+    .then(function(result) {
+      $scope.users = result.data;
     });
   };
 
