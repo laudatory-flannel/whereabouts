@@ -1,12 +1,16 @@
-var bodyparser = require('body-parser');
+var bodyParser = require('body-parser');
 var helpers = require('./controllers/helpers.js');
 var jwt = require('jwt-simple');
 var ObjectId = require('mongoose').Types.ObjectId; 
 
 
 module.exports = function(app, express) {
-	app.use(bodyparser.json());
-	app.use(express.static(__dirname + '/../client'));
+	// Allow app to parse request body (for POST requests)
+	app.use(bodyParser.urlencoded({extended: true})); // unsure if necessary
+  app.use(bodyParser.json());
+
+  app.use(express.static(__dirname + '/../client'));
+
 // Get requests
 	// Get events
 	app.get('/events', function(req, res){
@@ -64,26 +68,32 @@ module.exports = function(app, express) {
 	});
 
 // Post requests
-	//Posting new event
+	//Logging in/authentication
 	app.post('/auth', function(req, res){
-		// if logged in with facebook
-		//create token
-		var user = req.body;
-		var token = jwt.encode(user, 'candyvan');
-		helpers.getUserByName(user.name, function(err, result){
-			if(result === null || result.length === 0){
-				helpers.addUserToDb(user, function(err, result){
-					if(err){
-						res.send(500);
-					} else {
-						res.json({token: 'token'});
-					}
-				});
-			} else {
-				res.json({token: 'token'});
-			}
-		});
-		// else redirect
+		// Check if access token is valid by attempting to call Facebook api with it
+		var accessToken = req.body.accessToken;
+		var userName = req.body.userName;
+
+		// If so, find or create the user by name (can later adjust this to use fb id)
+		// Return the user as a jwt
+		if (accessToken) { // currently not checking validity at all
+			helpers.getUserByName(userName, function(err, user) {
+				if (user) {
+					console.log("found existing user:", user);
+					res.json({ token: jwt.encode(user, 'candyvan') });
+				} else {
+					helpers.addUserToDb({ name: userName }, function(err, user) {
+						if (err) {
+							res.send(500);
+						} else {
+							console.log("created new user:", user);
+							res.json({ token: jwt.encode(user, 'candyvan') });
+						}
+					});
+				}
+			});
+		}
+		// Else redirect
 	});
 
 	//Add new friend to user's friends.
@@ -97,7 +107,7 @@ module.exports = function(app, express) {
 		});
 	});
 
-	//Logging in/authentication
+	//Posting new event
 	app.post('/events', function(req, res){
 		//AUTHENTICATION HERE
 		//if auth
