@@ -38,11 +38,12 @@ angular.module('greenfield.services', [])
 })
 .factory('Friends', function ($http) {
 
-  var addFriend = function (input) {
-
+  var addFriend = function (user, input) {
+    console.log('post request to add friend')
     return $http({
       method: 'POST',
-      url: '/users/' + input + '/friends',
+      url: '/users/' + user.name + '/friends',
+      data: input
     })
     .then(function (resp) {
       return resp;
