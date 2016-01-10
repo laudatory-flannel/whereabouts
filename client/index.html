@@ -18,15 +18,12 @@
  
     <div ng-view></div>
 
-    <!-- Angular -->
-    <!-- <script src="lib/angular/angular.js"></script>
-    <script src="lib/angular-route/angular-route.js"></script> -->
-    <script src="lib/jquery/dist/jquery.js"></script>
-    <script src="lib/moment/src/moment.js"></script>
-    <script src="lib/combodate/src/combodate.js"></script>
+    <!-- Library -->
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular-route/angular-route.js"></script>
-    <!-- <script src="../bower_components/angular-mocks/angular-mocks.js"></script> -->
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/moment/moment.js"></script>
+    <script src="lib/combodate/src/combodate.js"></script>
     
     <!-- App files -->
     <script src="services/services.js"></script>
@@ -36,8 +33,9 @@
     <script src="app/home/home.js"></script>
     <script src="app/app.js"></script>
 
-
     <!-- External APIs -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBD2V3S0YNeUESwl6xl7al7v6NTDtCzDRQ"></script>
+    <!-- Unclear if 'home' page still needs this - seems to work with just the Places library api -->
+  <!--   // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBD2V3S0YNeUESwl6xl7al7v6NTDtCzDRQ"></script> -->
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
   </body>
 </html>
