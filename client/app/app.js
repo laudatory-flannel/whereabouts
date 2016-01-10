@@ -6,10 +6,6 @@ angular.module('greenfield', [
   'ngRoute'])
 .config(function ($routeProvider, $httpProvider) {
   $routeProvider
-    .when('/', {
-      templateUrl: 'app/auth/auth.html',
-      controller: 'AuthController'
-    })
     .when('/auth', {
       templateUrl: 'app/auth/auth.html',
       controller: 'AuthController'
@@ -29,18 +25,16 @@ angular.module('greenfield', [
       controller: 'FriendsController',
       authenticate: true
     })
-    .when('/logout', {
-      templateUrl: 'app/auth/auth.html',
-      controller: 'AuthController'
-    })
     .otherwise( {
       templateUrl: 'app/auth/auth.html',
-      controller: 'AuthController',
-      authenticate: true
+      controller: 'AuthController'
     });
 
 })
-
-.run(function () {
-
+.run(function ($rootScope, $location, Auth) {
+  $rootScope.$on('$routeChangeStart', function(evt, next, current) {
+    if (next.$$route && next.$$route.authenticate && !Auth.isAuth()) {
+      $location.path('/auth');
+    }
+  });
 });
