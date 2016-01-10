@@ -20,52 +20,54 @@ angular.module('greenfield.auth', ['greenfield.services'])
     }(document, 'script', 'facebook-jssdk'));
   };
 
+  // This code does not work, due to Facebook tightening access to friend lists
   // $scope.getFriendLists = function(authResponse) {
-  //   FB.api("/me/friends?access_token=" + authResponse, function(response) {
+  //   FB.api('/me/friends', function(response) {
   //     console.log("friend list:", response);
   //   });
   // };
 
-  // $scope.getAuthResponse = function() {
-  //   console.log('running this');
-  //   FB.getAuthResponse(function(response) {
-  //     console.log("auth response:", response);
-  //   });
-  // };
-
   $scope.login = function() {
-    var getUserData = function(callback) {
+    var loginToFacebook = function(successCallback) {
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          console.log('already logged in:', response);
+          successCallback(response);
+        }
+        else {
+          console.log('attempting login...');
+          FB.login(function(response) {
+            if (response.status === 'connected') {
+              console.log('successful login:', response);
+              successCallback(response);
+            } else {
+              console.log('failed login:', response);
+            }
+          });
+        }
+      });
+    };
+
+    var getFacebookUserData = function(successCallback) {
       FB.api('/me', function(response) {
-        console.log("user info:", response);
-        callback(response);
+        //console.log('user info:', response);
+        successCallback(response);
       });
     };
 
-    var loginToApp = function(response) {
-      getUserData(function(userDataResponse) {
-        var accessToken = response.authResponse.accessToken;
+    var loginToApp = function(accessToken, userName) {
+      HTTP.sendRequest('POST', '/auth', {
+        accessToken: accessToken,
+        userName: userName
+      });
+    };
+
+    loginToFacebook(function(loginResponse) {
+      getFacebookUserData(function(userDataResponse) {
+        var accessToken = loginResponse.authResponse.accessToken;
         var userName = userDataResponse.name;
-        HTTP.sendRequest('POST', '/auth', { accessToken: accessToken, userName: userName });
+        loginToApp(accessToken, userName);
       });
-    };
-
-    FB.getLoginStatus(function(response) {
-      if (response.status === 'connected') {
-        console.log('already logged in:', response);
-        loginToApp(response);
-        //$scope.getUserData(response.authResponse);
-      }
-      else {
-        console.log('attempting login...');
-        FB.login(function(response) {
-          if (response.status === 'connected') {
-            console.log('successful login:', response);
-            loginToApp(response);
-          } else {
-            console.log('failed login:', response);
-          }
-        });
-      }
     });
   };
 
