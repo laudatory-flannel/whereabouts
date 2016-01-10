@@ -16,7 +16,9 @@ module.exports = function(app, express) {
 	app.use(bodyParser.urlencoded({extended: true})); // unsure if necessary
   app.use(bodyParser.json());
 
-  app.use(middleware.requestLogger);
+  // For debugging purposes
+  // app.use(middleware.requestLogger);
+  
   app.use(express.static(__dirname + '/../client'));
 
   // Adds authentication for all protected endpoints
@@ -85,6 +87,11 @@ module.exports = function(app, express) {
 	app.post('/auth', function(req, res){
 		var accessToken = req.body.accessToken;
 		var userName = req.body.userName;
+
+		if (!accessToken) {
+			console.log("no access token");
+			res.send(403); // Forbidden
+		}
 
 		// Check if access token is valid by attempting to call Facebook api with it
 		var form = new FormData();
