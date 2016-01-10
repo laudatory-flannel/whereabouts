@@ -17,6 +17,7 @@
   <div class="box">
     <div id="contactFormContainer">
         <div id="contactForm">
+          <form action="POST">
             <fieldset>
                 <label for="Title">Title *</label>
                 <input id="name" type="text" />
@@ -28,15 +29,14 @@
                 <input type="text" id="time2" data-format="h:mm a" data-template="hh : mm a" name="datetime2" value="8:30 pm" required>
                 <label for="Description">Event Description *</label>
                 <textarea id="Description" rows="3" cols="20"></textarea>
-                <input id="sendMail" type="submit" name="submit" onclick="closeForm()" />
-                <span id="messageSent">Your message has been sent successfully!</span>
+                <input id="sendMail" type="submit"/>
            </fieldset>
+        </form>
         </div>
         <div id="contactLink"></div>
     </div>
 </div>
 </div>
-
 
 <div ng-controller='HomeController'>
     <img class="loading" src="img/loading.gif" ng-show="loading">
@@ -50,10 +50,10 @@
                <li> Will be here until {{data.timeuntil}} </li>
                <li><button class="btn btn-alt" style="display:inline-block;" ng-click="callMarker($index)">Get event info</button> </li>
            </ul>
-
            <button ng-click="clearMarkers()">Clear Markers</button>
-
         </div>
-<div id="directions"></div>
-
+  <div ng-if="boxAppear">
+    <div class="largeText"> Directions: </div>
+    <div id="directions"></div>
+  </div>
 </div>
