@@ -13,7 +13,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports = function(app, express) {
 	// Allow app to parse request body (for POST requests)
-	app.use(bodyParser.urlencoded({extended: true})); // unsure if necessary
+  app.use(bodyParser.urlencoded({extended: true})); // unsure if necessary
   app.use(bodyParser.json());
 
   // For debugging purposes
@@ -29,13 +29,13 @@ module.exports = function(app, express) {
 	// ---- GET REQUESTS ----
 	// Get events
 	app.get('/events', function(req, res){
-		helpers.getActiveEvents(function(err, data){
+		helpers.expireEvents(helpers.getActiveEvents(function(err, data){
 			if (err) {
 				res.send(500);
 			} else {
 				data === null ? res.json({message: "Error: Events not found."}) : res.json(data);
 			}
-		});
+		}));
 	});
 
 	// Get users
@@ -147,7 +147,8 @@ module.exports = function(app, express) {
 
 	app.post('/users/:name/friends', function(req, res) {
 		console.log('updating friend', req.params.name, req.body)
-		helpers.updateUserFriends({name: req.params.name}, req.body, '$push', function (err, data) {
+
+		helpers.updateUserFriends({name: req.params.name}, req.body, '$addToSet', function (err, data) {
 			if (err) {
 				res.send(500);
 			} else {
