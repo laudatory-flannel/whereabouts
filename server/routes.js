@@ -1,6 +1,7 @@
 var bodyparser = require('body-parser');
 var helpers = require('./controllers/helpers.js');
 var jwt = require('jwt-simple');
+var ObjectId = require('mongoose').Types.ObjectId; 
 
 
 module.exports = function(app, express) {
@@ -10,6 +11,17 @@ module.exports = function(app, express) {
 	// Get events
 	app.get('/events', function(req, res){
 		helpers.getActiveEvents(function(err, data){
+			if (err) {
+				res.send(500);
+			} else {
+				res.json(data);
+			}
+		});
+	});
+
+	// Get users
+	app.get('/users', function(req, res){
+		helpers.getUsers(function(err, data){
 			if (err) {
 				res.send(500);
 			} else {
@@ -29,9 +41,20 @@ module.exports = function(app, express) {
 		});
 	});
 
+	// // Get users' friends array
+	// app.get('/users/:id/friends', function(req, res){
+	// 	helpers.getUserById(req.params.id, function(err, data) {
+	// 		if (err) {
+	// 			res.send(500);
+	// 		} else {
+	// 			res.json(data.friends);
+	// 		}
+	// 	})
+	// });
+
 	// Get users' friends array
-	app.get('/users/:id/friends', function(req, res){
-		helpers.getUserById(req.params.id, function(err, data) {
+	app.get('/users/:name/friends', function(req, res){
+		helpers.getUserByName(req.params.name, function(err, data) {
 			if (err) {
 				res.send(500);
 			} else {

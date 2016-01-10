@@ -23,6 +23,17 @@ var utils = {
   },
 
   // get user based on name -- Verified
+  getUsers: function(cb) {
+    User.find({}, function(err, result) {
+      if (err) {
+        console.log(err);
+        return res.send(500, { error: err });
+      }
+      return cb(null, result);
+    });
+  },
+
+  // get user based on name -- Verified
   getUserByName: function(name, cb) {
     var query = {'name': name};
     User.findOne(query, function(err, result) {

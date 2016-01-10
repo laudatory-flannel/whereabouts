@@ -37,4 +37,45 @@ angular.module('greenfield.services', [])
   return {
     sendRequest: sendRequest
   };
+})
+.factory('Friends', function ($http) {
+
+  var addFriend = function (input) {
+
+    return $http({
+      method: 'POST',
+      url: '/users/' + input + '/friends',
+    })
+    .then(function (resp) {
+      return resp;
+    });
+  };
+
+  var getAllFriends = function (input) {
+
+    return $http({
+      method: 'GET',
+      url: '/users/' + input + '/friends',
+    })
+    .then(function (resp) {
+      return resp;
+    });
+  };
+
+  var getAllUsers = function (input) {
+
+    return $http({
+      method: 'GET',
+      url: '/users',
+    })
+    .then(function (resp) {
+      return resp;
+    });
+  };
+
+  return { 
+    addFriend: addFriend,
+    getAllFriends: getAllFriends,
+    getAllUsers: getAllUsers
+  };
 });
