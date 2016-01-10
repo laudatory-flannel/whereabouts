@@ -9,6 +9,7 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.user = localStorage.get('flannel.user') || DEFAULT_USER;
   $scope.endpointUrl = '/users/' + $scope.user._id + '/friends';
   $scope.friends = [];
+  $scope.users = [];
 
   $scope.add = function(friendId) {
     HTTP.sendRequest('POST', $scope.endpointUrl)
@@ -17,14 +18,22 @@ angular.module('greenfield.friends', ['greenfield.services'])
     });
   };
 
-  $scope.getAll = function() {
+  $scope.getAllFriends = function() {
     HTTP.sendRequest('GET', $scope.endpointUrl)
-    .then(function(response){
+    .then(function(response) {
       if (response.data) {
         $scope.friends = response.data;
       }
     })
   };
 
-  $scope.getAll();
+  $scope.getAllUsers = function() {
+    HTTP.sendRequest('GET', '/users')
+    .then(function(response) {
+      $scope.users = response.data;
+    });
+  };
+
+  $scope.getAllFriends();
+  $scope.getAllUsers();
 });
