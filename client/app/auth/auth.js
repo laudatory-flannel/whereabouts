@@ -12,19 +12,24 @@ angular.module('greenfield.auth', ['greenfield.services'])
       });
     };
 
-    Facebook.login(function(loginResponse) {
-      Facebook.getUserData(function(userDataResponse) {
-        var accessToken = loginResponse.authResponse.accessToken;
-        var userName = userDataResponse.name;
-        loginToApp(accessToken, userName);
+    if (Auth.isAuth()) {
+      $location.path('/home');
+    } else {
+      Facebook.login(function(loginResponse) {
+        Facebook.getUserData(function(userDataResponse) {
+          var accessToken = loginResponse.authResponse.accessToken;
+          var userName = userDataResponse.name;
+          loginToApp(accessToken, userName);
+        });
       });
-    });
+    }
   };
 
   $scope.logout = function() {
-    Facebook.logout(function() {
+    if (Auth.isAuth()) {
       Auth.logout();
       $location.path('/auth');
-    });
+      Facebook.logout(function() {});
+    }
   }
 });
