@@ -1,12 +1,8 @@
-angular.module('greenfield.auth', [])
-// .controller('AuthController', function ($scope, $window, $location, Services) {
-   
-// });
-
-//this is currently a copy of facebookController, but will end up taking care of only auth
-.controller('AuthController', function($scope) {
+angular.module('greenfield.auth', ['greenfield.services'])
+.controller('AuthController', function($scope, HTTP) {
+  // Initialize Facebook api caller
+  // This is boilerplate code provided directly by Facebook
   $scope.initialize = function() {
-    //initialize facebook stuff for authentication/api
     window.fbAsyncInit = function() {
     FB.init({
       appId      : '993093684087607',
@@ -24,39 +20,50 @@ angular.module('greenfield.auth', [])
     }(document, 'script', 'facebook-jssdk'));
   };
 
-  $scope.getUserData = function() {
-    FB.api('/me', function(response) {
-      console.log("user info:", response);
-      $scope.getFriendLists();
-    })
-  };
+  // $scope.getFriendLists = function(authResponse) {
+  //   FB.api("/me/friends?access_token=" + authResponse, function(response) {
+  //     console.log("friend list:", response);
+  //   });
+  // };
 
-  $scope.getFriendLists = function(authResponse) {
-    FB.api("/me/friends?access_token=" + authResponse, function(response) {
-      console.log("friend list:", response);
-    });
-  };
-
-  $scope.getAuthResponse = function() {
-    console.log('running this');
-    FB.getAuthResponse(function(response) {
-      console.log("auth response:", response);
-    });
-  };
+  // $scope.getAuthResponse = function() {
+  //   console.log('running this');
+  //   FB.getAuthResponse(function(response) {
+  //     console.log("auth response:", response);
+  //   });
+  // };
 
   $scope.login = function() {
-    // If already logged in, do nothing
+    var getUserData = function(callback) {
+      FB.api('/me', function(response) {
+        console.log("user info:", response);
+        callback(response);
+      });
+    };
+
+    var loginToApp = function(response) {
+      getUserData(function(userDataResponse) {
+        var accessToken = response.authResponse.accessToken;
+        var userName = userDataResponse.name;
+        HTTP.sendRequest('POST', '/auth', { accessToken: accessToken, userName: userName });
+      });
+    };
+
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
         console.log('already logged in:', response);
+        loginToApp(response);
         //$scope.getUserData(response.authResponse);
-        //$scope.getAuthResponse();
       }
-    // Else attempt login
       else {
         console.log('attempting login...');
         FB.login(function(response) {
-          console.log('attempted log in:', response);
+          if (response.status === 'connected') {
+            console.log('successful login:', response);
+            loginToApp(response);
+          } else {
+            console.log('failed login:', response);
+          }
         });
       }
     });
@@ -67,7 +74,11 @@ angular.module('greenfield.auth', [])
       if (response.status === 'connected') {
         console.log('attempting logout...');
         FB.logout(function(response) {
-          console.log('attempted log out:', response);
+          if (response.status === 'unknown') {
+            console.log('successful logout:', response);
+          } else {
+            console.log('failed logout:', response);
+          }
         });
       } else {
         console.log('already logged out:', response);
