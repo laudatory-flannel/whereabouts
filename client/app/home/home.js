@@ -4,6 +4,8 @@ var DEFAULT_POSITION = [ 30, -120 ]; // random default location in Berkeley, CA
 
 angular.module('greenfield.home', ['greenfield.services'])
 .factory('Map', function(localStorage) {
+  // position is a 2-tuple of [ latitude, longitude ]
+
   // Gets/Sets position from localStorage
   // Allows for faster load of map, since using getRealLocation can take a few seconds 
   var getLocalPosition = function() {
@@ -29,7 +31,8 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 
   // Renders map in $('#map') DOM element, based on $scope position
-  var render = function(position) {
+  var render = function() {
+    var position = getLocalPosition();
     return new google.maps.Map(document.getElementById('map'), {
       center: { lat: position[0], lng: position[1] },
       zoom: 14,
@@ -57,13 +60,6 @@ angular.module('greenfield.home', ['greenfield.services'])
 })
 .controller('HomeController', function($scope, $http, Map, Markers, Directions) {
   $scope.map; // google map object
-  $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
-
-  // Sets $scope position
-  $scope.setScopePosition = function(position) {
-    $scope.position[0] = position[0] || DEFAULT_POSITION[0];
-    $scope.position[1] = position[1] || DEFAULT_POSITION[1];
-  };
 
   $scope.setUpRoutes = function() {
     // Sets visibility of directions box (should likely be renamed for clarity)
@@ -150,9 +146,9 @@ angular.module('greenfield.home', ['greenfield.services'])
     var postMarker;
 
     // Adds marker to map (and returns the marker)
-    var addMarker = function(latitude, longitude, iconUrl) {
+    var addMarker = function(position, iconUrl) {
       return new google.maps.Marker({
-        position: new google.maps.LatLng(latitude, longitude), 
+        position: new google.maps.LatLng(position[0], position[1]), 
         animation: google.maps.Animation.DROP,
         map: $scope.map,
         icon: iconUrl
@@ -160,12 +156,12 @@ angular.module('greenfield.home', ['greenfield.services'])
     };
 
     // Add marker for user
-    addMarker($scope.position[0], $scope.position[1], USER_ICON_URL);
+    addMarker(Map.getLocalPosition(), USER_ICON_URL);
 
     // Add clickable map marker for each location
     for (var i = 0; i < $scope.allLocations.length; i++) {
       var location = $scope.allLocations[i];
-      var marker = addMarker(location.latitude, location.longitude, EVENT_ICON_URL);
+      var marker = addMarker([ location.latitude, location.longitude ], EVENT_ICON_URL);
       $scope.postMarker.push(marker);
       
       google.maps.event.addListener($scope.postMarker[i], 'click', (function(marker, i) {
@@ -184,19 +180,17 @@ angular.module('greenfield.home', ['greenfield.services'])
     $scope.loading = true; // boolean to determine whether to display loading gif
     
     // Render a possibly-reasonable guess for the location
-    //$scope.setScopePosition(Map.getLocalPosition());
-    //Map.render();
+    //$scope.map = Map.render();
 
     // Render the actual location, once it is found
     Map.getRealLocation(function(position) {
-      $scope.setScopePosition(position);
       Map.setLocalPosition(position);
 
       $scope.$apply(function() {
         // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
         $scope.loading = false;
       });
-      $scope.map = Map.render($scope.position);
+      $scope.map = Map.render();
       callback();
     });
   };
