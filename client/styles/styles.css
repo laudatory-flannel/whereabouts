@@ -49,6 +49,27 @@ div.auth {
 
 /* ---- Home page ---- */
 
+.navbar {
+  background-color: #ca7;
+  padding: 12px;
+  margin-top: 5px;
+  z-index: 1;
+}
+
+.navbar a {
+  font-family:"Roboto", "sans-serif";
+  font-size: 20px;
+  display: block;
+  position: relative;
+  text-decoration: none;
+  height: 100%;
+  cursor: pointer;
+}
+
+.navbar a:hover {
+  background-color: #a85;
+}
+
 div {
   /*border: dotted 1px red;*/
 }
