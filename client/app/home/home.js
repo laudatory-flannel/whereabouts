@@ -164,11 +164,14 @@ angular.module('greenfield.home', ['greenfield.services'])
 
   $scope.initMarkers = function() {
     $scope.allEvents = []; // not being utilized yet
-    $scope.allLocations = [];
     $scope.markers = [];
 
-    // Populated with dummy data for now - should eventually get data from $scope.allEvents
-    $scope.allLocations = [
+    // Add marker for user
+    Markers.addUserMarker($scope.map, Map.getLocalPosition());
+    
+    // ---- seed ---- (for testing purposes)
+    // This entire section should be deleted for production
+    $scope.allEvents = [
     {
       id: 1,
       personname: "Greg Domorski",
@@ -199,14 +202,13 @@ angular.module('greenfield.home', ['greenfield.services'])
     },    
     ];
 
-    // Add marker for user
-    Markers.addUserMarker($scope.map, Map.getLocalPosition());
-
     // Add event marker for each location
-    _.forEach($scope.allLocations, function(event) {
+    _.forEach($scope.allEvents, function(event) {
       var marker = Markers.addEventMarker($scope.map, event);
       $scope.markers.push(marker);
     });
+
+    // ---- end seed ----
   };
 
   // Triggers click on marker from click on event in feed

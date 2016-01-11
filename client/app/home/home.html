@@ -9,7 +9,7 @@
     </select>
     <b>End: </b>
     <select id="end" >
-      <option ng-repeat="data in allLocations" value="{{data.latitude}}, {{data.longitude}}">{{data.personname}}</option>
+      <option ng-repeat="data in allEvents" value="{{data.location.coordinates[1]}}, {{data.location.coordinates[0]}}">{{data.personname}}</option>
     </select>
   </div>
 <div class="box">
@@ -38,10 +38,10 @@
     <br>
     <div class='largeText'>Events near you:</div>
         <div style="margin-top: 15px; width: 320px; height: 455px; padding: 5px; border: solid 2px #000; overflow:auto;">
-           <ul ng-repeat="data in allLocations" style="margin-right: 5px; padding-bottom: 30px; display:inline-block;">
+           <ul ng-repeat="data in allEvents" style="margin-right: 5px; padding-bottom: 30px; display:inline-block;">
                <li style="font-weight: bold;"> {{data.personname}} </li>
                <li> {{data.description}}  </li>
-               <li> Will be here until {{data.timeuntil}} </li>
+               <li> Will be here until {{data.endedAt}} </li>
                <li><button class="btn btn-alt" style="display:inline-block;" ng-click="callMarker($index)">Get event info</button> </li>
            </ul>
            <button ng-click="clearMarkers()">Clear Markers</button>
