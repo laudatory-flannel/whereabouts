@@ -119,8 +119,8 @@ div {
   margin-left: 0px;
   margin-right: 0px;
 }
-
 /*
+
 #map {
   height: 500px;
   width: 500px;
@@ -148,7 +148,7 @@ div {
   width: 50px;
   top: 225px;
   left: 225px;
-}
+}*/
 
 #over {
   position: absolute;
@@ -162,12 +162,11 @@ div {
 #under {
   position: absolute;
   z-index: 0;
-  opacity: .3;
 }
-
+/*
 .btn {
   background-color: green;
-}
+}*/
 
 /* ---- Friends page ---- */
 
