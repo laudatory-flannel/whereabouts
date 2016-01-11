@@ -6,12 +6,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
   $scope.map; // google map object
   $scope.loading; // boolean for whether map is loading
   $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
-  
-  //greg
-  $scope.boxAppear = false;
-  $scope.allEvents;
-  $scope.allLocations;
-  $scope.postMarker = [];
 
   // Sets $scope position
   $scope.setScopePosition = function(position) {
@@ -63,8 +57,10 @@ app.controller('HomeController', function($scope, localStorage, $http) {
 
   };
 
-  //greg
   $scope.setUpRoutes = function() {
+    // Sets visibility of directions box (should likely be renamed for clarity)
+    $scope.boxAppear = false;
+
     // Initialize directions modules
     var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
     var directionsService = new google.maps.DirectionsService();
@@ -94,12 +90,16 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     };
 
     // Register event listeners to display route whenever endpoints change
-    console.log('outside the func', $scope);
+    // console.log('outside the func', $scope);
     document.getElementById('start').addEventListener('change', displayRoute);
     document.getElementById('end').addEventListener('change', displayRoute);
   };
 
   $scope.setUpMarkers = function() {
+    $scope.allEvents;
+    $scope.allLocations;
+    $scope.postMarker = [];
+
     // Not being utilized yet
     $scope.findEvents();
 
@@ -142,8 +142,10 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     var infowindow = new google.maps.InfoWindow({ maxWidth: 160 });
     var postMarker;
 
+    // Add clickable map marker for each location
     for (var i = 0; i < $scope.allLocations.length; i++) {
       var location = $scope.allLocations[i];
+
       $scope.postMarker.push(new google.maps.Marker({
         position: new google.maps.LatLng(location.latitude, location.longitude), 
         animation: google.maps.Animation.DROP,
@@ -151,7 +153,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
         icon: 'app/home/peace.png'
       }));
       
-
       google.maps.event.addListener($scope.postMarker[i], 'click', (function(postMarker, i) {
         return function() {
           infowindow.setContent("<h4>" + location.personname + "</h4>" + location.description + "<p>Will be there until " + location.timeuntil + "</p>");
@@ -160,6 +161,7 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       })($scope.postMarker[i], i));
     }
 
+    // Add marker for user
     new google.maps.Marker({
         position: new google.maps.LatLng($scope.position[0], $scope.position[1]), 
         animation: google.maps.Animation.DROP,
@@ -185,6 +187,19 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     });
   };
 
+  // Triggers click on marker from click on event in feed
+  $scope.callMarker = function($index){
+    // console.log($scope.postMarker);
+    google.maps.event.trigger($scope.postMarker[$index], 'click', 'click');
+  };
+
+  // Clears all markers from map
+  $scope.clearMarkers = function() {
+    for (var i = 0; i < $scope.allLocations.length; i++) {
+       $scope.postMarker[i].setMap(null);
+    }
+  };
+
   // Find events - not really being used
   $scope.findEvents = function(){
     $http.get('/events').success(function(data, status, headers, config) {
@@ -193,17 +208,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     error(function(data, status, headers, config) {
       console.log('There was an error with your get request');
     });
-  };
-
-  // Markers
-  $scope.callMarker = function(num){
-    console.log($scope.postMarker);
-    google.maps.event.trigger($scope.postMarker[num], 'click', 'click');
-  };
-  $scope.clearMarkers = function() {
-    for (var i = 0; i < $scope.allLocations.length; i++) {
-       $scope.postMarker[i].setMap(null);
-    }
   };
 
   $scope.initMap();
