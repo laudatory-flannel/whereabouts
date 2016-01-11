@@ -97,6 +97,8 @@ div.auth {
   background-color: green;
 }
 
+/* ---- Friends page ---- */
+
 .friendImage {
   position: relative;
   padding: 8px;
@@ -135,7 +137,6 @@ div.auth {
 }
 
 td {
-    text-align: left;
-    vertical-align:middle;
-    
+  text-align: left;
+  vertical-align:middle;   
 }
