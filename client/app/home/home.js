@@ -1,5 +1,5 @@
-var USER_ICON_URL = 'app/home/currentlocation.png';
-var EVENT_ICON_URL = 'app/home/peace.png';
+var USER_ICON_URL = 'img/currentlocation.png';
+var EVENT_ICON_URL = 'img/flag.png';
 var DEFAULT_POSITION = [ 37.784, -122.409 ]; // Hack Reactor
 
 angular.module('greenfield.home', ['greenfield.services'])
