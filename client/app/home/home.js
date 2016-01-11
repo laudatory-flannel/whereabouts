@@ -1,32 +1,24 @@
 var USER_ICON_URL = 'app/home/currentlocation.png';
 var EVENT_ICON_URL = 'app/home/peace.png';
-var DEFAULT_POSITION = [ 30, -120 ]; // random default location in Berkeley, CA
+var DEFAULT_POSITION = [ 37.784, -122.409 ]; // Hack Reactor
 
-var app = angular.module('greenfield.home', ['greenfield.services']);
-app.controller('HomeController', function($scope, localStorage, $http) {
-  $scope.map; // google map object
-  $scope.loading; // boolean for whether map is loading
-  $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
+angular.module('greenfield.home', ['greenfield.services'])
+.factory('Map', function(localStorage) {
+  // position is a 2-tuple of [ latitude, longitude ]
 
-  // Sets $scope position
-  $scope.setScopePosition = function(position) {
-    $scope.position[0] = position[0] || DEFAULT_POSITION[0];
-    $scope.position[1] = position[1] || DEFAULT_POSITION[1];
-  };
-  
   // Gets/Sets position from localStorage
   // Allows for faster load of map, since using getRealLocation can take a few seconds 
-  $scope.getLocalPosition = function() {
+  var getLocalPosition = function() {
     return [ parseFloat(localStorage.get('flannel.latitude')),
              parseFloat(localStorage.get('flannel.longitude')) ];
   };
-  $scope.setLocalPosition = function (position){
+  var setLocalPosition = function (position){
     localStorage.set('flannel.latitude', position[0]);
     localStorage.set('flannel.longitude', position[1]);
   };
 
   // Gets actual position, passes to callback
-  $scope.getRealLocation = function(callback) {
+  var getRealLocation = function(callback) {
     var successCallback = function(positionObj) {
       // positionObj's format is native to navigator.geolocation.getCurrentPosition
       var position = [ positionObj.coords.latitude, positionObj.coords.longitude ];
@@ -39,14 +31,9 @@ app.controller('HomeController', function($scope, localStorage, $http) {
   };
 
   // Renders map in $('#map') DOM element, based on $scope position
-  $scope.renderMap = function() {
-    $scope.$apply(function() {
-      // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
-      $scope.loading = false;
-    });
-
-    $scope.map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: $scope.position[0], lng: $scope.position[1]},
+  var render = function(position) {
+    return new google.maps.Map(document.getElementById('map'), {
+      center: { lat: position[0], lng: position[1] },
       zoom: 14,
       minZoom: 14,
       maxZoom: 14,
@@ -57,50 +44,128 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     });
   };
 
-  $scope.setUpRoutes = function() {
+  return {
+    getLocalPosition: getLocalPosition,
+    setLocalPosition: setLocalPosition,
+    getRealLocation: getRealLocation,
+    render: render
+  };
+})
+.factory('Directions', function() {
+  var display = new google.maps.DirectionsRenderer({ draggable: true });
+  var service = new google.maps.DirectionsService();
+
+  var displayRoute = function(map) {
+    display.setMap(map);
+    display.setPanel(document.getElementById("directions"));
+    service.route({
+      origin: document.getElementById('start').value,
+      destination: document.getElementById('end').value,
+      travelMode: google.maps.TravelMode.WALKING
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        display.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  };
+
+  return {
+    displayRoute: displayRoute
+  };
+})
+.factory('Markers', function() {
+  // Info window object that will change content/position to display info for last marker clicked
+  var infoWindow = new google.maps.InfoWindow({ maxWidth: 160 });
+
+  // Adds marker to map (and returns the marker)
+  var addMarker = function(map, position, iconUrl) {
+    return new google.maps.Marker({
+      position: new google.maps.LatLng(position[0], position[1]), 
+      animation: google.maps.Animation.DROP,
+      map: map,
+      icon: iconUrl
+    });
+  };
+
+  var addUserMarker = function(map, position) {
+    return addMarker(map, position, USER_ICON_URL);
+  }
+
+  var addEventMarker = function(map, position, location) {
+    var marker = addMarker(map, position, EVENT_ICON_URL);
+    var clickHandler = function() {
+      infoWindow.setContent(
+        "<h4>" + location.personname +
+        "</h4>" + location.description + 
+        "<p>Will be there until " + location.timeuntil + "</p>");
+      infoWindow.open(map, marker);
+    };
+    google.maps.event.addListener(marker, 'click', clickHandler);
+    return marker;
+  };
+
+  var triggerClick = function(marker) {
+    google.maps.event.trigger(marker, 'click', 'click');
+  };
+
+  var removeFromMap = function(marker) {
+    marker.setMap(null);
+  };
+
+  return {
+    addUserMarker: addUserMarker,
+    addEventMarker: addEventMarker,
+    triggerClick: triggerClick,
+    removeFromMap: removeFromMap
+  };
+})
+.controller('HomeController', function($scope, Map, Directions, Markers, HTTP) {
+  $scope.map; // google map object
+
+  $scope.initMap = function(callback) {
+    $scope.loading = true; // boolean to determine whether to display loading gif
+    
+    // Render a possibly-reasonable guess for the location
+    //$scope.position = Map.getLocalPosition();
+    //$scope.map = Map.render();
+
+    // Render the actual location, once it is found
+    Map.getRealLocation(function(position) {
+      Map.setLocalPosition(position);
+      $scope.position = position;
+      $scope.$apply(function() {
+        // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
+        $scope.loading = false;
+      });
+      $scope.map = Map.render(position);
+      callback();
+    });
+  };
+
+  $scope.initRoutes = function() {
     // Sets visibility of directions box (should likely be renamed for clarity)
     $scope.boxAppear = false;
 
-    // Initialize directions modules
-    var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
-    var directionsService = new google.maps.DirectionsService();
-
-    // Display route (what's its relation to calculateAndDisplayRoute?)
-    var displayRoute = function() {
-      var calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
-        directionsService.route({
-          origin: document.getElementById('start').value,
-          destination: document.getElementById('end').value,
-          travelMode: google.maps.TravelMode.WALKING
-        }, function(response, status) {
-          if (status === google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-          } else {
-            window.alert('Directions request failed due to ' + status);
-          }
-        });
-      };
-
-      $scope.$apply(function(){
+    var displayRouteHandler = function() {
+      $scope.$apply(function() {
         $scope.boxAppear = true;
       });
-      directionsDisplay.setMap($scope.map);
-      directionsDisplay.setPanel(document.getElementById("directions"));
-      calculateAndDisplayRoute(directionsService, directionsDisplay);
-    };
+      Directions.displayRoute($scope.map);
+    }
 
     // Register event listeners to display route whenever endpoints change
-    document.getElementById('start').addEventListener('change', displayRoute);
-    document.getElementById('end').addEventListener('change', displayRoute);
+    document.getElementById('start').addEventListener('change', displayRouteHandler);
+    document.getElementById('end').addEventListener('change', displayRouteHandler);
   };
 
-  $scope.setUpMarkers = function() {
-    $scope.allEvents;
-    $scope.allLocations;
-    $scope.postMarker = [];
+  $scope.initMarkers = function() {
+    $scope.allEvents = []; // not being utilized yet
+    $scope.allLocations = [];
+    $scope.markers = [];
 
-    // Not being utilized yet
-    $scope.findEvents();
+    $scope.findEvents(); // not being utilized yet
 
     // Populated with dummy data for now - should eventually get data from $scope.allEvents
     $scope.allLocations = [
@@ -138,81 +203,47 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     },    
     ];
 
-    var infowindow = new google.maps.InfoWindow({ maxWidth: 160 });
-    var postMarker;
-
-    // Adds marker to map (and returns the marker)
-    var addMarker = function(latitude, longitude, iconUrl) {
-      return new google.maps.Marker({
-        position: new google.maps.LatLng(latitude, longitude), 
-        animation: google.maps.Animation.DROP,
-        map: $scope.map,
-        icon: iconUrl
-      });
-    };
-
     // Add marker for user
-    addMarker($scope.position[0], $scope.position[1], USER_ICON_URL);
+    Markers.addUserMarker($scope.map, Map.getLocalPosition());
 
-    // Add clickable map marker for each location
-    for (var i = 0; i < $scope.allLocations.length; i++) {
-      var location = $scope.allLocations[i];
-      var marker = addMarker(location.latitude, location.longitude, EVENT_ICON_URL);
-      $scope.postMarker.push(marker);
-      
-      google.maps.event.addListener($scope.postMarker[i], 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent(
-            "<h4>" + $scope.allLocations[i].personname +
-            "</h4>" + $scope.allLocations[i].description + 
-            "<p>Will be there until " + $scope.allLocations[i].timeuntil + "</p>");
-          infowindow.open($scope.map, marker);
-        };
-      })($scope.postMarker[i], i));
-    }
-  };
-
-  $scope.initMap = function() {
-    $scope.loading = true;
-    
-    // Render a possibly-reasonable guess for the location
-    //$scope.setScopePosition($scope.getLocalPosition());
-    //$scope.renderMap();
-
-    // Render the actual location, once it is found
-    $scope.getRealLocation(function(position) {
-      $scope.setScopePosition(position);
-      $scope.setLocalPosition(position);
-      $scope.renderMap();
-      $scope.setUpRoutes();
-      $scope.setUpMarkers();
+    // Add event marker for each location
+    _.forEach($scope.allLocations, function(location) {
+      var marker = Markers.addEventMarker($scope.map, [ location.latitude, location.longitude ], location);
+      $scope.markers.push(marker);
     });
   };
 
   // Triggers click on marker from click on event in feed
   $scope.callMarker = function($index){
-    // console.log($scope.postMarker);
-    google.maps.event.trigger($scope.postMarker[$index], 'click', 'click');
+    var marker = $scope.markers[$index];
+    Markers.triggerClick(marker);
   };
 
   // Clears all markers from map
   $scope.clearMarkers = function() {
-    for (var i = 0; i < $scope.allLocations.length; i++) {
-       $scope.postMarker[i].setMap(null);
-    }
-  };
-
-  // Find events - not really being used
-  $scope.findEvents = function(){
-    $http.get('/events').success(function(data, status, headers, config) {
-      $scope.allEvents = data;
-    }).
-    error(function(data, status, headers, config) {
-      console.log('There was an error with your get request');
+    _.forEach($scope.markers, function(marker) {
+      Markers.removeFromMap(marker);
     });
   };
 
-  $scope.initMap();
+  $scope.findEvents = function(){ //not being utilized yet
+    // Version using raw $http
+    // $http.get('/events').success(function(data, status, headers, config) {
+    //   $scope.allEvents = data;
+    // }).
+    // error(function(data, status, headers, config) {
+    //   console.log('There was an error with your get request');
+    // });
+    HTTP.sendRequest('GET', '/events')
+    .then(function(response) {
+      $scope.allEvents = response.data;
+    });
+  };
+
+  $scope.initMap(function() { //finishes asynchronously
+    $scope.initRoutes();
+    $scope.initMarkers();
+  });
 
 
 });
