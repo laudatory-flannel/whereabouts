@@ -93,13 +93,15 @@ angular.module('greenfield.home', ['greenfield.services'])
     return addMarker(map, position, USER_ICON_URL);
   }
 
-  var addEventMarker = function(map, position, location) {
-    var marker = addMarker(map, position, EVENT_ICON_URL);
+  var addEventMarker = function(map, event) {
+    var latitude = event.location.coordinates[1];
+    var longitude = event.location.coordinates[0];
+    var marker = addMarker(map, [latitude, longitude], EVENT_ICON_URL);
     var clickHandler = function() {
       infoWindow.setContent(
-        "<h4>" + location.personname +
-        "</h4>" + location.description + 
-        "<p>Will be there until " + location.timeuntil + "</p>");
+        "<h4>" + "[Person name]" + //event.personname +
+        "</h4>" + event.description + 
+        "<p>Will be there until " + event.endedAt + "</p>");
       infoWindow.open(map, marker);
     };
     google.maps.event.addListener(marker, 'click', clickHandler);
@@ -171,33 +173,29 @@ angular.module('greenfield.home', ['greenfield.services'])
       id: 1,
       personname: "Greg Domorski",
       description: "I'm at Starbucks Bros!",
-      timeuntil: "8 p.m.",
-      latitude: 37.793686,
-      longitude: -122.401268
+      endedAt: "8 p.m.",
+      location: { coordinates: [ -122.401268, 37.793686 ] }
     },
     {
       id: 2,
       personname: "Max O'Connell",
       description: "I'm at SF GreenSpace HACKING! YEAH HACK REACTOR",
-      timeuntil: "10 p.m.",
-      latitude: 37.786710,
-      longitude: -122.400831
+      endedAt: "10 p.m.",
+      location: { coordinates: [ -122.400831, 37.786710 ] }
     },
     {
       id: 3,
       personname: "Gloria Ma",
       description: "I'm  hanging out at the Hyatt!! Come join me",
-      timeuntil: "8 p.m.",
-      latitude: 37.794301,
-      longitude: -122.39573
+      endedAt: "8 p.m.",
+      location: { coordinates: [ -122.39573, 37.794301 ] }
     },
     {
       id: 4,
       personname: "Rachel RoseFigura",
       description: "I'm at Starbucks Bros!",
-      timeuntil: "8 p.m.",
-      latitude: 37.784118,
-      longitude: -122.406435
+      endedAt: "8 p.m.",
+      location: { coordinates: [ -122.406435, 37.784118 ] }
     },    
     ];
 
@@ -205,8 +203,8 @@ angular.module('greenfield.home', ['greenfield.services'])
     Markers.addUserMarker($scope.map, Map.getLocalPosition());
 
     // Add event marker for each location
-    _.forEach($scope.allLocations, function(location) {
-      var marker = Markers.addEventMarker($scope.map, [ location.latitude, location.longitude ], location);
+    _.forEach($scope.allLocations, function(event) {
+      var marker = Markers.addEventMarker($scope.map, event);
       $scope.markers.push(marker);
     });
   };
@@ -242,12 +240,11 @@ angular.module('greenfield.home', ['greenfield.services'])
     _.forEach(events, function(event) {
       //if event is not already in $scope.allEvents
       if (_.pluck($scope.allEvents, '_id').indexOf(event._id) === -1) {
+        console.log('pushing new event', event);
         $scope.allEvents.push(event);
 
         //add marker for event
-        var latitude = event.location.coordinates[1];
-        var longitude = event.location.coordinates[0];
-        var marker = Markers.addEventMarker($scope.map, [ latitude, longitude ], event);
+        var marker = Markers.addEventMarker($scope.map, event);
         $scope.markers.push(marker);
       }
     });
