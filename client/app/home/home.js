@@ -133,21 +133,25 @@ angular.module('greenfield.home', ['greenfield.services'])
   $scope.initMap = function(callback) {
     $scope.loading = true; // boolean to determine whether to display loading gif
     
-    // Render a possibly-reasonable guess for the location
-    //$scope.position = Map.getLocalPosition();
-    //$scope.map = Map.render();
+    // Optional preliminary step for production
+    // Render last location saved on the computer, to minimize lag on page
+    $scope.position = Map.getLocalPosition();
+    $scope.loading = false;
+    $scope.map = Map.render($scope.position);
+    callback();
 
+    // Uncomment the below code for production
     // Render the actual location, once it is found
-    Map.getRealLocation(function(position) {
-      Map.setLocalPosition(position);
-      $scope.position = position;
-      $scope.$apply(function() {
-        // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
-        $scope.loading = false;
-      });
-      $scope.map = Map.render(position);
-      callback();
-    });
+    // Map.getRealLocation(function(position) {
+    //   Map.setLocalPosition(position);
+    //   $scope.position = position;
+    //   $scope.$apply(function() {
+    //     // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
+    //     $scope.loading = false;
+    //   });
+    //   $scope.map = Map.render(position);
+    //   callback();
+    // });
   };
 
   $scope.initRoutes = function() {
