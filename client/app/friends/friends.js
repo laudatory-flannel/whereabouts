@@ -11,6 +11,10 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.users = [];
 
   $scope.addFriend = function(friend) {
+
+    // if (friend._id === $scope.user._id) {
+    //   return;
+    // }
     Friends.modifyFriend($scope.user, friend, 'add')
     .then(function(data) {
       $scope.friends.push(friend._id);
