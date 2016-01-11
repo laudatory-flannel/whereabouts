@@ -2,31 +2,21 @@ var USER_ICON_URL = 'app/home/currentlocation.png';
 var EVENT_ICON_URL = 'app/home/peace.png';
 var DEFAULT_POSITION = [ 30, -120 ]; // random default location in Berkeley, CA
 
-var app = angular.module('greenfield.home', ['greenfield.services']);
-app.controller('HomeController', function($scope, localStorage, $http) {
-  $scope.map; // google map object
-  $scope.loading; // boolean for whether map is loading
-  $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
-
-  // Sets $scope position
-  $scope.setScopePosition = function(position) {
-    $scope.position[0] = position[0] || DEFAULT_POSITION[0];
-    $scope.position[1] = position[1] || DEFAULT_POSITION[1];
-  };
-  
+angular.module('greenfield.home', ['greenfield.services'])
+.factory('Map', function(localStorage) {
   // Gets/Sets position from localStorage
   // Allows for faster load of map, since using getRealLocation can take a few seconds 
-  $scope.getLocalPosition = function() {
+  var getLocalPosition = function() {
     return [ parseFloat(localStorage.get('flannel.latitude')),
              parseFloat(localStorage.get('flannel.longitude')) ];
   };
-  $scope.setLocalPosition = function (position){
+  var setLocalPosition = function (position){
     localStorage.set('flannel.latitude', position[0]);
     localStorage.set('flannel.longitude', position[1]);
   };
 
   // Gets actual position, passes to callback
-  $scope.getRealLocation = function(callback) {
+  var getRealLocation = function(callback) {
     var successCallback = function(positionObj) {
       // positionObj's format is native to navigator.geolocation.getCurrentPosition
       var position = [ positionObj.coords.latitude, positionObj.coords.longitude ];
@@ -39,14 +29,9 @@ app.controller('HomeController', function($scope, localStorage, $http) {
   };
 
   // Renders map in $('#map') DOM element, based on $scope position
-  $scope.renderMap = function() {
-    $scope.$apply(function() {
-      // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
-      $scope.loading = false;
-    });
-
-    $scope.map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: $scope.position[0], lng: $scope.position[1]},
+  var render = function(position) {
+    return new google.maps.Map(document.getElementById('map'), {
+      center: { lat: position[0], lng: position[1] },
       zoom: 14,
       minZoom: 14,
       maxZoom: 14,
@@ -55,6 +40,29 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       disableDefaultUI: true,
       styles: [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}]
     });
+  };
+
+  return {
+    getLocalPosition: getLocalPosition,
+    setLocalPosition: setLocalPosition,
+    getRealLocation: getRealLocation,
+    render: render
+  };
+})
+.factory('Markers', function() {
+  return {};
+})
+.factory('Directions', function() {
+  return {};
+})
+.controller('HomeController', function($scope, $http, Map, Markers, Directions) {
+  $scope.map; // google map object
+  $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
+
+  // Sets $scope position
+  $scope.setScopePosition = function(position) {
+    $scope.position[0] = position[0] || DEFAULT_POSITION[0];
+    $scope.position[1] = position[1] || DEFAULT_POSITION[1];
   };
 
   $scope.setUpRoutes = function() {
@@ -172,20 +180,24 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     }
   };
 
-  $scope.initMap = function() {
-    $scope.loading = true;
+  $scope.initMap = function(callback) {
+    $scope.loading = true; // boolean to determine whether to display loading gif
     
     // Render a possibly-reasonable guess for the location
-    //$scope.setScopePosition($scope.getLocalPosition());
-    //$scope.renderMap();
+    //$scope.setScopePosition(Map.getLocalPosition());
+    //Map.render();
 
     // Render the actual location, once it is found
-    $scope.getRealLocation(function(position) {
+    Map.getRealLocation(function(position) {
       $scope.setScopePosition(position);
-      $scope.setLocalPosition(position);
-      $scope.renderMap();
-      $scope.setUpRoutes();
-      $scope.setUpMarkers();
+      Map.setLocalPosition(position);
+
+      $scope.$apply(function() {
+        // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
+        $scope.loading = false;
+      });
+      $scope.map = Map.render($scope.position);
+      callback();
     });
   };
 
@@ -212,7 +224,10 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     });
   };
 
-  $scope.initMap();
+  $scope.initMap(function() { //finishes asynchronously
+    $scope.setUpRoutes();
+    $scope.setUpMarkers();
+  });
 
 
 });
