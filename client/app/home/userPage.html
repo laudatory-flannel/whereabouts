@@ -1,0 +1,21 @@
+<div ng-controller='UserPageController'>
+
+  <!--
+
+  - form with input for picture
+  - form input for about you
+  - form input for 'looking for'
+  - displays their username
+
+
+-->
+
+  <form >
+    Change your profile (enter a url): <input type="text" ng-model="img_url" /><br />
+    About you: <input type="text" ng-model="description" /><br />
+    <input type="button" ng-click="reset()" value="Reset" />
+    <input type="submit" ng-click="update(user)" value="Save" />
+  </form>
+
+
+</div>

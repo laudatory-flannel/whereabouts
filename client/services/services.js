@@ -119,7 +119,7 @@ angular.module('greenfield.services', [])
           } else {
             console.log('---failed facebook login:', response);
           }
-        });
+        }, {scope: 'user_friends'});
       }
     });
   };
@@ -144,7 +144,13 @@ angular.module('greenfield.services', [])
 
   var getUserData = function(successCallback) {
     FB.api('/me', function(response) {
-      //console.log('user info:', response);
+      console.log('user info:', response);
+      successCallback(response);
+    });
+  };
+
+  var getProfilePicture = function(successCallback) {
+    FB.api('/me/picture?width=256', function(response) {
       successCallback(response);
     });
   };
@@ -161,7 +167,8 @@ angular.module('greenfield.services', [])
   return {
     login: login,
     logout: logout,
-    getUserData: getUserData
+    getUserData: getUserData,
+    getProfilePicture: getProfilePicture,
   };
 })
 .factory('Auth', function($location, Facebook, HTTP, localStorage) {
@@ -173,21 +180,26 @@ angular.module('greenfield.services', [])
       console.log('attempting app login...');
       Facebook.login(function(loginResponse) {
         Facebook.getUserData(function(userDataResponse) {
-          var data = {
-            accessToken: loginResponse.authResponse.accessToken,
-            userName: userDataResponse.name
-          };
-          return HTTP.sendRequest('POST', '/auth', data)
-          .then(function(response) {
-            var token = response.data.token;
-            if (token) {
-              console.log('successful app login:', token);
-              localStorage.set('flannel.token', token);
-              $location.path('/home');
-            } else {
-              console.log('failed app login');
-            }
-            return response;
+          Facebook.getProfilePicture(function(profilePictureResponse) {
+            console.log(profilePictureResponse);
+            var data = {
+              accessToken: loginResponse.authResponse.accessToken,
+              userName: userDataResponse.name,
+              imageUrl: profilePictureResponse.data.url,
+              fbId: userDataResponse.id
+            };
+            return HTTP.sendRequest('POST', '/auth', data)
+            .then(function(response) {
+              var token = response.data.token;
+              if (token) {
+                console.log('successful app login:', token);
+                localStorage.set('flannel.token', token);
+                $location.path('/home');
+              } else {
+                console.log('failed app login');
+              }
+              return response;
+            });
           });
         });
       });
@@ -208,6 +220,8 @@ angular.module('greenfield.services', [])
   var isAuth = function() {
     return !!localStorage.get('flannel.token');
   }
+
+  window.fbLogout = logout;
 
   return {
     login: login,

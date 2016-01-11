@@ -8,6 +8,7 @@ var middleware = require('./middleware.js');
 var request = require('request');
 var FormData = require('form-data');
 var jwt = require('jwt-simple');
+var request = require('request');
 
 module.exports = function(app, express) {
 	// Allow app to parse request body (for POST requests)
@@ -87,41 +88,62 @@ module.exports = function(app, express) {
 	app.post('/auth', function(req, res){
 		var accessToken = req.body.accessToken;
 		var userName = req.body.userName;
+		var fbId = req.body.fbId;
+		var imageUrl = req.body.imageUrl;
 
 		if (!accessToken) {
 			console.log("no access token");
 			res.send(403); // Forbidden
 		}
-
+		console.log("1 FB auth?");
 		// Check if access token is valid by attempting to call Facebook api with it
 		var form = new FormData();
 		form.append('access_token', accessToken);
 		form.submit('https://graph.facebook.com/v2.5/me', function(err, fbRes) {
 			// If valid, find or create the user by name (can later adjust this to use fb id)
 			// and return the user as a jwt
+			console.log("FB auth?");
 			var result = '';
 			fbRes.on('data', function(chunk) {
 				result += chunk;
 			})
 			fbRes.on('end', function() {
 				var body = JSON.parse(result);
+				console.log(body);
 				if (body.success) { // Facebook returns this only if valid
-				console.log("valid facebook token");
-				helpers.getUserByName(userName, function(err, user) {
-					if (user) {
-						console.log("found existing user:", user);
-						res.json({ token: jwt.encode(user, JWT_SECRET) });
-					} else {
-						helpers.addUserToDb({ name: userName }, function(err, user) {
-							if (err) {
-								res.send(500);
-							} else {
-								console.log("created new user:", user);
-								res.json({ token: jwt.encode(user, JWT_SECRET) });
-							}
+
+
+					// Now get any of their friends from FB
+					// who are also using the app
+					request.get('https://graph.facebook.com/v2.5/' + fbId + '/friends?access_token=' + accessToken, function(err, getResponse, friendsResult) {
+						if (err) {
+							console.log("Error getting FB friends", err)
+						}
+
+						try {
+							friendsResult = JSON.parse(friendsResult);
+							var friends = friendsResult.data;
+						} catch (e) {
+							console.log("Bad friends result");
+						}
+
+						var userData = {fbId: fbId, name: userName, imageUrl: imageUrl};
+						console.log("FR: ", friends);
+						if (friends && friends.length > 0) {
+							userData.friends = friends;
+						}
+
+						console.log("User data is:");
+						console.log(userData);
+
+						console.log("valid facebook token");
+						helpers.getOrCreateUserByFbId(fbId, userData, function(err, user) {
+							console.log("found existing user:", user);
+							res.json({ token: jwt.encode(user, JWT_SECRET) });
 						});
-					}
-				});
+					});
+
+
 			// Else redirect
 			} else {
 				console.log("invalid facebook token");
