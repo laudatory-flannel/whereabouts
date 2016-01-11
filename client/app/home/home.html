@@ -1,9 +1,13 @@
 <div class="container-fluid">
+
+
 	<!-- Map Column -->
 	<div class="col-md-6 mapContainer">
+	<!-- Map -->
 		<div class="col-md-12" id="map">
 		</div>
-		<div class="col-md-12" id="floating-panel">
+	<!-- Map Direction Bar -->
+		<div class="col-md-12 text-center" id="floating-panel">
 			<span>Start: </span>
 			<select id="start">
 				<option value="{{position[0]}}, {{position[1]}}">
@@ -16,8 +20,42 @@
 			</select>
 		</div>
 	</div>
+
+
 	<!-- Nearby Events Column -->
-	<div class="col-md-3 nearbyEvents">Events Near Yo' Bitch Ass</div>
-	<div class="col-md-3 createEvent">Create Event Dropdown</div>
+	<div class="col-md-3 nearbyEvents">
+		<h2 class="columnHeader">Events near yo' bitch ass</h2>
+	<!-- Individual Events -->
+		<div class="event" ng-repeat="data in allLocations">
+			<li>{{data.personname}}</li>
+			<li>{{data.description}}</li>
+			<button ng-click="callMarker($index)">Get event info</button>
+		</div>
+	</div>
+
+
+	<!-- Create Event Column -->
+	<div class="col-md-3 createEvent">
+		<h2 class="columnHeader">Create Event Dropdown</h2>
+	<!-- Create Event Form -->
+		<form action="/events" method="POST">
+			<fieldset>
+				<label for="Title">Title:</label><br>
+                <input id="name" type="text"/><br>
+                <label for="location">Location: </label><br>
+                <input type="text" id="txtPlaces" name="location" placeholder="Enter a location" required/><br>
+                <label for="datetime1"> Starting Time: </label><br>
+                <input type="text" id="time" data-format="h:mm a" data-template="hh : mm a" name="datetime1" value="8:30 pm" required><br>
+                <label for="datetime2"> Ending Time: </label><br>
+                <input type="text" id="time2" data-format="h:mm a" data-template="hh : mm a" name="datetime2" value="8:30 pm" required><br>
+                <label for="Description">Event Description: </label><br>
+                <textarea id="Description"></textarea><br>
+                <input id="sendMail" type="submit"/>
+			</fieldset>
+		</form>
+		<div id="contactLink"></div>
 	</div>
 </div>
+
+
+
