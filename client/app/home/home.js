@@ -3,10 +3,12 @@ var DEFAULT_POSITION = [ 30, -120 ];
 
 var app = angular.module('greenfield.home', ['greenfield.services']);
 app.controller('HomeController', function($scope, localStorage, $http) {
-  $scope.boxAppear = false;
   $scope.map; // google map object
   $scope.loading; // boolean for whether map is loading
   $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
+  
+  //greg
+  $scope.boxAppear = false;
   $scope.allEvents;
   $scope.allLocations;
   $scope.postMarker = [];
@@ -28,15 +30,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     localStorage.set('flannel.longitude', position[1]);
   };
 
-  $scope.findEvents = function(){
-    $http.get('/events').success(function(data, status, headers, config) {
-      $scope.allEvents = data;
-    }).
-    error(function(data, status, headers, config) {
-      console.log('There was an error with your get request');
-    });
-  };
-
   // Gets actual position, passes to callback
   $scope.getRealLocation = function(callback) {
     var successCallback = function(positionObj) {
@@ -50,13 +43,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   };
 
-
-  $scope.callMarker = function(num){
-    console.log($scope.postMarker);
-      google.maps.event.trigger($scope.postMarker[num], 'click', 'click');
-
-  },
-
   // Renders map in $('#map') DOM element, based on $scope position
   $scope.renderMap = function() {
     $scope.$apply(function() {
@@ -64,8 +50,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       $scope.loading = false;
     });
 
-      var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
-      var directionsService = new google.maps.DirectionsService();
     $scope.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: $scope.position[0], lng: $scope.position[1]},
       zoom: 14,
@@ -77,15 +61,22 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       styles: [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}]
     });
 
+    //greg til end of renderMap()
 
+    // Initialize directions modules
+    var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
+    var directionsService = new google.maps.DirectionsService();
+
+    // Display route (what's its relation to calculateAndDisplayRoute?)
     var onChangeHandler = function() {
       $scope.$apply(function(){
         $scope.boxAppear = true;
        });
-    directionsDisplay.setMap($scope.map);
-    directionsDisplay.setPanel(document.getElementById("directions"));
+      directionsDisplay.setMap($scope.map);
+      directionsDisplay.setPanel(document.getElementById("directions"));
       $scope.calculateAndDisplayRoute(directionsService, directionsDisplay);
     };
+
 
     console.log('outside the func', $scope);
     document.getElementById('start').addEventListener('change', onChangeHandler);
@@ -173,12 +164,28 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     });
   };
 
+  // Find events - not really being used
+  $scope.findEvents = function(){
+    $http.get('/events').success(function(data, status, headers, config) {
+      $scope.allEvents = data;
+    }).
+    error(function(data, status, headers, config) {
+      console.log('There was an error with your get request');
+    });
+  };
+
+  // Markers
+  $scope.callMarker = function(num){
+    console.log($scope.postMarker);
+    google.maps.event.trigger($scope.postMarker[num], 'click', 'click');
+  };
   $scope.clearMarkers = function() {
     for (var i = 0; i < $scope.allLocations.length; i++) {
        $scope.postMarker[i].setMap(null);
     }
   };
 
+  // Map route
   $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
     directionsService.route({
       origin: document.getElementById('start').value,
