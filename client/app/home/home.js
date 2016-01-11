@@ -97,9 +97,19 @@ angular.module('greenfield.home', ['greenfield.services'])
     };
   };
 
+  var triggerClick = function(marker) {
+    google.maps.event.trigger(marker, 'click', 'click');
+  };
+
+  var removeFromMap = function(marker) {
+    marker.setMap(null);
+  };
+
   return {
     addMarker: addMarker,
-    getDisplayInfoHandler: getDisplayInfoHandler
+    getDisplayInfoHandler: getDisplayInfoHandler,
+    triggerClick: triggerClick,
+    removeFromMap: removeFromMap
   };
 })
 .controller('HomeController', function($scope, Map, Directions, Markers, HTTP) {
@@ -205,13 +215,14 @@ angular.module('greenfield.home', ['greenfield.services'])
 
   // Triggers click on marker from click on event in feed
   $scope.callMarker = function($index){
-    google.maps.event.trigger($scope.markers[$index], 'click', 'click');
+    var marker = $scope.markers[$index];
+    Markers.triggerClick(marker);
   };
 
   // Clears all markers from map
   $scope.clearMarkers = function() {
-    _.forEach($scope.markers, function(postMarker) {
-      postMarker.setMap(null);
+    _.forEach($scope.markers, function(marker) {
+      Markers.removeFromMap(marker);
     });
   };
 
