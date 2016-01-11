@@ -239,7 +239,7 @@ angular.module('greenfield.home', ['greenfield.services'])
       events = _.filter(events, function(event) {
         return event.isPublic ||
                event.userId === User.getId() ||
-               $scope.friends.indexOf(event.userId) !== -1;
+               _.pluck($scope.friends, '_id').indexOf(event.userId) !== -1;
       });
 
       callback(events);
