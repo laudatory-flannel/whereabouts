@@ -11,6 +11,7 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.users = [];
 
   $scope.addFriend = function(friend) {
+    $scope.search = null;
     Friends.modifyFriend($scope.user, friend, 'add')
     .then(function(data) {
       $scope.friends.push(friend._id);
