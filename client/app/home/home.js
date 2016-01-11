@@ -93,7 +93,7 @@ angular.module('greenfield.home', ['greenfield.services'])
   //adds marker to page
   var addUserMarker = function(map, position) {
     return addMarker(map, position, USER_ICON_URL);
-  }
+  };
 
 
   //adds event marker to page
@@ -267,7 +267,7 @@ angular.module('greenfield.home', ['greenfield.services'])
         $scope.markers.push(marker);
       }
     });
-  }
+  };
 
 
   //Get user's friends, to be able to filter events
