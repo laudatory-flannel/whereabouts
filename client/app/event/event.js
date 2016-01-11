@@ -2,36 +2,13 @@
 
 angular.module('greenfield.event', ['greenfield.services'])
 .controller('EventController', function($scope, $http, User) {
-
   $scope.title;
   $scope.description;
   $scope.user;
   $scope.endedAt;     
   $scope.locations;
-
-  // Initialize combodate drop-down menus in view
-  $(function(){
-    $('#time').combodate({
-      firstItem: 'name',
-      minuteStep: 1
-    }); 
-    $('#time2').combodate({
-      firstItem: 'name', 
-      minuteStep: 1
-    }); 
-
-
-  $("#contactLink").click(function(){
-      if ($("#contactForm").is(":hidden")){
-          $("#contactForm").slideDown("slow");
-      } else {
-          $("#contactForm").slideUp("slow");
-      }
-      
-  });
   
   $scope.sendForm = function(){
-
     var inputs = $scope.locations;
     //console.log($scope.title, $scope.endedAt, $scope.address, $scope.description);
 
@@ -52,12 +29,6 @@ angular.module('greenfield.event', ['greenfield.services'])
       console.log(response);
     });
   };
-
-  function closeForm(){
-      $("#messageSent").show("slow");
-      setTimeout('$("#messageSent").hide();$("#contactForm").slideUp("slow")', 2000);
-    }
-  });
 
   $scope.getAllPlaces = function(){
   // Initialize location autocomplete
