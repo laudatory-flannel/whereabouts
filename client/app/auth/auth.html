@@ -1,15 +1,24 @@
 <div class="auth" ng-controller="AuthController">
  	<!-- <h1>Authentication</h1> -->
-  <header class="primary-header container group">
-    <h1 class="logo">
-      Find your friends
-    </h1>
-  </header>
-  <div class="container group">
-    <button class="btn btn-alt" ng-click="login()">
-      Log in to Facebook
-      <!-- <img class="icon" src="img/facebookIcon.ico"> -->
-    </button>
-    <button class="btn btn-alt" ng-click="logout()">Log out</button>
+  <div id="over">
+    <header class="primary-header container group">
+      <h1 class="logo">
+        Find your friends
+      </h1>
+    </header>
+    <div class="container group">
+      <button class="btn btn-alt" ng-click="login()">
+        Log in to Facebook
+        <!-- <img class="icon" src="img/facebookIcon.ico"> -->
+      </button>
+      <button class="btn btn-alt" ng-click="logout()">Log out</button>
+    </div>
+  </div>
+
+  <div id="under">
+    <video autoplay loop muted poster="" id="video-bg">
+      <!-- <source src="video.webm" type="video/webm"> -->
+      <source src="img/frisbee.mp4" type="video/mp4">
+    </video>
   </div>
 </div>
