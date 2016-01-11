@@ -50,7 +50,7 @@ div.auth {
 /* ---- Home page ---- */
 
 div {
-  /*border: dotted 1px red;*/
+  border: dotted 1px red;
 }
 
 .container-fluid {
@@ -58,17 +58,26 @@ div {
   padding: 60px;
 }
 
-.map {
-  background-color: #ccc
+.mapContainer {
+  border: solid black 2px;
+  padding: 0px;
+  background-color: #ccc;
+}
+
+#map {
+  width: 100%;
+  height: 500px;
 }
 
 .nearbyEvents {
-  background-color: #b88
+  background-color: #b88;
 }
 
 .createEvent {
-  background-color: #66a
+  background-color: #66a;
 }
+
+
 /*
 #map {
   height: 500px;

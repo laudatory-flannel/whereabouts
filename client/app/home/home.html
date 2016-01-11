@@ -1,16 +1,23 @@
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-12" id="map">
-					CONTENT
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">Direction Bar</div>
-			</div>
+	<!-- Map Column -->
+	<div class="col-md-6 mapContainer">
+		<div class="col-md-12" id="map">
 		</div>
-		<div class="col-md-3 nearbyEvents">Events Near Yo' Bitch Ass</div>
-		<div class="col-md-3 createEvent">Create Event Dropdown</div>
+		<div class="col-md-12" id="floating-panel">
+			<span>Start: </span>
+			<select id="start">
+				<option value="{{position[0]}}, {{position[1]}}">
+					Your Location
+				</option>
+			</select>
+			<span>End: </span>
+			<select id="end">
+				<option ng-repeat="data in allLocations" value="{{data.latitude}}, {{data.longitude}}">{{data.personname}}</option>
+			</select>
+		</div>
+	</div>
+	<!-- Nearby Events Column -->
+	<div class="col-md-3 nearbyEvents">Events Near Yo' Bitch Ass</div>
+	<div class="col-md-3 createEvent">Create Event Dropdown</div>
 	</div>
 </div>
