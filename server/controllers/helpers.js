@@ -58,6 +58,16 @@ var utils = {
     });
   },
 
+    getOrCreateUserByFbId: function(fbId, user, cb) {
+      User.findOneAndUpdate({fbId: fbId}, user, {upsert: true, 'new': true}, function(err, user) {
+        if(err) {
+          console.log(err);
+          return cb(err);
+        }
+        return cb(null, user);
+      });
+  },
+
   // This should be re-usable if we create a 'delete friend' method later on. 'Method' can be changed $push ect...
 
   // updateUserFriends: function (id, friendId, method, cb) {
