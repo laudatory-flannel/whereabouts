@@ -215,7 +215,8 @@ angular.module('greenfield.home', ['greenfield.services'])
     Markers.triggerClick(marker);
   };
 
-  // Clears all markers from map
+  // Clears all markers from map - only used for testing purposes now
+  // Eventually may be utilized for removing expired events
   $scope.clearMarkers = function() {
     _.forEach($scope.markers, function(marker) {
       Markers.removeFromMap(marker);
@@ -225,20 +226,15 @@ angular.module('greenfield.home', ['greenfield.services'])
   $scope.getEvents = function(callback){
     HTTP.sendRequest('GET', '/events')
     .then(function(response) {
-      //console.log("old", $scope.allEvents)
       var events = response.data;
       callback(events);
-      //$scope.allEvents = response.data;
-      //$scope.allEvents = $scope.allEvents.concat(response.data);
     });
   };
 
+  // Updates $scope.allEvents with new events and adds markers accordingly
+  // Currently never removes events, even if inactive
   $scope.updateEvents = function(events) {
-    //$scope.clearMarkers();
-
-    // Add event marker for each NEW location
     _.forEach(events, function(event) {
-      //if event is not already in $scope.allEvents
       if (_.pluck($scope.allEvents, '_id').indexOf(event._id) === -1) {
         console.log('pushing new event', event);
         $scope.allEvents.push(event);
@@ -257,8 +253,6 @@ angular.module('greenfield.home', ['greenfield.services'])
       $scope.getEvents(function(events) {
         $scope.updateEvents(events);
       });
-      //console.log('All the events',  $scope.allEvents);
-      //$scope.updateEventMarkers();
     }, 1000);
   });
 });
