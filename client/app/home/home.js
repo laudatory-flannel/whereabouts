@@ -235,9 +235,11 @@ angular.module('greenfield.home', ['greenfield.services'])
       var events = response.data;
 
       //client-side filtering for events a user can see
-      //if isPublic OR userId is in user.friends
+      //if isPublic OR is user's own even OR userId is in user.friends
       events = _.filter(events, function(event) {
-        return event.isPublic || $scope.friends.indexOf(event.userId) !== -1;
+        return event.isPublic ||
+               event.userId === User.getId() ||
+               $scope.friends.indexOf(event.userId) !== -1;
       });
 
       callback(events);
