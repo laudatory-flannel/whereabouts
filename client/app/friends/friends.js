@@ -6,6 +6,51 @@ var DEFAULT_USER = {
 };
 
 angular.module('greenfield.friends', ['greenfield.services'])
+.factory('Friends', function ($http) {
+
+  var modifyFriend = function (user, friend, action) {
+    console.log('modifying friend', user._id)
+    data = {
+      friend: friend,
+      action: action
+    }
+    return $http({
+      method: 'POST',
+      url: '/users/' + user._id + '/friends',
+      data: data
+    })
+    .then(function (resp) {
+      return resp;
+    });
+  };
+
+  var getAllFriends = function (input) {
+    return $http({
+      method: 'GET',
+      url: '/users/' + input + '/friends',
+    })
+    .then(function (resp) {
+      return resp;
+    });
+  };
+
+  var getAllUsers = function (input) {
+
+    return $http({
+      method: 'GET',
+      url: '/users',
+    })
+    .then(function (resp) {
+      return resp;
+    });
+  };
+
+  return { 
+    modifyFriend: modifyFriend,
+    getAllFriends: getAllFriends,
+    getAllUsers: getAllUsers
+  };
+})
 .controller('FriendsController', function ($scope, localStorage, HTTP, Friends) {
   $scope.user = localStorage.get('flannel.user') || DEFAULT_USER;
   $scope.friends = [];

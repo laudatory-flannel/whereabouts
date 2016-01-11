@@ -38,51 +38,6 @@ angular.module('greenfield.services', [])
     sendRequest: sendRequest
   };
 })
-.factory('Friends', function ($http) {
-
-  var modifyFriend = function (user, friend, action) {
-    console.log('modifying friend', user._id)
-    data = {
-      friend: friend,
-      action: action
-    }
-    return $http({
-      method: 'POST',
-      url: '/users/' + user._id + '/friends',
-      data: data
-    })
-    .then(function (resp) {
-      return resp;
-    });
-  };
-
-  var getAllFriends = function (input) {
-    return $http({
-      method: 'GET',
-      url: '/users/' + input + '/friends',
-    })
-    .then(function (resp) {
-      return resp;
-    });
-  };
-
-  var getAllUsers = function (input) {
-
-    return $http({
-      method: 'GET',
-      url: '/users',
-    })
-    .then(function (resp) {
-      return resp;
-    });
-  };
-
-  return { 
-    modifyFriend: modifyFriend,
-    getAllFriends: getAllFriends,
-    getAllUsers: getAllUsers
-  };
-})
 // Provides Facebook authentication-related functionality
 .factory('Facebook', function() {
   // Initializes Facebook api caller (boilerplate code provided directly by Facebook)
