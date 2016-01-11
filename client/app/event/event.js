@@ -1,3 +1,5 @@
+// MARKED FOR DELETION
+
 angular.module('greenfield.event', [])
 .controller('EventController', function($scope) {
   // Initialize combodate drop-down menus in view
@@ -24,9 +26,7 @@ angular.module('greenfield.event', [])
   function closeForm(){
       $("#messageSent").show("slow");
       setTimeout('$("#messageSent").hide();$("#contactForm").slideUp("slow")', 2000);
- }
-
-
+    }
   });
 
 
