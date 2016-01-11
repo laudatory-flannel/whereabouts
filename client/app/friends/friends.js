@@ -34,7 +34,13 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.deleteFriend = function(friend) {
    Friends.modifyFriend($scope.user,friend, 'delete')
    .then(function(data) {
-     // delete friend id from $scope.
+    console.log('scope.friends', $scope.friends, 'friend', friend)
+     for (var i = 0; i < $scope.friends.length; i++) {
+      if ($scope.friends[i] === friend) {
+        console.log('updating scope.firends')
+        $scope.friends.splice(i, 1);
+      }
+     }
    });
   };
 
