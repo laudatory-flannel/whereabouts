@@ -179,28 +179,20 @@ angular.module('greenfield.services', [])
     } else {
       console.log('attempting app login...');
       Facebook.login(function(loginResponse) {
-        Facebook.getUserData(function(userDataResponse) {
-          Facebook.getProfilePicture(function(profilePictureResponse) {
-            console.log(profilePictureResponse);
-            var data = {
-              accessToken: loginResponse.authResponse.accessToken,
-              userName: userDataResponse.name,
-              imageUrl: profilePictureResponse.data.url,
-              fbId: userDataResponse.id
-            };
-            return HTTP.sendRequest('POST', '/auth', data)
-            .then(function(response) {
-              var token = response.data.token;
-              if (token) {
-                console.log('successful app login:', token);
-                localStorage.set('flannel.token', token);
-                $location.path('/home');
-              } else {
-                console.log('failed app login');
-              }
-              return response;
-            });
-          });
+        var data = {
+          accessToken: loginResponse.authResponse.accessToken
+        };
+        return HTTP.sendRequest('POST', '/auth', data)
+        .then(function(response) {
+          var token = response.data.token;
+          if (token) {
+            console.log('successful app login:', token);
+            localStorage.set('flannel.token', token);
+            $location.path('/home');
+          } else {
+            console.log('failed app login');
+          }
+          return response;
         });
       });
     }
