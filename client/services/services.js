@@ -38,51 +38,6 @@ angular.module('greenfield.services', [])
     sendRequest: sendRequest
   };
 })
-.factory('Friends', function ($http) {
-
-  var modifyFriend = function (user, friend, action) {
-    console.log('modifying friend', user._id)
-    data = {
-      friend: friend,
-      action: action
-    }
-    return $http({
-      method: 'POST',
-      url: '/users/' + user._id + '/friends',
-      data: data
-    })
-    .then(function (resp) {
-      return resp;
-    });
-  };
-
-  var getAllFriends = function (input) {
-    return $http({
-      method: 'GET',
-      url: '/users/' + input + '/friends',
-    })
-    .then(function (resp) {
-      return resp;
-    });
-  };
-
-  var getAllUsers = function (input) {
-
-    return $http({
-      method: 'GET',
-      url: '/users',
-    })
-    .then(function (resp) {
-      return resp;
-    });
-  };
-
-  return { 
-    modifyFriend: modifyFriend,
-    getAllFriends: getAllFriends,
-    getAllUsers: getAllUsers
-  };
-})
 // Provides Facebook authentication-related functionality
 .factory('Facebook', function() {
   // Initializes Facebook api caller (boilerplate code provided directly by Facebook)
@@ -185,9 +140,16 @@ angular.module('greenfield.services', [])
         return HTTP.sendRequest('POST', '/auth', data)
         .then(function(response) {
           var token = response.data.token;
+          // should not be necessary after full JWT integration
+          var _id = response.data._id;
+          var name = response.data.name;
           if (token) {
             console.log('successful app login:', token);
             localStorage.set('flannel.token', token);
+            //should not be necessary after full JWT integration
+            console.log('_id:', _id, ', name:', name);
+            localStorage.set('flannel._id', _id);
+            localStorage.set('flannel.name', name);
             $location.path('/home');
           } else {
             console.log('failed app login');
@@ -201,6 +163,9 @@ angular.module('greenfield.services', [])
   var logout = function() {
     if (isAuth()) {
       localStorage.remove('flannel.token');
+      //should not be necessary after full JWT integration
+      localStorage.remove('flannel._id');
+      localStorage.remove('flannel.name');
       $location.path('/auth');
       Facebook.logout(function() {});
       console.log('logged out of app');

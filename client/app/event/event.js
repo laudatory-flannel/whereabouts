@@ -1,7 +1,7 @@
 // MARKED FOR DELETION
 
-angular.module('greenfield.event', [])
-.controller('EventController', function($scope, $http) {
+angular.module('greenfield.event', ['greenfield.services'])
+.controller('EventController', function($scope, $http, localStorage) {
 
   $scope.title;
   $scope.description;
@@ -36,6 +36,7 @@ angular.module('greenfield.event', [])
     //console.log($scope.title, $scope.endedAt, $scope.address, $scope.description);
 
     var data = {
+      user: localStorage.get('flannel.name'),
       title: $scope.title,
       description: $scope.description,
       active: true,

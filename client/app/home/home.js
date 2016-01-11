@@ -99,7 +99,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     var marker = addMarker(map, [latitude, longitude], EVENT_ICON_URL);
     var clickHandler = function() {
       infoWindow.setContent(
-        "<h4>" + "[Person name]" + //event.personname +
+        "<h4>" + event.user +
         "</h4>" + event.description + 
         "<p>Will be there until " + event.endedAt + "</p>");
       infoWindow.open(map, marker);
@@ -174,28 +174,28 @@ angular.module('greenfield.home', ['greenfield.services'])
     $scope.allEvents = [
     {
       id: 1,
-      personname: "Greg Domorski",
+      user: "Greg Domorski",
       description: "I'm at Starbucks Bros!",
       endedAt: "8 p.m.",
       location: { coordinates: [ -122.401268, 37.793686 ] }
     },
     {
       id: 2,
-      personname: "Max O'Connell",
+      user: "Max O'Connell",
       description: "I'm at SF GreenSpace HACKING! YEAH HACK REACTOR",
       endedAt: "10 p.m.",
       location: { coordinates: [ -122.400831, 37.786710 ] }
     },
     {
       id: 3,
-      personname: "Gloria Ma",
+      user: "Gloria Ma",
       description: "I'm  hanging out at the Hyatt!! Come join me",
       endedAt: "8 p.m.",
       location: { coordinates: [ -122.39573, 37.794301 ] }
     },
     {
       id: 4,
-      personname: "Rachel RoseFigura",
+      user: "Rachel RoseFigura",
       description: "I'm at Starbucks Bros!",
       endedAt: "8 p.m.",
       location: { coordinates: [ -122.406435, 37.784118 ] }
