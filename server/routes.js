@@ -12,7 +12,7 @@ var request = require('request');
 
 module.exports = function(app, express) {
 	// Allow app to parse request body (for POST requests)
-  app.use(bodyParser.urlencoded({extended: true})); // unsure if necessary
+  app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
 
   // For debugging purposes
@@ -26,7 +26,8 @@ module.exports = function(app, express) {
 	// app.use('/users', middleware.authenticate);
 
 	// ---- GET REQUESTS ----
-	// Get events
+
+	// Get events (expires inactive events and returns all active events)
 	app.get('/events', function(req, res){
 		helpers.expireEvents(helpers.getActiveEvents(function(err, data){
 			if (err) {
@@ -37,7 +38,7 @@ module.exports = function(app, express) {
 		}));
 	});
 
-	// Get users
+	// Get users (returns all users)
 	app.get('/users', function(req, res){
 		console.log('getting users');
 		helpers.getUsers(function(err, data){
@@ -49,7 +50,7 @@ module.exports = function(app, express) {
 		});
 	});
 
-	// Get event by id
+	// Get event by id 
 	app.get('/events/:id', function(req, res){
 		helpers.getEventById(req.params.id, function(err, data) {
 			if (err) {
@@ -72,18 +73,8 @@ module.exports = function(app, express) {
 		})
 	});
 
-	// Get users' friends array
-	// app.get('/users/:name/friends', function(req, res){
-	// 	helpers.getUserByName(req.params.name, function(err, data) {
-	// 		if (err) {
-	// 			res.send(500);
-	// 		} else {
-	// 			data === null ? res.json({message: "Error: User not found."}) : res.json(data.friends);
-	// 		}
-	// 	})
-	// });
-
 	// ---- POST REQUESTS ----
+
 	//Logging in/authentication
 	app.post('/auth', function(req, res){
 		var accessToken = req.body.accessToken;
@@ -100,6 +91,7 @@ module.exports = function(app, express) {
 				return res.send(500);
 			}
 
+			// parses user fb data into object for insertion into database
 			try {
 				fbResult = JSON.parse(fbResult);
 				var userData = {
@@ -113,11 +105,7 @@ module.exports = function(app, express) {
 				return res.send(500);
 			}
 
-
-			console.log("User data is:");
-			console.log(userData);
-
-			console.log("valid facebook token");
+			// either returns an existing user or creates a new user if no user with that Facebook ID exists
 			helpers.getOrCreateUserByFbId(userData.fbId, userData, function(err, user) {
 				console.log("found existing user:", user);
 				res.json({ token: jwt.encode(user, JWT_SECRET) });
@@ -127,10 +115,8 @@ module.exports = function(app, express) {
 
 	});
 
-	//Add new friend to user's friends.
-
+	//Add new friend to user's friends by user ID
 	app.post('/users/:id/friends', function(req, res) {
-		console.log('modifying friend routes', req.params.id)
 		helpers.updateUserFriends({_id: req.params.id}, req.body.friend, req.body.action, function (err, data) {
 			if (err) {
 				res.send(500);
@@ -141,24 +127,16 @@ module.exports = function(app, express) {
 		});
 	});
 
-	// app.post('/users/:name/friends', function(req, res) {
-	// 	console.log('friend obj?',req.body.friend)
-	// 	helpers.updateUserFriends({name: req.params.name}, req.body.friend, req.body.action, function (err, data) {
-	// 		if (err) {
-	// 			res.send(500);
-	// 		} else {
-	// 			res.json(data);
-	// 		}
-	// 	});
-	// });
-
+	//Post to check authentication
 	app.post('/checkAuth', function(req, res, next) {
 		var token = req.body.token;
 		if (!token) {
 			next(new Error('No token'));
 		}
 		var user = jwt.decode(token, JWT_SECRET);
-		helpers.getUserByName(user.name, function(err, user) {
+
+		//Checks existance of user in the database and return appropriate status code
+		helpers.getUserById(user.id, function(err, user) {
 			if (err) {
 				res.send(500);
 			} else if (user) {

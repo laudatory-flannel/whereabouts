@@ -28,6 +28,8 @@
 
 ## Detailed Workflow
 
+See [GIT-WORKFLOW.md](GIT-WORKFLOW.md) for detailed workflow guidelines.
+
 ### Fork the repo
 
 Use github’s interface to make a fork of the repo, then add that repo as an upstream remote:

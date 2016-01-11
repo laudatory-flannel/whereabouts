@@ -8,13 +8,14 @@ var EventSchema = new mongoose.Schema({
  createdAt: { type: Date, default: new Date(Date.now()) },
  endedAt: { type: Date, default: new Date(Date.now()) },
  active: Boolean,
+ // More info on location data types http://cannoneyed.github.io/geojson/
  location: {
     type: { 
       type: String,
       default: 'Point'
     }, 
     coordinates: [Number]
-  } // http://cannoneyed.github.io/geojson/
+  } 
 });
 
 EventSchema.index({ location : '2dsphere' });
