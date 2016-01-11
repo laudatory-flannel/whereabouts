@@ -249,78 +249,48 @@ angular.module('greenfield.home', ['greenfield.services'])
     //greg code
     setInterval(function(){
 
-    $scope.findEvents();
-    console.log('All the events',  $scope.allEvents);
+      $scope.findEvents(); // updates allEvents
+      console.log('All the events',  $scope.allEvents);
 
-    // var allLocations = [
-    // {
-    //   id: 1,
-    //   personname: "Greg Domorski",
-    //   description: "I'm at Starbucks Bros!",
-    //   timeuntil: "8 p.m.",
-    //   latitude: 37.793686,
-    //   longitude: -122.401268
-    // },
-    // {
-    //   id: 2,
-    //   personname: "Max O'Connell",
-    //   description: "I'm at SF GreenSpace HACKING! YEAH HACK REACTOR",
-    //   timeuntil: "10 p.m.",
-    //   latitude: 37.786710,
-    //   longitude: -122.400831
-    // },
-    // {
-    //   id: 3,
-    //   personname: "Gloria Ma",
-    //   description: "I'm  hanging out at the Hyatt!! Come join me",
-    //   timeuntil: "8 p.m.",
-    //   latitude: 37.794301,
-    //   longitude: -122.39573
-    // },
-    // {
-    //   id: 4,
-    //   personname: "Rachel RoseFigura",
-    //   description: "I'm at Starbucks Bros!",
-    //   timeuntil: "8 p.m.",
-    //   latitude: 37.784118,
-    //   longitude: -122.406435
-    // },    
-    // ];
+      $scope.clearMarkers();
+      // Add event marker for each location
+      _.forEach($scope.allEvents, function(event) {
+        var latitude = event.location.coordinates[1];
+        var longitude = event.location.coordinates[0];
+        var marker = Markers.addEventMarker($scope.map, [ latitude, longitude ], event);
+        $scope.markers.push(marker);
+      });
+      //var infowindow = new google.maps.InfoWindow({maxWidth: 160});
+      // var postMarker;
 
-    // $scope.allLocations = allLocations;
+      // if ($scope.allEvents.length){
+      //   var alltheEvents = $scope.allEvents;
 
+      //   for (var i = 0; i < alltheEvents.length; i++) {  
+      //     $scope.postMarker.push(new google.maps.Marker({
+      //       position: new google.maps.LatLng(alltheEvents[i].location.coordinates[1], alltheEvents[i].location.coordinates[0]), 
+      //       animation: google.maps.Animation.DROP,
+      //       map: $scope.map,
+      //       icon: 'app/home/peace.png'
+      //     }));
+          
 
-      var infowindow = new google.maps.InfoWindow({maxWidth: 160});
-      var postMarker;
-
-    if($scope.allEvents.length){
-      var alltheEvents = $scope.allEvents;
-
-      for (var i = 0; i < alltheEvents.length; i++) {  
-        $scope.postMarker.push(new google.maps.Marker({
-          position: new google.maps.LatLng(alltheEvents[i].location.coordinates[1], alltheEvents[i].location.coordinates[0]), 
-          animation: google.maps.Animation.DROP,
-          map: $scope.map,
-          icon: 'app/home/peace.png'
-        }));
-        
-
-        google.maps.event.addListener($scope.postMarker[i], 'click', (function(postMarker, i) {
-          return function() {
-            infowindow.setContent("<h4>" + "Greg Domorski" + "</h4>" + alltheEvents[i].description + "<p>Will be there until " + alltheEvents[i].endedAt + "</p>");
-            infowindow.open($scope.map, postMarker);
-          };
-        })($scope.postMarker[i], i));
-      }
-    }
+      //     google.maps.event.addListener($scope.postMarker[i], 'click', (function(postMarker, i) {
+      //       return function() {
+      //         infowindow.setContent("<h4>" + "Greg Domorski" + "</h4>" + alltheEvents[i].description + "<p>Will be there until " + alltheEvents[i].endedAt + "</p>");
+      //         infowindow.open($scope.map, postMarker);
+      //       };
+      //     })($scope.postMarker[i], i));
+      //   }
+      // }
 
     }, 1000);
 
-    var youAreHere = new google.maps.Marker({
-        position: new google.maps.LatLng($scope.position[0], $scope.position[1]), 
-        map: $scope.map,
-        icon: 'app/home/currentlocation.png'
-      });
+    // var youAreHere = new google.maps.Marker({
+    //     position: new google.maps.LatLng($scope.position[0], $scope.position[1]), 
+    //     map: $scope.map,
+    //     icon: 'app/home/currentlocation.png'
+    //   });
     //end greg code
 
   });
