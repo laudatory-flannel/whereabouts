@@ -5,7 +5,7 @@ var EventSchema = new mongoose.Schema({
  title: String,
  description: String,
  user: String, // just the user's name, at least for now (easier to show it in view)
- userID: String;
+ userID: String,
  createdAt: { type: Date, default: new Date(Date.now()) },
  endedAt: { type: Date, default: new Date(Date.now()) },
  active: Boolean,
