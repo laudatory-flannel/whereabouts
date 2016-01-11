@@ -161,12 +161,11 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 
   $scope.initMarkers = function() {
-    $scope.allEvents = [];
+    $scope.allEvents = []; // not being utilized yet
     $scope.allLocations = [];
     $scope.markers = [];
 
-    // Not being utilized yet
-    $scope.findEvents();
+    $scope.findEvents(); // not being utilized yet
 
     // Populated with dummy data for now - should eventually get data from $scope.allEvents
     $scope.allLocations = [
@@ -207,8 +206,8 @@ angular.module('greenfield.home', ['greenfield.services'])
     // Add marker for user
     Markers.addUserMarker($scope.map, Map.getLocalPosition());
 
-    // Add clickable map marker for each location
-    _.forEach($scope.allLocations, function(location, i) {
+    // Add event marker for each location
+    _.forEach($scope.allLocations, function(location) {
       var marker = Markers.addEventMarker($scope.map, [ location.latitude, location.longitude ], location);
       $scope.markers.push(marker);
     });
@@ -227,8 +226,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   };
 
-  // Find events - not really being used
-  $scope.findEvents = function(){
+  $scope.findEvents = function(){ //not being utilized yet
     // Version using raw $http
     // $http.get('/events').success(function(data, status, headers, config) {
     //   $scope.allEvents = data;
