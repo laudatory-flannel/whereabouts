@@ -76,7 +76,19 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 })
 .factory('Markers', function() {
-  return {};
+  // Adds marker to map (and returns the marker)
+  var addMarker = function(map, position, iconUrl) {
+    return new google.maps.Marker({
+      position: new google.maps.LatLng(position[0], position[1]), 
+      animation: google.maps.Animation.DROP,
+      map: map,
+      icon: iconUrl
+    });
+  };
+
+  return {
+    addMarker: addMarker
+  };
 })
 .controller('HomeController', function($scope, Map, Directions, Markers, HTTP) {
   $scope.map; // google map object
@@ -164,23 +176,13 @@ angular.module('greenfield.home', ['greenfield.services'])
     var infowindow = new google.maps.InfoWindow({ maxWidth: 160 });
     var postMarker;
 
-    // Adds marker to map (and returns the marker)
-    var addMarker = function(position, iconUrl) {
-      return new google.maps.Marker({
-        position: new google.maps.LatLng(position[0], position[1]), 
-        animation: google.maps.Animation.DROP,
-        map: $scope.map,
-        icon: iconUrl
-      });
-    };
-
     // Add marker for user
-    addMarker(Map.getLocalPosition(), USER_ICON_URL);
+    Markers.addMarker($scope.map, Map.getLocalPosition(), USER_ICON_URL);
 
     // Add clickable map marker for each location
     for (var i = 0; i < $scope.allLocations.length; i++) {
       var location = $scope.allLocations[i];
-      var marker = addMarker([ location.latitude, location.longitude ], EVENT_ICON_URL);
+      var marker = Markers.addMarker($scope.map, [ location.latitude, location.longitude ], EVENT_ICON_URL);
       $scope.postMarker.push(marker);
       
       google.maps.event.addListener($scope.postMarker[i], 'click', (function(marker, i) {
