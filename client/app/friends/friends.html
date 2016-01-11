@@ -1,11 +1,11 @@
 <div ng-controller='FriendsController'>
-
   <!-- Add friend -->
   <label>Search Greenfield: <input type="text" ng-model="search"></label>
   <form name="searchFriends" ng-show="(filteredUsers = (users | filter:search)) && search.length >= 2">
     <table>  
       <tr ng-repeat="person in filteredUsers">
-        <td ng-click="filteredUsers=''; addFriend(person)">{{person.name}}</td>
+        <td class='col1'><img class='friendPreview' ng-src="{{person.imageUrl}}"></td>
+        <td class='friendPreviewName' ng-click="filteredUsers=''; addFriend(person)">{{person.name}}</td>
       </tr>
     </table>
     <!-- <input type="submit" ng-click="update(user)" value="Save" /> -->
