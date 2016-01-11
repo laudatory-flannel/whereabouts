@@ -1,12 +1,9 @@
-// .controller('HomeController', function ($scope, $window, $location, Services) {
-   
-// });
-
 // random default location in Berkeley, CA
 var DEFAULT_POSITION = [ 30, -120 ];
 
 var app = angular.module('greenfield.home', ['greenfield.services']);
 app.controller('HomeController', function($scope, localStorage, $http) {
+  $scope.boxAppear = false;
   $scope.map; // google map object
   $scope.loading; // boolean for whether map is loading
   $scope.position = [ null, null ]; // 2-tuple of [ latitude, longitude ]
@@ -67,8 +64,8 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       $scope.loading = false;
     });
 
-    var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
-    var directionsService = new google.maps.DirectionsService();
+      var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
+      var directionsService = new google.maps.DirectionsService();
     $scope.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: $scope.position[0], lng: $scope.position[1]},
       zoom: 14,
@@ -80,17 +77,21 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       styles: [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}]
     });
 
-    directionsDisplay.setMap($scope.map);
-
-    directionsDisplay.setPanel(document.getElementById("directions"));
 
     var onChangeHandler = function() {
+      $scope.$apply(function(){
+        $scope.boxAppear = true;
+       });
+    directionsDisplay.setMap($scope.map);
+    directionsDisplay.setPanel(document.getElementById("directions"));
       $scope.calculateAndDisplayRoute(directionsService, directionsDisplay);
     };
+
+    console.log('outside the func', $scope);
     document.getElementById('start').addEventListener('change', onChangeHandler);
     document.getElementById('end').addEventListener('change', onChangeHandler);
 
-      $scope.findEvents();
+    $scope.findEvents();
 
     var allLocations = [
     {
@@ -127,12 +128,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     },    
     ];
 
-    var myLocations = [
-      ['<h4> My People</h4>', 37.793686, -122.401268],
-      ['<h4>My People</h4>', 37.789911, -122.402327],
-    ];
-
-
     $scope.allLocations = allLocations;
 
     var infowindow = new google.maps.InfoWindow({maxWidth: 160});
@@ -161,9 +156,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
         map: $scope.map,
         icon: 'app/home/currentlocation.png'
       })
-
-    
-
   };
 
   $scope.initMap = function() {
@@ -181,6 +173,12 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     });
   };
 
+  $scope.clearMarkers = function() {
+    for (var i = 0; i < $scope.allLocations.length; i++) {
+       $scope.postMarker[i].setMap(null);
+    }
+  };
+
   $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
     directionsService.route({
       origin: document.getElementById('start').value,
@@ -193,7 +191,7 @@ app.controller('HomeController', function($scope, localStorage, $http) {
         window.alert('Directions request failed due to ' + status);
       }
     });
-  }
+  };
 
   $scope.initMap();
 
