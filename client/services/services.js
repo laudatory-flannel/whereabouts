@@ -38,10 +38,10 @@ angular.module('greenfield.services', [])
 })
 .factory('Friends', function ($http) {
 
-  var modifyFriend = function (user, input, action) {
-    console.log('post request to add friend', action)
+  var modifyFriend = function (user, friend, action) {
+    console.log('post request to add friend', friend)
     data = {
-      friend: input,
+      friend: friend,
       action: action
     }
     return $http({

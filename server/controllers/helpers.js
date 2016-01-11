@@ -72,7 +72,7 @@ var utils = {
   // },
 
     updateUserFriends: function (name, friend, method, cb) {
-      console.log('HERRRREEEE',name, friend, method)
+      console.log('inserting friend into db', friend)
       if (method === 'add') {
         var actionQuery = {'$addToSet': {friends: friend}};
       } else {
