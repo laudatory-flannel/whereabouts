@@ -137,10 +137,11 @@ var utils = {
 
     Event.update(query, data, {multi: true}, function(err, results) { // may need upsert or new options
       if (err) {
-        console.log(err);
-        return cb(err);
-      } 
-      return cb(null, results);
+        //console.log(err);
+        //return cb(err);
+      }
+      //console.log(results);
+      //return cb(null, results);
     });
 
   }
