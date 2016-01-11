@@ -35,8 +35,8 @@ angular.module('greenfield.home', ['greenfield.services'])
     return new google.maps.Map(document.getElementById('map'), {
       center: { lat: position[0], lng: position[1] },
       zoom: 14,
-      // minZoom: 14,
-      // maxZoom: 14,
+      minZoom: 14,
+      maxZoom: 14,
       // draggable: false,
       // scrollwheel: false,
       disableDefaultUI: true,
@@ -89,10 +89,14 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   };
 
+
+  //adds marker to page
   var addUserMarker = function(map, position) {
     return addMarker(map, position, USER_ICON_URL);
   }
 
+
+  //adds event marker to page
   var addEventMarker = function(map, event) {
     var latitude = event.location.coordinates[1];
     var longitude = event.location.coordinates[0];
@@ -229,6 +233,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   };
 
+  //gets the events from the server
   $scope.getEvents = function(callback){
     HTTP.sendRequest('GET', '/events')
     .then(function(response) {
@@ -264,6 +269,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   }
 
+
   //Get user's friends, to be able to filter events
   //Assumes friends do not change during their visit to the page
   User.getFriends()
@@ -278,6 +284,17 @@ angular.module('greenfield.home', ['greenfield.services'])
         });
       }, 1000);
     });
+
+  //initial 
+  $scope.initMap(function() { //finishes asynchronously
+    $scope.initRoutes();
+    $scope.initMarkers();
+    setInterval(function(){
+      $scope.getEvents(function(events) {
+        $scope.updateEvents(events);
+      });
+    }, 1000);
+
   });
 
 });
