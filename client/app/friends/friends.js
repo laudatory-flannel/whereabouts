@@ -1,41 +1,20 @@
 angular.module('greenfield.friends', ['greenfield.services'])
-.factory('Friends', function ($http) {
-
+.factory('Friends', function (HTTP) {
   var modifyFriend = function (userId, friend, action) {
     console.log('modifying friend', userId)
     data = {
       friend: friend,
       action: action
     }
-    return $http({
-      method: 'POST',
-      url: '/users/' + userId + '/friends',
-      data: data
-    })
-    .then(function (resp) {
-      return resp;
-    });
+    return HTTP.sendRequest('POST', '/users/' + userId + '/friends', data);
   };
 
   var getAllFriends = function (input) {
-    return $http({
-      method: 'GET',
-      url: '/users/' + input + '/friends',
-    })
-    .then(function (resp) {
-      return resp;
-    });
+    return HTTP.sendRequest('GET', '/users/' + input + '/friends');
   };
 
   var getAllUsers = function (input) {
-
-    return $http({
-      method: 'GET',
-      url: '/users',
-    })
-    .then(function (resp) {
-      return resp;
-    });
+    return HTTP.sendRequest('GET', '/users');
   };
 
   return { 
