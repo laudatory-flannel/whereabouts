@@ -78,7 +78,7 @@ angular.module('greenfield.home', ['greenfield.services'])
 .factory('Markers', function() {
   return {};
 })
-.controller('HomeController', function($scope, $http, Map, Markers, Directions) {
+.controller('HomeController', function($scope, Map, Directions, Markers, HTTP) {
   $scope.map; // google map object
 
   $scope.setUpRoutes = function() {
@@ -91,6 +91,7 @@ angular.module('greenfield.home', ['greenfield.services'])
       });
       Directions.displayRoute($scope.map);
     }
+
     // Register event listeners to display route whenever endpoints change
     document.getElementById('start').addEventListener('change', displayRouteHandler);
     document.getElementById('end').addEventListener('change', displayRouteHandler);
@@ -208,11 +209,16 @@ angular.module('greenfield.home', ['greenfield.services'])
 
   // Find events - not really being used
   $scope.findEvents = function(){
-    $http.get('/events').success(function(data, status, headers, config) {
-      $scope.allEvents = data;
-    }).
-    error(function(data, status, headers, config) {
-      console.log('There was an error with your get request');
+    // Version using raw $http
+    // $http.get('/events').success(function(data, status, headers, config) {
+    //   $scope.allEvents = data;
+    // }).
+    // error(function(data, status, headers, config) {
+    //   console.log('There was an error with your get request');
+    // });
+    HTTP.sendRequest('GET', '/events')
+    .then(function(response) {
+      $scope.allEvents = response.data;
     });
   };
 
