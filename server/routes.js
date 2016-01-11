@@ -100,6 +100,7 @@ module.exports = function(app, express) {
 					imageUrl: fbResult.picture.data.url,
 					friends: fbResult.friends.data || []
 				}
+				console.log('USERDATA:',userData)
 			} catch (e) {
 				console.log("Bad friends result");
 				return res.send(500);
