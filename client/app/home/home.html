@@ -2,7 +2,7 @@
   <div ng-controller="EventController">
 
 
- <div id="floating-panel">
+  <div id="floating-panel">
     <b>Start: </b>
     <select id="start">
       <option value="{{position[0]}}, {{position[1]}}">Your Location</option>
@@ -11,31 +11,27 @@
     <select id="end" >
       <option ng-repeat="data in allLocations" value="{{data.latitude}}, {{data.longitude}}">{{data.personname}}</option>
     </select>
-</div>
-  <div class="box">
+  </div>
+<div class="box">
     <div id="contactFormContainer">
         <div id="contactForm">
-          <form action="/events.html" method="POST">
-            <fieldset>
-                <label for="Title">Title *</label>
-                <input id="name" type="text" />
+          <form>
+       
+                <label for="Title" ng-model="title">Title *</label>
+                <input ng-model="title" type="text" />
                 <label for="location">Location:</label> 
-                <input type="text" id="txtPlaces" style="width: 250px" name="location" placeholder="Enter a location" required/>
-                <label for="datetime1"> Starting Time: </label>
-                <input type="text" id="time" data-format="h:mm a" data-template="hh : mm a" name="datetime1" value="8:30 pm" required>
+                <input type="text" ng-model="address" id="txtPlaces" style="width: 250px" name="location" placeholder="Enter a location" required/>
                 <label for="datetime2"> Ending Time: </label>
-                <input type="text" id="time2" data-format="h:mm a" data-template="hh : mm a" name="datetime2" value="8:30 pm" required>
+                <input type="datetime-local" ng-model="endedAt" /> <!--type might be wrong now -->
                 <label for="Description">Event Description *</label>
-                <textarea id="Description" rows="3" cols="20"></textarea>
-                <input id="sendMail" type="submit"/>
-           </fieldset>
+                <textarea id="Description" ng-model="description" rows="3" cols="20"></textarea>
+                <input ng-click="sendForm()" type="submit"/>
+      
         </form>
         </div>
         <div id="contactLink"></div>
     </div>
 </div>
-</div>
-
 <div>
     <img class="loading" src="img/loading.gif" ng-show="loading">
     <div id="map" style="border-style: solid; border-width: 2px; border-color: black;"> </div>
