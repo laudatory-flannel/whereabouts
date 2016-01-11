@@ -1,53 +1,16 @@
-<div id="concert">
-  <div ng-controller="EventController">
-
-
-  <div id="floating-panel">
-    <b>Start: </b>
-    <select id="start">
-      <option value="{{position[0]}}, {{position[1]}}">Your Location</option>
-    </select>
-    <b>End: </b>
-    <select id="end" >
-      <option ng-repeat="data in allEvents" value="{{data.location.coordinates[1]}}, {{data.location.coordinates[0]}}">{{data.user}}: {{data.title}}</option>
-    </select>
-  </div>
-<div class="box">
-    <div id="contactFormContainer">
-        <div id="contactForm">
-          <form>
-       
-                <label for="Title" ng-model="title">Title *</label>
-                <input ng-model="title" type="text" />
-                <label for="location">Location:</label> 
-                <input type="text" ng-model="address" id="txtPlaces" style="width: 250px" name="location" placeholder="Enter a location" required/>
-                <label for="datetime2"> Ending Time: </label>
-                <input type="datetime-local" ng-model="endedAt" /> <!--type might be wrong now -->
-                <label for="Description">Event Description *</label>
-                <textarea id="Description" ng-model="description" rows="3" cols="20"></textarea>
-                <input ng-click="sendForm()" type="submit"/>
-      
-        </form>
-        </div>
-        <div id="contactLink"></div>
-    </div>
-</div>
-<div>
-    <img class="loading" src="img/loading.gif" ng-show="loading">
-    <div id="map" style="border-style: solid; border-width: 2px; border-color: black;"> </div>
-    <br>
-    <div class='largeText'>Events near you:</div>
-        <div style="margin-top: 15px; width: 320px; height: 455px; padding: 5px; border: solid 2px #000; overflow:auto;">
-           <ul ng-repeat="data in allEvents" style="margin-right: 5px; padding-bottom: 30px; display:inline-block;">
-               <li style="font-weight: bold;"> {{data.user}} </li>
-               <li> {{data.description}}  </li>
-               <li> Will be here until {{data.endedAt}} </li>
-               <li><button class="btn btn-alt" style="display:inline-block;" ng-click="callMarker($index)">Get event info</button> </li>
-           </ul>
-           <button ng-click="clearMarkers()">Clear Markers</button>
-        </div>
-  <div ng-if="boxAppear" id="directBox">
-    <div class="largeText"> Directions: </div>
-    <div id="directions"></div>
-  </div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12" id="map">
+					CONTENT
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">Direction Bar</div>
+			</div>
+		</div>
+		<div class="col-md-3 nearbyEvents">Events Near Yo' Bitch Ass</div>
+		<div class="col-md-3 createEvent">Create Event Dropdown</div>
+	</div>
 </div>

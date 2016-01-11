@@ -49,6 +49,27 @@ div.auth {
 
 /* ---- Home page ---- */
 
+div {
+  /*border: dotted 1px red;*/
+}
+
+.container-fluid {
+  border: dashed 2px blue;
+  padding: 60px;
+}
+
+.map {
+  background-color: #ccc
+}
+
+.nearbyEvents {
+  background-color: #b88
+}
+
+.createEvent {
+  background-color: #66a
+}
+/*
 #map {
   height: 500px;
   width: 500px;
@@ -90,7 +111,7 @@ div.auth {
 #under {
   position: absolute;
   z-index: 0;
-  /*opacity: .3;*/
+  opacity: .3;
 }
 
 .btn {
