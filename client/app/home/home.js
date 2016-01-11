@@ -224,24 +224,32 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   };
 
-  $scope.updateEvents = function(){
+  $scope.getEvents = function(callback){
     HTTP.sendRequest('GET', '/events')
     .then(function(response) {
-      console.log("old", $scope.allEvents)
-      $scope.allEvents = response.data;
+      //console.log("old", $scope.allEvents)
+      var events = response.data;
+      callback(events);
+      //$scope.allEvents = response.data;
       //$scope.allEvents = $scope.allEvents.concat(response.data);
     });
   };
 
-  $scope.updateEventMarkers = function() {
+  $scope.updateEvents = function(events) {
     //$scope.clearMarkers();
 
-    // Add event marker for each location
-    _.forEach($scope.allEvents, function(event) {
-      var latitude = event.location.coordinates[1];
-      var longitude = event.location.coordinates[0];
-      var marker = Markers.addEventMarker($scope.map, [ latitude, longitude ], event);
-      $scope.markers.push(marker);
+    // Add event marker for each NEW location
+    _.forEach(events, function(event) {
+      //if event is not already in $scope.allEvents
+      if (_.pluck($scope.allEvents, '_id').indexOf(event._id) === -1) {
+        $scope.allEvents.push(event);
+
+        //add marker for event
+        var latitude = event.location.coordinates[1];
+        var longitude = event.location.coordinates[0];
+        var marker = Markers.addEventMarker($scope.map, [ latitude, longitude ], event);
+        $scope.markers.push(marker);
+      }
     });
   }
 
@@ -249,9 +257,11 @@ angular.module('greenfield.home', ['greenfield.services'])
     $scope.initRoutes();
     $scope.initMarkers();
     setInterval(function(){
-      $scope.updateEvents();
-      console.log('All the events',  $scope.allEvents);
-      $scope.updateEventMarkers();
+      $scope.getEvents(function(events) {
+        $scope.updateEvents(events);
+      });
+      //console.log('All the events',  $scope.allEvents);
+      //$scope.updateEventMarkers();
     }, 1000);
   });
 });
