@@ -11,7 +11,7 @@ h1, h2, h3, h4 {
 
 /* ---- Auth page ---- */
 div.auth {
-  background-image: url('../img/coffee.jpg');
+  /*background-image: url('../img/coffee.jpg');*/
   height: 600px;
 }
 
@@ -78,4 +78,21 @@ div.auth {
   left: 225px;
 }
 
+#over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  z-index: 1;
+}
 
+#under {
+  position: absolute;
+  z-index: 0;
+  /*opacity: .3;*/
+}
+
+.btn {
+  background-color: green;
+}
