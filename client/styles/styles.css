@@ -154,14 +154,19 @@ div {
   position: absolute;
   top: 0;
   left: 0;
-  width: 200px;
-  height: 200px;
   z-index: 1;
 }
 
 #under {
   position: absolute;
+  height: 100%;
+  width: 100%;
   z-index: 0;
+}
+
+#video-bg {
+  height: 100%;
+  width: 100%;
 }
 /*
 .btn {
@@ -210,4 +215,8 @@ div {
 td {
   text-align: left;
   vertical-align:middle;   
+}
+
+.container {
+  margin-left: 150px;
 }
