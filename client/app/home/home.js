@@ -252,6 +252,9 @@ angular.module('greenfield.home', ['greenfield.services'])
     _.forEach(events, function(event) {
       if (_.pluck($scope.allEvents, '_id').indexOf(event._id) === -1) {
         console.log('pushing new event', event);
+        // console.log(event.isPublic)
+        // console.log(event.userId === User.getId());
+        // console.log(_.pluck($scope.friends, '_id').indexOf(event.userId) !== -1);
         $scope.allEvents.push(event);
 
         //add marker for event
