@@ -96,3 +96,29 @@ div.auth {
 .btn {
   background-color: green;
 }
+
+.friendImage {
+  position: relative;
+  padding: 8px;
+  color: #fff;
+  background-size: cover;
+  width: 31%;
+  height: 256px;
+  display: block;
+  float: left;
+  margin: 4px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px rgba(100, 100, 100, 0.5);
+
+  transition: all .2s ease-in-out;
+}
+
+.removeButton {
+  position: absolute;
+  bottom:   10px;
+}
+
+.friendName {
+  position: absolute;
+  bottom:   30px;
+}

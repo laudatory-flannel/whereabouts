@@ -94,7 +94,7 @@ module.exports = function(app, express) {
 		}
 		
 		// Check if access token is valid by attempting to call Facebook api with it
-		request.get('https://graph.facebook.com/v2.5/me?fields=id,name,picture,friends&access_token=' + accessToken, function(err, getResponse, fbResult) {
+		request.get('https://graph.facebook.com/v2.5/me?fields=id,name,picture.width(320).type(square),friends&access_token=' + accessToken, function(err, getResponse, fbResult) {
 			if (err) {
 				console.log("FB err: ", err);
 				return res.send(500);
