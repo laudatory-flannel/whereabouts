@@ -76,6 +76,9 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 })
 .factory('Markers', function() {
+  // Info window object that will change content/position to display info for last marker clicked
+  var infoWindow = new google.maps.InfoWindow({ maxWidth: 160 });
+
   // Adds marker to map (and returns the marker)
   var addMarker = function(map, position, iconUrl) {
     return new google.maps.Marker({
@@ -87,7 +90,7 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 
   // Returns a handler that shows an info window for a given marker
-  var getDisplayInfoHandler = function(map, infoWindow, location, marker) {
+  var getDisplayInfoHandler = function(map, location, marker) {
     return function() {
       infoWindow.setContent(
         "<h4>" + location.personname +
@@ -195,9 +198,6 @@ angular.module('greenfield.home', ['greenfield.services'])
     },    
     ];
 
-    var infoWindow = new google.maps.InfoWindow({ maxWidth: 160 });
-    var postMarker;
-
     // Add marker for user
     Markers.addMarker($scope.map, Map.getLocalPosition(), USER_ICON_URL);
 
@@ -208,7 +208,7 @@ angular.module('greenfield.home', ['greenfield.services'])
       google.maps.event.addListener(
         $scope.markers[i],
         'click',
-        Markers.getDisplayInfoHandler($scope.map, infoWindow, $scope.allLocations[i], $scope.markers[i])
+        Markers.getDisplayInfoHandler($scope.map, $scope.allLocations[i], $scope.markers[i])
       );
     });
   };
