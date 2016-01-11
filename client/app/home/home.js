@@ -81,7 +81,27 @@ angular.module('greenfield.home', ['greenfield.services'])
 .controller('HomeController', function($scope, Map, Directions, Markers, HTTP) {
   $scope.map; // google map object
 
-  $scope.setUpRoutes = function() {
+  $scope.initMap = function(callback) {
+    $scope.loading = true; // boolean to determine whether to display loading gif
+    
+    // Render a possibly-reasonable guess for the location
+    //$scope.position = Map.getLocalPosition();
+    //$scope.map = Map.render();
+
+    // Render the actual location, once it is found
+    Map.getRealLocation(function(position) {
+      Map.setLocalPosition(position);
+      $scope.position = position;
+      $scope.$apply(function() {
+        // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
+        $scope.loading = false;
+      });
+      $scope.map = Map.render(position);
+      callback();
+    });
+  };
+
+  $scope.initRoutes = function() {
     // Sets visibility of directions box (should likely be renamed for clarity)
     $scope.boxAppear = false;
 
@@ -97,7 +117,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     document.getElementById('end').addEventListener('change', displayRouteHandler);
   };
 
-  $scope.setUpMarkers = function() {
+  $scope.initMarkers = function() {
     $scope.allEvents;
     $scope.allLocations;
     $scope.postMarker = [];
@@ -175,26 +195,6 @@ angular.module('greenfield.home', ['greenfield.services'])
     }
   };
 
-  $scope.initMap = function(callback) {
-    $scope.loading = true; // boolean to determine whether to display loading gif
-    
-    // Render a possibly-reasonable guess for the location
-    //$scope.map = Map.render();
-
-    // Render the actual location, once it is found
-    Map.getRealLocation(function(position) {
-      $scope.position = position;
-      Map.setLocalPosition(position);
-
-      $scope.$apply(function() {
-        // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
-        $scope.loading = false;
-      });
-      $scope.map = Map.render(position);
-      callback();
-    });
-  };
-
   // Triggers click on marker from click on event in feed
   $scope.callMarker = function($index){
     google.maps.event.trigger($scope.postMarker[$index], 'click', 'click');
@@ -223,8 +223,8 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 
   $scope.initMap(function() { //finishes asynchronously
-    $scope.setUpRoutes();
-    $scope.setUpMarkers();
+    $scope.initRoutes();
+    $scope.initMarkers();
   });
 
 
