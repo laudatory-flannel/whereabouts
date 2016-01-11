@@ -147,8 +147,8 @@ module.exports = function(app, express) {
 
 	app.post('/users/:name/friends', function(req, res) {
 		console.log('updating friend', req.params.name, req.body)
-
-		helpers.updateUserFriends({name: req.params.name}, req.body, '$addToSet', function (err, data) {
+		console.log('ACTION', req.body.action)
+		helpers.updateUserFriends({name: req.params.name}, req.body.friend, req.body.action, function (err, data) {
 			if (err) {
 				res.send(500);
 			} else {

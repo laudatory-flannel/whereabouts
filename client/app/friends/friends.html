@@ -5,7 +5,7 @@
   <form ng-show="(filteredUsers = (users | filter:search)) && search.length >= 2">
     <table>  
       <tr ng-repeat="user in filteredUsers">
-        <td ng-click="deleteFriend(user)">{{user.name}}</td>
+        <td ng-click="addFriend(user)">{{user.name}}</td>
       </tr>
     </table>
     <!-- <input type="submit" ng-click="update(user)" value="Save" /> -->
@@ -16,6 +16,9 @@
   
   <div ng-repeat="friend in friends">
     <p>{{friend}}</p>
+    <button ng-click="deleteFriend(friend)">
+      Remove from friends
+    </button>
     <!-- <div class= "friend" ng-style= "{'background-image':'url(http://www.helpinghomelesscats.com/images/cat1.jpg)'}">
     </div>  -->
   </div>
