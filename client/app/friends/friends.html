@@ -1,27 +1,30 @@
-<div ng-controller='FriendsController'>
-  <!-- Add friend -->
-  <label>Search Greenfield: <input type="text" ng-model="search"></label>
-  <form name="searchFriends" ng-show="(filteredUsers = (users | filter:search)) && search.length >= 2">
-    <table>  
-      <tr ng-repeat="person in filteredUsers">
-        <td class='col1'><img class='friendPreview' ng-src="{{person.imageUrl}}"></td>
-        <td class='friendPreviewName' ng-click="filteredUsers=''; addFriend(person)">{{person.name}}</td>
-      </tr>
-    </table>
-    <!-- <input type="submit" ng-click="update(user)" value="Save" /> -->
-  </form>
+<div class="background">
+  <div ng-controller='FriendsController'>
+    <!-- Add friend -->
+    <label>Search Greenfield: <input type="text" ng-model="search"></label>
+    <form name="searchFriends" ng-show="(filteredUsers = (users | filter:search)) && search.length >= 2">
+      <table>  
+        <tr ng-repeat="person in filteredUsers">
+          <td class='col1'><img class='friendPreview' ng-src="{{person.imageUrl}}"></td>
+          <td class='friendPreviewName' ng-click="filteredUsers=''; addFriend(person)">{{person.name}}</td>
+        </tr>
+      </table>
+      <!-- <input type="submit" ng-click="update(user)" value="Save" /> -->
+    </form>
 
-  <!-- View friends -->
-  <h3>My Friends</h3>
-  
-  <div ng-repeat="friend in friends">
+    <!-- View friends -->
+    <h3>My Friends</h3>
+    
+    <div ng-repeat="friend in friends">
 
-    <div class='friendImage' ng-style= "{'background-image':'url(' + friend.imageUrl + ')'}">
-      <div class='friendName'>{{friend.name}}</div>
-      <button class='removeButton' ng-click="deleteFriend(friend)">
-        Remove from friends
-      </button>
+      <div class='friendImage' ng-style= "{'background-image':'url(' + friend.imageUrl + ')'}">
+        <div class='friendName'>{{friend.name}}</div>
+        <button class='removeButton' ng-click="deleteFriend(friend)">
+          Remove from friends
+        </button>
+      </div>
     </div>
-  </div>
+
+</div>
 
 </div>
