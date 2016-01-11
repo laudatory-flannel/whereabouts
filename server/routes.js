@@ -108,7 +108,13 @@ module.exports = function(app, express) {
 			// either returns an existing user or creates a new user if no user with that Facebook ID exists
 			helpers.getOrCreateUserByFbId(userData.fbId, userData, function(err, user) {
 				console.log("found existing user:", user);
-				res.json({ token: jwt.encode(user, JWT_SECRET) });
+				var data = {
+					token: jwt.encode(user, JWT_SECRET),
+					//the below should not be necessary later, but for now is an easy MVP solution
+					_id: user._id,
+					name: user.name
+				}
+				res.json(data);
 			});
 
 		});

@@ -185,9 +185,16 @@ angular.module('greenfield.services', [])
         return HTTP.sendRequest('POST', '/auth', data)
         .then(function(response) {
           var token = response.data.token;
+          // should not be necessary after full JWT integration
+          var _id = response.data._id;
+          var name = response.data.name;
           if (token) {
             console.log('successful app login:', token);
             localStorage.set('flannel.token', token);
+            //should not be necessary after full JWT integration
+            console.log('_id:', _id, ', name:', name);
+            localStorage.set('flannel._id', _id);
+            localStorage.set('flannel.name', name);
             $location.path('/home');
           } else {
             console.log('failed app login');
@@ -201,6 +208,9 @@ angular.module('greenfield.services', [])
   var logout = function() {
     if (isAuth()) {
       localStorage.remove('flannel.token');
+      //should not be necessary after full JWT integration
+      localStorage.remove('flannel._id');
+      localStorage.remove('flannel.name');
       $location.path('/auth');
       Facebook.logout(function() {});
       console.log('logged out of app');
