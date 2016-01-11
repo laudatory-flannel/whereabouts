@@ -123,7 +123,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     removeFromMap: removeFromMap
   };
 })
-.controller('HomeController', function($scope, Map, Directions, Markers, HTTP, localStorage) {
+.controller('HomeController', function($scope, Map, Directions, Markers, HTTP, User) {
   $scope.map; // google map object
 
   $scope.initMap = function(callback) {
@@ -261,7 +261,7 @@ angular.module('greenfield.home', ['greenfield.services'])
 
   //Get user's friends, to be able to filter events
   //Assumes friends do not change during their visit to the page
-  HTTP.sendRequest('GET', '/users/' + localStorage.get('flannel._id') + '/friends')
+  User.getFriends()
   .then(function(response) {
     $scope.friends = response.data;
     $scope.initMap(function() { //finishes asynchronously

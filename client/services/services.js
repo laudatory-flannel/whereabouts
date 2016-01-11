@@ -1,5 +1,3 @@
-
-
 angular.module('greenfield.services', [])
 // Simplifies interaction with browser's local storage
 .factory('localStorage', function($window) {
@@ -185,4 +183,24 @@ angular.module('greenfield.services', [])
     logout: logout,
     isAuth: isAuth
   };
+})
+.factory('User', function(localStorage, HTTP) {
+  var getId = function() {
+    return localStorage.get('flannel._id');
+  };
+
+  var getName = function() {
+    return localStorage.get('flannel.name');
+  }
+
+  var getFriends = function() {
+    return HTTP.sendRequest('GET', '/users/' + getId() + '/friends');
+  };
+
+  return {
+    getId: getId,
+    getName: getName,
+    getFriends: getFriends
+  }
+
 });
