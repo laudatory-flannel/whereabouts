@@ -86,8 +86,20 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   };
 
+  // Returns a handler that shows an info window for a given marker
+  var getDisplayInfoHandler = function(map, infoWindow, location, marker) {
+    return function() {
+      infoWindow.setContent(
+        "<h4>" + location.personname +
+        "</h4>" + location.description + 
+        "<p>Will be there until " + location.timeuntil + "</p>");
+      infoWindow.open(map, marker);
+    };
+  };
+
   return {
-    addMarker: addMarker
+    addMarker: addMarker,
+    getDisplayInfoHandler: getDisplayInfoHandler
   };
 })
 .controller('HomeController', function($scope, Map, Directions, Markers, HTTP) {
@@ -130,9 +142,9 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 
   $scope.initMarkers = function() {
-    $scope.allEvents;
-    $scope.allLocations;
-    $scope.postMarker = [];
+    $scope.allEvents = [];
+    $scope.allLocations = [];
+    $scope.markers = [];
 
     // Not being utilized yet
     $scope.findEvents();
@@ -173,7 +185,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     },    
     ];
 
-    var infowindow = new google.maps.InfoWindow({ maxWidth: 160 });
+    var infoWindow = new google.maps.InfoWindow({ maxWidth: 160 });
     var postMarker;
 
     // Add marker for user
@@ -182,28 +194,23 @@ angular.module('greenfield.home', ['greenfield.services'])
     // Add clickable map marker for each location
     _.forEach($scope.allLocations, function(location, i) {
       var marker = Markers.addMarker($scope.map, [ location.latitude, location.longitude ], EVENT_ICON_URL);
-      $scope.postMarker.push(marker);
-      
-      google.maps.event.addListener($scope.postMarker[i], 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent(
-            "<h4>" + $scope.allLocations[i].personname +
-            "</h4>" + $scope.allLocations[i].description + 
-            "<p>Will be there until " + $scope.allLocations[i].timeuntil + "</p>");
-          infowindow.open($scope.map, marker);
-        };
-      })($scope.postMarker[i], i));
+      $scope.markers.push(marker);
+      google.maps.event.addListener(
+        $scope.markers[i],
+        'click',
+        Markers.getDisplayInfoHandler($scope.map, infoWindow, $scope.allLocations[i], $scope.markers[i])
+      );
     });
   };
 
   // Triggers click on marker from click on event in feed
   $scope.callMarker = function($index){
-    google.maps.event.trigger($scope.postMarker[$index], 'click', 'click');
+    google.maps.event.trigger($scope.markers[$index], 'click', 'click');
   };
 
   // Clears all markers from map
   $scope.clearMarkers = function() {
-    _.forEach($scope.postMarker, function(postMarker) {
+    _.forEach($scope.markers, function(postMarker) {
       postMarker.setMap(null);
     });
   };
