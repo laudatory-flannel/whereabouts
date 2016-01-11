@@ -89,7 +89,8 @@ var utils = {
 
   //Get active events from database
   getActiveEvents: function(cb) {
-    var query = {'active': true};
+    //var query = {'active': true};
+    var query = {};
     Event.find(query, function(err, events) {
       if (err) {
         console.log(err);
