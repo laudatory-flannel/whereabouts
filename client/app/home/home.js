@@ -99,7 +99,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     var marker = addMarker(map, [latitude, longitude], EVENT_ICON_URL);
     var clickHandler = function() {
       infoWindow.setContent(
-        "<h4>" + event.user +
+        "<h4>" + event.userName +
         "</h4>" + event.description + 
         "<p>Will be there until " + event.endedAt + "</p>");
       infoWindow.open(map, marker);
@@ -123,7 +123,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     removeFromMap: removeFromMap
   };
 })
-.controller('HomeController', function($scope, Map, Directions, Markers, HTTP) {
+.controller('HomeController', function($scope, Map, Directions, Markers, HTTP, localStorage) {
   $scope.map; // google map object
 
   $scope.initMap = function(callback) {
