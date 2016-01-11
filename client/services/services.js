@@ -1,3 +1,5 @@
+
+
 angular.module('greenfield.services', [])
 // Simplifies interaction with browser's local storage
 .factory('localStorage', function($window) {
@@ -38,15 +40,15 @@ angular.module('greenfield.services', [])
 })
 .factory('Friends', function ($http) {
 
-  var modifyFriend = function (user, input, action) {
-    console.log('post request to add friend', action)
+  var modifyFriend = function (user, friend, action) {
+    console.log('modifying friend', user._id)
     data = {
-      friend: input,
+      friend: friend,
       action: action
     }
     return $http({
       method: 'POST',
-      url: '/users/' + user.name + '/friends',
+      url: '/users/' + user._id + '/friends',
       data: data
     })
     .then(function (resp) {
