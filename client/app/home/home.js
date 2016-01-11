@@ -165,8 +165,6 @@ angular.module('greenfield.home', ['greenfield.services'])
     $scope.allLocations = [];
     $scope.markers = [];
 
-    $scope.findEvents(); // not being utilized yet
-
     // Populated with dummy data for now - should eventually get data from $scope.allEvents
     $scope.allLocations = [
     {
@@ -226,75 +224,35 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   };
 
-  $scope.findEvents = function(){ //not being utilized yet
-    // Version using raw $http
-    // $http.get('/events').success(function(data, status, headers, config) {
-    //   $scope.allEvents = data;
-    // }).
-    // error(function(data, status, headers, config) {
-    //   console.log('There was an error with your get request');
-    // });
+  $scope.updateEvents = function(){
     HTTP.sendRequest('GET', '/events')
     .then(function(response) {
       console.log("old", $scope.allEvents)
       $scope.allEvents = response.data;
+      //$scope.allEvents = $scope.allEvents.concat(response.data);
     });
   };
+
+  $scope.updateEventMarkers = function() {
+    //$scope.clearMarkers();
+
+    // Add event marker for each location
+    _.forEach($scope.allEvents, function(event) {
+      var latitude = event.location.coordinates[1];
+      var longitude = event.location.coordinates[0];
+      var marker = Markers.addEventMarker($scope.map, [ latitude, longitude ], event);
+      $scope.markers.push(marker);
+    });
+  }
 
   $scope.initMap(function() { //finishes asynchronously
     $scope.initRoutes();
     $scope.initMarkers();
-
-    $scope.postMarker = [];
-    //greg code
     setInterval(function(){
-
-      $scope.findEvents(); // updates allEvents
+      $scope.updateEvents();
       console.log('All the events',  $scope.allEvents);
-
-      $scope.clearMarkers();
-      // Add event marker for each location
-      _.forEach($scope.allEvents, function(event) {
-        var latitude = event.location.coordinates[1];
-        var longitude = event.location.coordinates[0];
-        var marker = Markers.addEventMarker($scope.map, [ latitude, longitude ], event);
-        $scope.markers.push(marker);
-      });
-      //var infowindow = new google.maps.InfoWindow({maxWidth: 160});
-      // var postMarker;
-
-      // if ($scope.allEvents.length){
-      //   var alltheEvents = $scope.allEvents;
-
-      //   for (var i = 0; i < alltheEvents.length; i++) {  
-      //     $scope.postMarker.push(new google.maps.Marker({
-      //       position: new google.maps.LatLng(alltheEvents[i].location.coordinates[1], alltheEvents[i].location.coordinates[0]), 
-      //       animation: google.maps.Animation.DROP,
-      //       map: $scope.map,
-      //       icon: 'app/home/peace.png'
-      //     }));
-          
-
-      //     google.maps.event.addListener($scope.postMarker[i], 'click', (function(postMarker, i) {
-      //       return function() {
-      //         infowindow.setContent("<h4>" + "Greg Domorski" + "</h4>" + alltheEvents[i].description + "<p>Will be there until " + alltheEvents[i].endedAt + "</p>");
-      //         infowindow.open($scope.map, postMarker);
-      //       };
-      //     })($scope.postMarker[i], i));
-      //   }
-      // }
-
+      $scope.updateEventMarkers();
     }, 1000);
-
-    // var youAreHere = new google.maps.Marker({
-    //     position: new google.maps.LatLng($scope.position[0], $scope.position[1]), 
-    //     map: $scope.map,
-    //     icon: 'app/home/currentlocation.png'
-    //   });
-    //end greg code
-
   });
-
-
 });
 
