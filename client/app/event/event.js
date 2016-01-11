@@ -1,7 +1,14 @@
 // MARKED FOR DELETION
 
 angular.module('greenfield.event', [])
-.controller('EventController', function($scope) {
+.controller('EventController', function($scope, $http) {
+
+  $scope.title;
+  $scope.description;
+  $scope.user;
+  $scope.endedAt;     
+  $scope.locations;
+
   // Initialize combodate drop-down menus in view
   $(function(){
     $('#time').combodate({
@@ -23,28 +30,49 @@ angular.module('greenfield.event', [])
       
   });
   
+  $scope.sendForm = function(){
+
+    var inputs = $scope.locations;
+    //console.log($scope.title, $scope.endedAt, $scope.address, $scope.description);
+
+    var data = {
+      title: $scope.title,
+      description: $scope.description,
+      active: true,
+      location:{ type: "Point", coordinates: [ $scope.locations[1], $scope.locations[0] ] }
+    };
+
+    console.log(data);
+
+    $http.post('/events', data).then(function successCallback(response) {
+      console.log(response);
+    }, function errorCallback(response) {
+      console.log(response);
+    });
+  };
+
   function closeForm(){
       $("#messageSent").show("slow");
       setTimeout('$("#messageSent").hide();$("#contactForm").slideUp("slow")', 2000);
     }
   });
 
-
-
-
-
-
+  $scope.getAllPlaces = function(){
   // Initialize location autocomplete
-  var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
-  google.maps.event.addListener(places, 'place_changed', function () {
-    var place = places.getPlace();
-    var address = place.formatted_address;
-    var latitude = place.geometry.location.lat();
-    var longitude = place.geometry.location.lng();
-    var mesg = "Address: " + address;
-    $('#latitude').text(latitude);
-    $('#latitude').text(longitude);
-  });
+    var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+    google.maps.event.addListener(places, 'place_changed', function () {
+      var array = [];
+      var place = places.getPlace();
+      var address = place.formatted_address;
+      var latitude = place.geometry.location.lat();
+      var longitude = place.geometry.location.lng();
+      var mesg = "Address: " + address;
+      array.push(latitude);
+      array.push(longitude);
+      $scope.locations = array;
+      console.log(array);
+      });
+  }();
 
 })
 .directive('formInput', function (){
