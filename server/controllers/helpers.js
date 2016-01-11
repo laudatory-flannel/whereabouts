@@ -111,7 +111,8 @@ var utils = {
 
   // get active events -- Verified
   getActiveEvents: function(cb) {
-    var query = {'active': true};
+    //var query = {'active': true};
+    var query = {};
     Event.find(query, function(err, events) {
       if (err) {
         console.log(err);
@@ -134,7 +135,7 @@ var utils = {
 
   // handle event expiration
   expireEvents: function(cb) {
-    var currentTime = new Date(Date.now());
+    /*var currentTime = new Date(Date.now());
 
     // grabs all events where endedAt is less than current time
     var query = {'endedAt': {'$lt': currentTime}};
@@ -147,14 +148,14 @@ var utils = {
 
     Event.update(query, data, {multi: true}, function(err, results) { // may need upsert or new options
       if (err) {
-        //console.log(err);
-        //return cb(err);
+        console.log(err);
+        return cb(err);
       }
-      //console.log(results);
-      //return cb(null, results);
-    });
-
+      console.log(results);
+      return cb(null, results);
+    });*/
   }
+  
 }
 
 module.exports = utils;
