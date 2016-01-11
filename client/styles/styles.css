@@ -49,6 +49,58 @@ div.auth {
 
 /* ---- Home page ---- */
 
+div {
+  /*border: dotted 1px red;*/
+}
+
+.container-fluid {
+  /*border: dashed 2px blue;*/
+  padding: 60px;
+}
+
+.mapContainer {
+  border: solid black 2px;
+  padding: 0px;
+  background-color: #ccc;
+}
+
+#map {
+  width: 100%;
+  height: 500px;
+}
+
+.nearbyEvents {
+  background-color: #b88;
+  overflow: auto;
+  height: 528px;
+  padding: 0px;
+}
+
+.event {
+  background-color: #9b9;
+  border-radius: 8px;
+  margin: 5px;
+}
+
+.createEvent {
+  height: 528px;
+  background-color: #66a;
+  padding: 0px;
+}
+
+.createEvent form {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.columnHeader {
+  text-align: center;
+  border-bottom: solid 1px black;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+/*
 #map {
   height: 500px;
   width: 500px;
@@ -90,7 +142,7 @@ div.auth {
 #under {
   position: absolute;
   z-index: 0;
-  /*opacity: .3;*/
+  opacity: .3;
 }
 
 .btn {
