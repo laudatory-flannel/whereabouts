@@ -61,30 +61,50 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       styles: [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}]
     });
 
-    //greg til end of renderMap()
+  };
 
+  //greg
+  $scope.setUpRoutes = function() {
     // Initialize directions modules
     var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
     var directionsService = new google.maps.DirectionsService();
 
     // Display route (what's its relation to calculateAndDisplayRoute?)
-    var onChangeHandler = function() {
+    var displayRoute = function() {
+      var calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
+        directionsService.route({
+          origin: document.getElementById('start').value,
+          destination: document.getElementById('end').value,
+          travelMode: google.maps.TravelMode.WALKING
+        }, function(response, status) {
+          if (status === google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      };
+
       $scope.$apply(function(){
         $scope.boxAppear = true;
-       });
+      });
       directionsDisplay.setMap($scope.map);
       directionsDisplay.setPanel(document.getElementById("directions"));
-      $scope.calculateAndDisplayRoute(directionsService, directionsDisplay);
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
     };
 
-
+    // Register event listeners to display route whenever endpoints change
     console.log('outside the func', $scope);
-    document.getElementById('start').addEventListener('change', onChangeHandler);
-    document.getElementById('end').addEventListener('change', onChangeHandler);
+    document.getElementById('start').addEventListener('change', displayRoute);
+    document.getElementById('end').addEventListener('change', displayRoute);
+  };
 
+  $scope.setUpMarkers = function() {
+    // Not being utilized yet
     $scope.findEvents();
 
-    var allLocations = [
+    // Populated with dummy data for now - should eventually get data from $scope.allEvents
+    $scope.allLocations = [
     {
       id: 1,
       personname: "Greg Domorski",
@@ -119,14 +139,13 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     },    
     ];
 
-    $scope.allLocations = allLocations;
-
-    var infowindow = new google.maps.InfoWindow({maxWidth: 160});
+    var infowindow = new google.maps.InfoWindow({ maxWidth: 160 });
     var postMarker;
 
-    for (var i = 0; i < allLocations.length; i++) {  
+    for (var i = 0; i < $scope.allLocations.length; i++) {
+      var location = $scope.allLocations[i];
       $scope.postMarker.push(new google.maps.Marker({
-        position: new google.maps.LatLng(allLocations[i].latitude, allLocations[i].longitude), 
+        position: new google.maps.LatLng(location.latitude, location.longitude), 
         animation: google.maps.Animation.DROP,
         map: $scope.map,
         icon: 'app/home/peace.png'
@@ -135,7 +154,7 @@ app.controller('HomeController', function($scope, localStorage, $http) {
 
       google.maps.event.addListener($scope.postMarker[i], 'click', (function(postMarker, i) {
         return function() {
-          infowindow.setContent("<h4>" + allLocations[i].personname + "</h4>" + allLocations[i].description + "<p>Will be there until " + allLocations[i].timeuntil + "</p>");
+          infowindow.setContent("<h4>" + location.personname + "</h4>" + location.description + "<p>Will be there until " + location.timeuntil + "</p>");
           infowindow.open($scope.map, postMarker);
         };
       })($scope.postMarker[i], i));
@@ -161,6 +180,8 @@ app.controller('HomeController', function($scope, localStorage, $http) {
       $scope.setScopePosition(position);
       $scope.setLocalPosition(position);
       $scope.renderMap();
+      $scope.setUpRoutes();
+      $scope.setUpMarkers();
     });
   };
 
@@ -183,21 +204,6 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     for (var i = 0; i < $scope.allLocations.length; i++) {
        $scope.postMarker[i].setMap(null);
     }
-  };
-
-  // Map route
-  $scope.calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
-    directionsService.route({
-      origin: document.getElementById('start').value,
-      destination: document.getElementById('end').value,
-      travelMode: google.maps.TravelMode.WALKING
-    }, function(response, status) {
-      if (status === google.maps.DirectionsStatus.OK) {
-        directionsDisplay.setDirections(response);
-      } else {
-        window.alert('Directions request failed due to ' + status);
-      }
-    });
   };
 
   $scope.initMap();
