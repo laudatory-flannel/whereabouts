@@ -23,8 +23,8 @@ module.exports = function(app, express) {
 
   // Adds authentication for all protected endpoints
   // Developer can comment out temporarily for testing purposes
-	app.use('/events', middleware.authenticate);
-	app.use('/users', middleware.authenticate);
+	// app.use('/events', middleware.authenticate);
+	// app.use('/users', middleware.authenticate);
 
 	// ---- GET REQUESTS ----
 	// Get events
