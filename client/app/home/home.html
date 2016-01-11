@@ -16,7 +16,7 @@
 			</select>
 			<span>End: </span>
 			<select id="end">
-				<option ng-repeat="data in allLocations" value="{{data.latitude}}, {{data.longitude}}">{{data.personname}}</option>
+				<option ng-repeat="data in allEvents" value="{{data.location.coordinates[1]}}, {{data.location.coordinates[0]}}">{{data.user}}: {{data.title}}</option>
 			</select>
 		</div>
 	</div>
@@ -26,9 +26,10 @@
 	<div class="col-md-3 nearbyEvents">
 		<h2 class="columnHeader">Events Near You</h2>
 	<!-- Individual Events -->
-		<div class="event" ng-repeat="data in allLocations">
-			<li>{{data.personname}}</li>
+		<div class="event" ng-repeat="data in allEvents">
+			<li>{{data.user}}</li>
 			<li>{{data.description}}</li>
+			<li>{{data.endedAt}}</li>
 			<button ng-click="callMarker($index)">Get event info</button>
 		</div>
 	</div>
@@ -38,20 +39,16 @@
 	<div class="col-md-3 createEvent">
 		<h2 class="columnHeader">Create Event Dropdown</h2>
 	<!-- Create Event Form -->
-		<form action="/events" method="POST">
-			<fieldset>
-				<label for="Title">Title:</label><br>
-                <input id="name" type="text"/><br>
-                <label for="location">Location: </label><br>
-                <input type="text" id="txtPlaces" name="location" placeholder="Enter a location" required/><br>
-                <label for="datetime1"> Starting Time: </label><br>
-                <input type="text" id="time" data-format="h:mm a" data-template="hh : mm a" name="datetime1" value="8:30 pm" required><br>
-                <label for="datetime2"> Ending Time: </label><br>
-                <input type="text" id="time2" data-format="h:mm a" data-template="hh : mm a" name="datetime2" value="8:30 pm" required><br>
-                <label for="Description">Event Description: </label><br>
-                <textarea id="Description"></textarea><br>
-                <input id="sendMail" type="submit"/>
-			</fieldset>
+		<form>             
+			<label for="Title" ng-model="title">Title: </label><br>
+            <input ng-model="title" type="text"/><br>
+            <label for="location">Location: </label><br>
+            <input type="text" ng-model="address" id="txtPlaces" style="width: 250px" name="location" placeholder="Enter a location" required/><br>
+            <label for="datetime2">Ending Time: </label><br>
+            <input type="datetime-local" ng-model="endedAt"/><br> <!--type might be wrong now -->
+            <label for="Description">Event Description: </label><br>
+            <textarea id="Description" ng-model="description" rows="3" cols="20"></textarea><br>
+            <input ng-click="sendForm()" type="submit"/>
 		</form>
 		<div id="contactLink"></div>
 	</div>
