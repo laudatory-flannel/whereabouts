@@ -18,7 +18,8 @@ angular.module('greenfield.event', ['greenfield.services'])
       title: $scope.title,
       description: $scope.description,
       active: true,
-      location:{ type: "Point", coordinates: [ $scope.locations[1], $scope.locations[0] ] }
+      location:{ type: "Point", coordinates: [ $scope.locations[1], $scope.locations[0] ] },
+      isPublic: !!$scope.isPublic
     };
 
     console.log(data);

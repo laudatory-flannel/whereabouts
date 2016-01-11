@@ -48,6 +48,8 @@
             <input type="datetime-local" ng-model="endedAt"/><br>
             <label for="Description">Event Description: </label><br>
             <textarea id="Description" ng-model="description" rows="3" cols="20"></textarea><br>
+            <label for="isPublic">Make public: </label>
+            <input id="isPublic" type='checkbox' ng-model='isPublic' /><br>
             <input ng-click="sendForm()" type="submit"/>
 		</form>
 		<div id="contactLink"></div>
