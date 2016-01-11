@@ -129,6 +129,7 @@ angular.module('greenfield.home', ['greenfield.services'])
 })
 .controller('HomeController', function($scope, Map, Directions, Markers, HTTP, User) {
   $scope.map; // google map object
+  $scope.isLandingPage = false;
 
   $scope.initMap = function(callback) {
     $scope.loading = true; // boolean to determine whether to display loading gif

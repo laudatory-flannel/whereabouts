@@ -24,6 +24,7 @@ angular.module('greenfield.friends', ['greenfield.services'])
   };
 })
 .controller('FriendsController', function ($scope, localStorage, Friends) {
+  $scope.isLandingPage = false;
   $scope.userId = localStorage.get('flannel._id');
   $scope.friends = [];
   $scope.users = [];
