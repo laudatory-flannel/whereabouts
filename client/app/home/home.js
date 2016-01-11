@@ -51,10 +51,31 @@ angular.module('greenfield.home', ['greenfield.services'])
     render: render
   };
 })
-.factory('Markers', function() {
-  return {};
-})
 .factory('Directions', function() {
+  var display = new google.maps.DirectionsRenderer({ draggable: true });
+  var service = new google.maps.DirectionsService();
+
+  var displayRoute = function(map) {
+    display.setMap(map);
+    display.setPanel(document.getElementById("directions"));
+    service.route({
+      origin: document.getElementById('start').value,
+      destination: document.getElementById('end').value,
+      travelMode: google.maps.TravelMode.WALKING
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        display.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  };
+
+  return {
+    displayRoute: displayRoute
+  };
+})
+.factory('Markers', function() {
   return {};
 })
 .controller('HomeController', function($scope, $http, Map, Markers, Directions) {
@@ -64,37 +85,15 @@ angular.module('greenfield.home', ['greenfield.services'])
     // Sets visibility of directions box (should likely be renamed for clarity)
     $scope.boxAppear = false;
 
-    // Initialize directions modules
-    var directionsDisplay = new google.maps.DirectionsRenderer({ draggable: true });
-    var directionsService = new google.maps.DirectionsService();
-
-    // Display route (what's its relation to calculateAndDisplayRoute?)
-    var displayRoute = function() {
-      var calculateAndDisplayRoute = function (directionsService, directionsDisplay) {
-        directionsService.route({
-          origin: document.getElementById('start').value,
-          destination: document.getElementById('end').value,
-          travelMode: google.maps.TravelMode.WALKING
-        }, function(response, status) {
-          if (status === google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-          } else {
-            window.alert('Directions request failed due to ' + status);
-          }
-        });
-      };
-
-      $scope.$apply(function(){
+    var displayRouteHandler = function() {
+      $scope.$apply(function() {
         $scope.boxAppear = true;
       });
-      directionsDisplay.setMap($scope.map);
-      directionsDisplay.setPanel(document.getElementById("directions"));
-      calculateAndDisplayRoute(directionsService, directionsDisplay);
-    };
-
+      Directions.displayRoute($scope.map);
+    }
     // Register event listeners to display route whenever endpoints change
-    document.getElementById('start').addEventListener('change', displayRoute);
-    document.getElementById('end').addEventListener('change', displayRoute);
+    document.getElementById('start').addEventListener('change', displayRouteHandler);
+    document.getElementById('end').addEventListener('change', displayRouteHandler);
   };
 
   $scope.setUpMarkers = function() {
