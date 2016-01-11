@@ -15,7 +15,7 @@ module.exports = function(app, express) {
   app.use(bodyParser.json());
 
   // For debugging purposes
-  // app.use(middleware.requestLogger);
+  app.use(middleware.requestLogger);
   
   app.use(express.static(__dirname + '/../client'));
 
@@ -38,6 +38,7 @@ module.exports = function(app, express) {
 
 	// Get users
 	app.get('/users', function(req, res){
+		console.log('getting users');
 		helpers.getUsers(function(err, data){
 			if (err) {
 				res.send(500);
@@ -60,6 +61,7 @@ module.exports = function(app, express) {
 
 	// Get users' friends array
 	app.get('/users/:id/friends', function(req, res){
+		console.log('successfully getting friends!')
 		helpers.getUserById(req.params.id, function(err, data) {
 			if (err) {
 				res.send(500);
@@ -68,6 +70,17 @@ module.exports = function(app, express) {
 			}
 		})
 	});
+
+	// Get users' friends array
+	// app.get('/users/:name/friends', function(req, res){
+	// 	helpers.getUserByName(req.params.name, function(err, data) {
+	// 		if (err) {
+	// 			res.send(500);
+	// 		} else {
+	// 			data === null ? res.json({message: "Error: User not found."}) : res.json(data.friends);
+	// 		}
+	// 	})
+	// });
 
 	// ---- POST REQUESTS ----
 	//Logging in/authentication
@@ -126,11 +139,22 @@ module.exports = function(app, express) {
 			if (err) {
 				res.send(500);
 			} else {
+				console.log('data', data)
 				res.json(data);
 			}
 		});
 	});
 
+	// app.post('/users/:name/friends', function(req, res) {
+	// 	console.log('friend obj?',req.body.friend)
+	// 	helpers.updateUserFriends({name: req.params.name}, req.body.friend, req.body.action, function (err, data) {
+	// 		if (err) {
+	// 			res.send(500);
+	// 		} else {
+	// 			res.json(data);
+	// 		}
+	// 	});
+	// });
 
 	app.post('/checkAuth', function(req, res, next) {
 		var token = req.body.token;

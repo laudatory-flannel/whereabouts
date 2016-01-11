@@ -57,7 +57,6 @@ angular.module('greenfield.services', [])
   };
 
   var getAllFriends = function (input) {
-
     return $http({
       method: 'GET',
       url: '/users/' + input + '/friends',

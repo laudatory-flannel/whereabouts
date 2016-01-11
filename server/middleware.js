@@ -7,7 +7,7 @@ var jwt = require('jwt-simple');
 // Used for debugging, to check if x-access-token is present
 // Not generally necessary
 exports.requestLogger = function(req, res, next) {
-  console.log(req.path, req.headers['x-access-token']);
+  console.log(req.path);
   next();
 };
 
