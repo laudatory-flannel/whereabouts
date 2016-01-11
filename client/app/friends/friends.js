@@ -11,7 +11,7 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.users = [];
 
   $scope.addFriend = function(friend) {
-    Friends.addFriend($scope.user, friend)
+    Friends.modifyFriend($scope.user, friend, 'add')
     .then(function(data) {
       $scope.friends.push(friend._id);
     });
@@ -29,6 +29,13 @@ angular.module('greenfield.friends', ['greenfield.services'])
     .then(function(result) {
       $scope.users = result.data;
     });
+  };
+
+  $scope.deleteFriend = function(user) {
+   Friends.modifyFriend($scope.user, friend, 'delete')
+   .then(function(data) {
+     // delete friend id from $scope.
+   });
   };
 
   $scope.getAllFriends();
