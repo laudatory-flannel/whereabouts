@@ -1,7 +1,8 @@
 //used purely for testing - production code will not utilize a default user
 var DEFAULT_USER = {
-  _id: "569301b92951990b21a1f28c",
+  _id: "569330315d957f2fd73cd7e2",
   name: 'Rachel',
+  friends: []
 };
 
 angular.module('greenfield.friends', ['greenfield.services'])
@@ -11,11 +12,11 @@ angular.module('greenfield.friends', ['greenfield.services'])
   $scope.users = [];
 
   $scope.addFriend = function(friend) {
+    console.log('calling $scope.addFriend', friend)
     $scope.search = null;
     Friends.modifyFriend($scope.user, friend, 'add')
     .then(function(data) {
       $scope.friends.push(friend);
-      console.log($scope.friends)
     });
   };
 
