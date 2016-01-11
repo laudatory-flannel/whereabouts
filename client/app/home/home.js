@@ -1,6 +1,6 @@
 var USER_ICON_URL = 'app/home/currentlocation.png';
 var EVENT_ICON_URL = 'app/home/peace.png';
-var DEFAULT_POSITION = [ 30, -120 ]; // random default location in Berkeley, CA
+var DEFAULT_POSITION = [ 37.784, -122.409 ]; // Hack Reactor
 
 angular.module('greenfield.home', ['greenfield.services'])
 .factory('Map', function(localStorage) {
@@ -31,8 +31,7 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 
   // Renders map in $('#map') DOM element, based on $scope position
-  var render = function() {
-    var position = getLocalPosition();
+  var render = function(position) {
     return new google.maps.Map(document.getElementById('map'), {
       center: { lat: position[0], lng: position[1] },
       zoom: 14,
@@ -184,20 +183,20 @@ angular.module('greenfield.home', ['greenfield.services'])
 
     // Render the actual location, once it is found
     Map.getRealLocation(function(position) {
+      $scope.position = position;
       Map.setLocalPosition(position);
 
       $scope.$apply(function() {
         // $apply notifies angular to watch changes and re-evaluate ng-if/show expressions
         $scope.loading = false;
       });
-      $scope.map = Map.render();
+      $scope.map = Map.render(position);
       callback();
     });
   };
 
   // Triggers click on marker from click on event in feed
   $scope.callMarker = function($index){
-    // console.log($scope.postMarker);
     google.maps.event.trigger($scope.postMarker[$index], 'click', 'click');
   };
 
