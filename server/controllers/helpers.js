@@ -72,9 +72,14 @@ var utils = {
   // },
 
     updateUserFriends: function (name, friend, method, cb) {
-      var action = {'$push': {friends: friend._id}};
-
-      User.update(name, action, function (err, result) {
+      console.log('HERRRREEEE',name, friend, method)
+      if (method === 'add') {
+        var actionQuery = {'$addToSet': {friends: friend}};
+      } else {
+        var actionQuery = {'$pull': {friends: friend}};
+        console.log('actionQuery',actionQuery)
+      }
+      User.update(name, actionQuery, function (err, result) {
         if (err) {
           console.log(err);
           return cb(err);
