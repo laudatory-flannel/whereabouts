@@ -7,7 +7,6 @@ angular.module('greenfield.event', ['greenfield.services'])
   $scope.user;
   $scope.endedAt;     
   $scope.locations;
-  $scope.isLandingPage = false;
   
   $scope.sendForm = function(){
     var inputs = $scope.locations;
