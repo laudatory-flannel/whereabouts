@@ -86,6 +86,17 @@ var utils = {
       return cb(null, result);
     });
   },
+  
+  //Get events by user ID
+  getEventById: function(id, cb) {
+    Event.findById(id, function(err, event) {
+      if(err) {
+        console.log(err);
+        return cb(err);
+      }
+      return cb(null, event);
+    });
+  },
 
   //Get active events from database
   getActiveEvents: function(cb) {
@@ -100,16 +111,6 @@ var utils = {
     });
   },
 
-  //Get events by user ID
-  getEventById: function(id, cb) {
-    Event.findById(id, function(err, event) {
-      if(err) {
-        console.log(err);
-        return cb(err);
-      }
-      return cb(null, event);
-    });
-  },
 
   //Set event active status to false based on current time and time ended
   expireEvents: function(cb) {
@@ -131,7 +132,7 @@ var utils = {
         console.log('Error expiring events: ',err);
       }
       console.log('no error in query, returning cb results')
-      return cb(null,results)
+      return cb(null, results)
     });
   }
 }
