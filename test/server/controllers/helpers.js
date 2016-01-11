@@ -122,7 +122,7 @@ describe("helpers", function() {
   });
   describe("#getActiveEvents", function() {
     return it("should get only active events", function(done) {
-      return Event.create(event1, function(err, result) {
+      return helpers.addEventToDb(event2, function(err, result) {
         if (err) {
           throw err;
         }
@@ -130,34 +130,58 @@ describe("helpers", function() {
           if (err) {
             throw err;
           }
-          expect(activeEvents.length).to.equal(0);
+          expect(activeEvents.length).to.equal(1);
           return done();
         });
       });
     });
   });
-  return describe("#expireEvents", function() {
+  describe("#expireEvents", function() {
     return it("should not expire active events", function(done) {
-      return Event.create(event2, function(err, result) {
+      return helpers.addEventToDb(event2, function(err, result) {
         if (err) {
           throw err;
         }
+        console.log('result', result);
         return helpers.expireEvents(function(err, events) {
           if (err) {
             throw err;
           }
-          console.log('here3');
+          console.log('here1');
           return Event.find({
             active: true
           }, function(err, foundActive) {
             if (err) {
               throw err;
             }
-            console.log('here4');
+            console.log('here2');
             expect(foundActive).to.have.length(1);
             expect(foundActive[0].active).to.equal(true);
             return done();
           });
+        });
+      });
+    });
+  });
+  return describe("#expireEvents", function() {
+    return it("should expire inactive events", function(done) {
+      return Event.create(event1, function(err, result) {
+        if (err) {
+          throw err;
+        }
+        helpers.expireEvents(function(err, events) {
+          if (err) {
+            throw err;
+          }
+        });
+        return Event.find({
+          active: true
+        }, function(err, foundEvent) {
+          if (err) {
+            throw err;
+          }
+          expect(foundEvent).to.have.length(0);
+          return done();
         });
       });
     });
