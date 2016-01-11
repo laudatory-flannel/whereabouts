@@ -180,8 +180,7 @@ angular.module('greenfield.home', ['greenfield.services'])
     Markers.addMarker($scope.map, Map.getLocalPosition(), USER_ICON_URL);
 
     // Add clickable map marker for each location
-    for (var i = 0; i < $scope.allLocations.length; i++) {
-      var location = $scope.allLocations[i];
+    _.forEach($scope.allLocations, function(location, i) {
       var marker = Markers.addMarker($scope.map, [ location.latitude, location.longitude ], EVENT_ICON_URL);
       $scope.postMarker.push(marker);
       
@@ -194,7 +193,7 @@ angular.module('greenfield.home', ['greenfield.services'])
           infowindow.open($scope.map, marker);
         };
       })($scope.postMarker[i], i));
-    }
+    });
   };
 
   // Triggers click on marker from click on event in feed
@@ -204,9 +203,9 @@ angular.module('greenfield.home', ['greenfield.services'])
 
   // Clears all markers from map
   $scope.clearMarkers = function() {
-    for (var i = 0; i < $scope.allLocations.length; i++) {
-       $scope.postMarker[i].setMap(null);
-    }
+    _.forEach($scope.postMarker, function(postMarker) {
+      postMarker.setMap(null);
+    });
   };
 
   // Find events - not really being used
