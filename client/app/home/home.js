@@ -89,6 +89,14 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   };
 
+  var addUserMarker = function(map, position) {
+    return addMarker(map, position, USER_ICON_URL);
+  }
+
+  var addEventMarker = function(map, position) {
+    return addMarker(map, position, EVENT_ICON_URL);
+  };
+
   // Returns a handler that shows an info window for a given marker
   var getDisplayInfoHandler = function(map, location, marker) {
     return function() {
@@ -109,7 +117,8 @@ angular.module('greenfield.home', ['greenfield.services'])
   };
 
   return {
-    addMarker: addMarker,
+    addUserMarker: addUserMarker,
+    addEventMarker: addEventMarker,
     getDisplayInfoHandler: getDisplayInfoHandler,
     triggerClick: triggerClick,
     removeFromMap: removeFromMap
@@ -199,11 +208,11 @@ angular.module('greenfield.home', ['greenfield.services'])
     ];
 
     // Add marker for user
-    Markers.addMarker($scope.map, Map.getLocalPosition(), USER_ICON_URL);
+    Markers.addUserMarker($scope.map, Map.getLocalPosition());
 
     // Add clickable map marker for each location
     _.forEach($scope.allLocations, function(location, i) {
-      var marker = Markers.addMarker($scope.map, [ location.latitude, location.longitude ], EVENT_ICON_URL);
+      var marker = Markers.addEventMarker($scope.map, [ location.latitude, location.longitude ]);
       $scope.markers.push(marker);
       google.maps.event.addListener(
         $scope.markers[i],
