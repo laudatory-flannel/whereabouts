@@ -2,7 +2,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: white;
+  background: black;
 }
 
 h1, h2, h3, h4 {
@@ -52,6 +52,15 @@ div.auth {
 div {
   /*border: dotted 1px red;*/
 }
+.background {
+  top:0;
+  left:0;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  background-image: url(../img/park.jpeg);
+}
 
 .container-fluid {
   /*border: dashed 2px blue;*/
@@ -59,32 +68,43 @@ div {
 }
 
 .mapContainer {
-  border: solid black 2px;
+  border-right: solid black 2px;
   padding: 0px;
   background-color: #ccc;
 }
 
 #map {
   width: 100%;
-  height: 500px;
+  height: 505px;
 }
 
 .nearbyEvents {
-  background-color: #b88;
+  background-color: #999;
   overflow: auto;
   height: 528px;
   padding: 0px;
 }
 
 .event {
-  background-color: #9b9;
-  border-radius: 8px;
+  color:#444;
+  padding:5px;
+  background-color: #cdc;
+  border-radius: 2px;
   margin: 5px;
 }
 
+.event li {
+  list-style: none;
+}
+
+.event button {
+  margin: 0px;
+}
+
 .createEvent {
+  color:#444;
   height: 528px;
-  background-color: #66a;
+  background-color: #ccc;
   padding: 0px;
 }
 
