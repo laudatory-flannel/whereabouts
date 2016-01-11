@@ -289,17 +289,16 @@ angular.module('greenfield.home', ['greenfield.services'])
       }, 1000);
     });
 
-  //initial 
-  $scope.initMap(function() { //finishes asynchronously
-    $scope.initRoutes();
-    $scope.initMarkers();
-    setInterval(function(){
-      $scope.getEvents(function(events) {
-        $scope.updateEvents(events);
-      });
-    }, 1000);
-
+    //initial 
+    $scope.initMap(function() { //finishes asynchronously
+      $scope.initRoutes();
+      $scope.initMarkers();
+      setInterval(function(){
+        $scope.getEvents(function(events) {
+          $scope.updateEvents(events);
+        });
+      }, 1000);
+    });
   });
-
 });
 
