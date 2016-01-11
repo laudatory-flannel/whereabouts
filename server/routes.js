@@ -8,8 +8,6 @@ var middleware = require('./middleware.js');
 var request = require('request');
 var FormData = require('form-data');
 var jwt = require('jwt-simple');
-var ObjectId = require('mongoose').Types.ObjectId; 
-
 
 module.exports = function(app, express) {
 	// Allow app to parse request body (for POST requests)
@@ -60,20 +58,9 @@ module.exports = function(app, express) {
 		});
 	});
 
-	// // Get users' friends array
-	// app.get('/users/:id/friends', function(req, res){
-	// 	helpers.getUserById(req.params.id, function(err, data) {
-	// 		if (err) {
-	// 			res.send(500);
-	// 		} else {
-	// 			res.json(data.friends);
-	// 		}
-	// 	})
-	// });
-
 	// Get users' friends array
-	app.get('/users/:name/friends', function(req, res){
-		helpers.getUserByName(req.params.name, function(err, data) {
+	app.get('/users/:id/friends', function(req, res){
+		helpers.getUserById(req.params.id, function(err, data) {
 			if (err) {
 				res.send(500);
 			} else {
@@ -133,21 +120,9 @@ module.exports = function(app, express) {
 
 	//Add new friend to user's friends.
 
-	// app.post('/users/:id/friends', function(req, res) {
-	// 	helpers.updateUserFriends(req.params.id, req.body.friendId, '$push', function (err, data) {
-	// app.post('/users/:id/friends', function(req, res) {
-	// 	helpers.updateUserFriends(req.params.id, req.body, '$push', function (err, data) {
-	// 		if (err) {
-	// 			res.send(500);
-	// 		} else {
-	// 			res.json(data);
-	// 		}
-	// 	});
-	// });
-
-	app.post('/users/:name/friends', function(req, res) {
-		console.log('friend obj?',req.body.friend)
-		helpers.updateUserFriends({name: req.params.name}, req.body.friend, req.body.action, function (err, data) {
+	app.post('/users/:id/friends', function(req, res) {
+		console.log('modifying friend routes', req.params.id)
+		helpers.updateUserFriends({_id: req.params.id}, req.body.friend, req.body.action, function (err, data) {
 			if (err) {
 				res.send(500);
 			} else {
@@ -155,6 +130,7 @@ module.exports = function(app, express) {
 			}
 		});
 	});
+
 
 	app.post('/checkAuth', function(req, res, next) {
 		var token = req.body.token;

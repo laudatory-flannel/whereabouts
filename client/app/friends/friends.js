@@ -1,6 +1,6 @@
 //used purely for testing - production code will not utilize a default user
 var DEFAULT_USER = {
-  _id: '1',
+  _id: "569301b92951990b21a1f28c",
   name: 'Rachel',
 };
 
@@ -20,7 +20,7 @@ angular.module('greenfield.friends', ['greenfield.services'])
   };
 
   $scope.getAllFriends = function() {
-    Friends.getAllFriends($scope.user.name)
+    Friends.getAllFriends($scope.user._id)
     .then(function(result) {
       $scope.friends = result.data;
     });
@@ -34,12 +34,10 @@ angular.module('greenfield.friends', ['greenfield.services'])
   };
 
   $scope.deleteFriend = function(friend) {
-   Friends.modifyFriend($scope.user,friend, 'delete')
+   Friends.modifyFriend($scope.user, friend, 'delete')
    .then(function(data) {
-    console.log('scope.friends', $scope.friends, 'friend', friend)
      for (var i = 0; i < $scope.friends.length; i++) {
       if ($scope.friends[i] === friend) {
-        console.log('updating scope.firends')
         $scope.friends.splice(i, 1);
       }
      }

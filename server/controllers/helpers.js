@@ -34,16 +34,16 @@ var utils = {
   },
 
   // get user based on name -- Verified
-  getUserByName: function(name, cb) {
-    var query = {'name': name};
-    User.findOne(query, function(err, result) {
-      if (err) {
-        console.log(err);
-        return res.send(500, { error: err });
-      }
-      return cb(null, result);
-    });
-  },
+  // getUserByName: function(name, cb) {
+  //   var query = {'name': name};
+  //   User.findOne(query, function(err, result) {
+  //     if (err) {
+  //       console.log(err);
+  //       return res.send(500, { error: err });
+  //     }
+  //     return cb(null, result);
+  //   });
+  // },
 
   // ^ These should be re-factored into one function later.  
 
@@ -71,15 +71,15 @@ var utils = {
   //   });
   // },
 
-    updateUserFriends: function (name, friend, method, cb) {
-      console.log('inserting friend into db', friend)
+    updateUserFriends: function (idQuery, friend, method, cb) {
+      console.log('inserting friend into db', idQuery)
       if (method === 'add') {
         var actionQuery = {'$addToSet': {friends: friend}};
       } else {
         var actionQuery = {'$pull': {friends: friend}};
         console.log('actionQuery',actionQuery)
       }
-      User.update(name, actionQuery, function (err, result) {
+      User.update(idQuery, actionQuery, function (err, result) {
         if (err) {
           console.log(err);
           return cb(err);
