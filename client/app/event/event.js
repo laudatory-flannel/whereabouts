@@ -1,6 +1,7 @@
 // MARKED FOR DELETION
 
 angular.module('greenfield.event', ['greenfield.services'])
+
 .controller('EventController', function($scope, $http, localStorage) {
 
   $scope.title;
