@@ -123,12 +123,12 @@ describe "helpers", () ->
   describe "#getActiveEvents", () ->
     it "should get only active events", (done) ->
 
-      Event.create event1,(err, result) -> # create an active event
+      helpers.addEventToDb event2,(err, result) -> # create an expired event
         throw err if err
-        
+       
         helpers.getActiveEvents (err, activeEvents) ->
           throw err if err
-          expect(activeEvents.length).to.equal(0)
+          expect(activeEvents.length).to.equal(1)
 
           return done()
         
@@ -146,41 +146,38 @@ describe "helpers", () ->
   describe "#expireEvents", () ->
     it "should not expire active events", (done) ->
 
-      Event.create event2, (err, result) -> # create an active event
+      helpers.addEventToDb event2, (err, result) -> # create an active event
         throw err if err
-
+        console.log('result', result)
         helpers.expireEvents (err, events) ->
           throw err if err
-          console.log('here3')
+          console.log('here1')
 
           Event.find {active: true}, (err, foundActive) ->
             throw err if err
-            console.log('here4')
+            console.log('here2')
 
             expect(foundActive).to.have.length(1)
             expect(foundActive[0].active).to.equal(true)
       
             return done() 
 
-  # describe "#expireEvents", () ->
-  #   it "should expire inactive events", (done) ->
-  #     console.log('here1')
-  #     Event.create event1,(err, result) ->
-  #       throw err if err
-  #       console.log('here2', result)
-  #       helpers.expireEvents (err, events) ->
-  #         throw err if err
-  #       console.log('here3')
-  #         # Look up the object in the db to make sure it was really written
-  #       Event.find {active: true}, (err, foundEvent) ->
-  #         throw err if err
-  #         console.log('here4')
-  #         console.log('foundEvent 1',foundEvent)
-  #         expect(foundEvent).to.have.length(0)
-  #         expect(foundEvent[0].active).to.equal(false)
-  #         console.log('here5')
+  describe "#expireEvents", () ->
+    it "should expire inactive events", (done) ->
+   
+      Event.create event1,(err, result) ->
+        throw err if err
+    
+        helpers.expireEvents (err, events) ->
+          throw err if err
+      
+          # Look up the object in the db to make sure it was really written
+        Event.find {active: true}, (err, foundEvent) ->
+          throw err if err
+        
+          expect(foundEvent).to.have.length(0)
 
-  #         return done()
+          return done()
 
 
 

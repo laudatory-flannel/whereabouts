@@ -29,13 +29,13 @@ module.exports = function(app, express) {
 
 	// Get events (expires inactive events and returns all active events)
 	app.get('/events', function(req, res){
-		helpers.expireEvents(helpers.getActiveEvents(function(err, data){
+		helpers.getActiveEvents(function(err, data){
 			if (err) {
 				res.send(500);
 			} else {
-				data === null ? res.json({message: "Error: Events not found."}) : res.json(data);
+				res.json(data);
 			}
-		}));
+		});
 	});
 
 	// Get users (returns all users)

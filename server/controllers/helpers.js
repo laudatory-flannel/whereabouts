@@ -89,8 +89,8 @@ var utils = {
 
   //Get active events from database
   getActiveEvents: function(cb) {
-    //var query = {'active': true};
-    var query = {};
+    var query = {'active': true};
+    // var query = {};
     Event.find(query, function(err, events) {
       if (err) {
         console.log(err);
@@ -113,6 +113,7 @@ var utils = {
 
   //Set event active status to false based on current time and time ended
   expireEvents: function(cb) {
+    console.log('IN EXPIRE EVENTS')
     var currentTime = new Date(Date.now());
 
     //Get all events where endedAt is less than current time
@@ -123,12 +124,14 @@ var utils = {
           active: false
         }
     }
-
+    console.log('pre query')
     //Update all events where endedAt is less than current time
     Event.update(query, data, {multi: true}, function(err, results) { 
       if (err) {
         console.log('Error expiring events: ',err);
       }
+      console.log('no error in query, returning cb results')
+      return cb(null,results)
     });
   }
 }
