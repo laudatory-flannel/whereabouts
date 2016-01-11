@@ -1,5 +1,6 @@
-// random default location in Berkeley, CA
-var DEFAULT_POSITION = [ 30, -120 ];
+var USER_ICON_URL = 'app/home/currentlocation.png';
+var EVENT_ICON_URL = 'app/home/peace.png';
+var DEFAULT_POSITION = [ 30, -120 ]; // random default location in Berkeley, CA
 
 var app = angular.module('greenfield.home', ['greenfield.services']);
 app.controller('HomeController', function($scope, localStorage, $http) {
@@ -142,32 +143,35 @@ app.controller('HomeController', function($scope, localStorage, $http) {
     var infowindow = new google.maps.InfoWindow({ maxWidth: 160 });
     var postMarker;
 
+    // Adds marker to map (and returns the marker)
+    var addMarker = function(latitude, longitude, iconUrl) {
+      return new google.maps.Marker({
+        position: new google.maps.LatLng(latitude, longitude), 
+        animation: google.maps.Animation.DROP,
+        map: $scope.map,
+        icon: iconUrl
+      });
+    };
+
+    // Add marker for user
+    addMarker($scope.position[0], $scope.position[1], USER_ICON_URL);
+
     // Add clickable map marker for each location
     for (var i = 0; i < $scope.allLocations.length; i++) {
       var location = $scope.allLocations[i];
-
-      $scope.postMarker.push(new google.maps.Marker({
-        position: new google.maps.LatLng(location.latitude, location.longitude), 
-        animation: google.maps.Animation.DROP,
-        map: $scope.map,
-        icon: 'app/home/peace.png'
-      }));
+      var marker = addMarker(location.latitude, location.longitude, EVENT_ICON_URL);
+      $scope.postMarker.push(marker);
       
       google.maps.event.addListener($scope.postMarker[i], 'click', (function(postMarker, i) {
         return function() {
-          infowindow.setContent("<h4>" + location.personname + "</h4>" + location.description + "<p>Will be there until " + location.timeuntil + "</p>");
+          infowindow.setContent(
+            "<h4>" + $scope.allLocations[i].personname +
+            "</h4>" + $scope.allLocations[i].description + 
+            "<p>Will be there until " + $scope.allLocations[i].timeuntil + "</p>");
           infowindow.open($scope.map, postMarker);
         };
       })($scope.postMarker[i], i));
     }
-
-    // Add marker for user
-    new google.maps.Marker({
-        position: new google.maps.LatLng($scope.position[0], $scope.position[1]), 
-        animation: google.maps.Animation.DROP,
-        map: $scope.map,
-        icon: 'app/home/currentlocation.png'
-      })
   };
 
   $scope.initMap = function() {
