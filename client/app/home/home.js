@@ -174,31 +174,35 @@ angular.module('greenfield.home', ['greenfield.services'])
     $scope.allEvents = [
     {
       id: 1,
-      user: "Greg Domorski",
+      userName: "Greg Domorski",
       description: "I'm at Starbucks Bros!",
       endedAt: "8 p.m.",
-      location: { coordinates: [ -122.401268, 37.793686 ] }
+      location: { coordinates: [ -122.401268, 37.793686 ] },
+      isPublic: true
     },
     {
       id: 2,
-      user: "Max O'Connell",
+      userName: "Max O'Connell",
       description: "I'm at SF GreenSpace HACKING! YEAH HACK REACTOR",
       endedAt: "10 p.m.",
-      location: { coordinates: [ -122.400831, 37.786710 ] }
+      location: { coordinates: [ -122.400831, 37.786710 ] },
+      isPublic: true
     },
     {
       id: 3,
-      user: "Gloria Ma",
+      userName: "Gloria Ma",
       description: "I'm  hanging out at the Hyatt!! Come join me",
       endedAt: "8 p.m.",
-      location: { coordinates: [ -122.39573, 37.794301 ] }
+      location: { coordinates: [ -122.39573, 37.794301 ] },
+      isPublic: true
     },
     {
       id: 4,
-      user: "Rachel RoseFigura",
+      userName: "Rachel RoseFigura",
       description: "I'm at Starbucks Bros!",
       endedAt: "8 p.m.",
-      location: { coordinates: [ -122.406435, 37.784118 ] }
+      location: { coordinates: [ -122.406435, 37.784118 ] },
+      isPublic: true
     },    
     ];
 
@@ -229,6 +233,13 @@ angular.module('greenfield.home', ['greenfield.services'])
     HTTP.sendRequest('GET', '/events')
     .then(function(response) {
       var events = response.data;
+
+      //client-side filtering for events a user can see
+      //if isPublic OR userId is in user.friends
+      events = _.filter(events, function(event) {
+        return event.isPublic || $scope.friends.indexOf(event.userId) !== -1;
+      });
+
       callback(events);
     });
   };
@@ -248,14 +259,21 @@ angular.module('greenfield.home', ['greenfield.services'])
     });
   }
 
-  $scope.initMap(function() { //finishes asynchronously
-    $scope.initRoutes();
-    $scope.initMarkers();
-    setInterval(function(){
-      $scope.getEvents(function(events) {
-        $scope.updateEvents(events);
-      });
-    }, 1000);
+  //Get user's friends, to be able to filter events
+  //Assumes friends do not change during their visit to the page
+  HTTP.sendRequest('GET', '/users/' + localStorage.get('flannel._id') + '/friends')
+  .then(function(response) {
+    $scope.friends = response.data;
+    $scope.initMap(function() { //finishes asynchronously
+      $scope.initRoutes();
+      $scope.initMarkers();
+      setInterval(function(){
+        $scope.getEvents(function(events) {
+          $scope.updateEvents(events);
+        });
+      }, 1000);
+    });
   });
+
 });
 

@@ -9,11 +9,11 @@ angular.module('greenfield.friends', ['greenfield.services'])
     return HTTP.sendRequest('POST', '/users/' + userId + '/friends', data);
   };
 
-  var getAllFriends = function (input) {
-    return HTTP.sendRequest('GET', '/users/' + input + '/friends');
+  var getAllFriends = function (userId) {
+    return HTTP.sendRequest('GET', '/users/' + userId + '/friends');
   };
 
-  var getAllUsers = function (input) {
+  var getAllUsers = function () {
     return HTTP.sendRequest('GET', '/users');
   };
 
