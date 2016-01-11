@@ -4,8 +4,8 @@ var EventSchema = new mongoose.Schema({
  // _id: no need to include _id in schema, should auto  http://stackoverflow.com/questions/11604928/is-there-a-way-to-auto-generate-objectid-when-a-mongoose-model-is-newed
  title: String,
  description: String,
- user: String, // just the user's name, at least for now (easier to show it in view)
- userID: String,
+ userName: String, // just the user's name, at least for now (easier to show it in view)
+ userId: String,
  createdAt: { type: Date, default: new Date(Date.now()) },
  endedAt: { type: Date, default: new Date(Date.now()) },
  active: Boolean,
