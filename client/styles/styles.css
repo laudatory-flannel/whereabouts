@@ -264,7 +264,9 @@ td {
   text-align: left;
   vertical-align:middle;   
 }
+*/
 
-.container {
+/* Used on landing page to move text/buttons to the right */
+.container { 
   margin-left: 150px;
-}*/
+}
