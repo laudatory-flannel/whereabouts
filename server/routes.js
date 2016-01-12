@@ -40,7 +40,7 @@ module.exports = function(app, express) {
 
 	// Get users (returns all users)
 	app.get('/users', function(req, res){
-		console.log('getting users');
+		
 		helpers.getUsers(function(err, data){
 			if (err) {
 				res.send(500);
@@ -63,7 +63,7 @@ module.exports = function(app, express) {
 
 	// Get users' friends array
 	app.get('/users/:id/friends', function(req, res){
-		console.log('successfully getting friends!')
+	
 		helpers.getUserById(req.params.id, function(err, data) {
 			if (err) {
 				res.send(500);
@@ -78,20 +78,19 @@ module.exports = function(app, express) {
 	//Logging in/authentication
 	app.post('/auth', function(req, res){
 		var accessToken = req.body.accessToken;
-
+		
 		if (!accessToken) {
 			console.log("no access token");
 			res.send(403); // Forbidden
 		}
 		
 		// Check if access token is valid by attempting to call Facebook api with it
-		request.get('https://graph.facebook.com/v2.5/me?fields=id,name,picture.width(320).type(square),friends&access_token=' + accessToken, function(err, getResponse, fbResult) {
+		request.get('https://graph.facebook.com/v2.5/me?fields=id,name,picture.width(200).height(200).type(square),friends&access_token=' + accessToken, function(err, getResponse, fbResult) {
 			if (err) {
 				console.log("FB err: ", err);
 				return res.send(500);
 			}
 
-			// parses user fb data into object for insertion into database
 			try {
 				fbResult = JSON.parse(fbResult);
 				var userData = {
@@ -100,13 +99,30 @@ module.exports = function(app, express) {
 					imageUrl: fbResult.picture.data.url,
 					friends: fbResult.friends.data || []
 				}
-				console.log('USERDATA:',userData)
+				
 			} catch (e) {
 				console.log("Bad friends result");
 				return res.send(500);
 			}
 
 			// either returns an existing user or creates a new user if no user with that Facebook ID exists
+
+			userData.friends.map(function(item) {
+
+				request.get('https://graph.facebook.com/v2.5/' +item.id+ '?fields=picture.width(200).height(200).type(square)&access_token=' + accessToken, function(err, getResponse, fbImgUrl) {
+					if (err) {
+						console.log("FB err: ", err);
+						return res.send(500);
+					}
+					console.log('FRIEND PIC',JSON.parse(fbImgUrl).picture.data.url);
+					item.imageUrl = JSON.parse(fbImgUrl).picture.data.url;
+				});
+
+
+			});
+
+			console.log('USERDATA', userData);
+
 			helpers.getOrCreateUserByFbId(userData.fbId, userData, function(err, user) {
 				console.log("found existing user:", user);
 				var data = {
