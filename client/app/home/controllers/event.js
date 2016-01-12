@@ -1,4 +1,4 @@
-homeModule.controller('EventController', function($scope, $http, User) {
+homeModule.controller('EventController', function($scope, HTTP, User) {
   $scope.title;
   $scope.description;
   $scope.user;
@@ -7,7 +7,7 @@ homeModule.controller('EventController', function($scope, $http, User) {
   
   $scope.sendForm = function(){
     var inputs = $scope.locations;
-    //console.log($scope.title, $scope.endedAt, $scope.address, $scope.description);
+    console.log($scope.title, $scope.endedAt, $scope.address, $scope.description);
 
     var data = {
       userId: User.getId(),
@@ -19,12 +19,9 @@ homeModule.controller('EventController', function($scope, $http, User) {
       isPublic: !!$scope.isPublic
     };
 
-    console.log(data);
-
-    $http.post('/events', data).then(function successCallback(response) {
-      console.log(response);
-    }, function errorCallback(response) {
-      console.log(response);
+    HTTP.sendRequest('POST', '/events', data)
+    .then(function(response) {
+      console.log('posted event to server:', response.data);
     });
   };
 
