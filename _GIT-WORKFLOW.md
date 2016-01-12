@@ -30,14 +30,14 @@ The remaining 10% will be dividing up work appropriately so that members of your
 ### When starting a new feature
   1. Do the above commands to update your local's and fork's master branches.
   1. Then create a new branch to work from. You should name it appropriately for your feature. For this document, we'll use the name ```feature-branch```.
-    ```
-    > git checkout -b feature-branch
-    > git add .
-    > git commit
-    > git add .
-    > git commit
-    > (etc...)
-    ```
+  ```
+  > git checkout -b feature-branch
+  > git add .
+  > git commit
+  > git add .
+  > git commit
+  > (etc...)
+  ```
 ### Periodically as you work
   Keep your branch up to date with the upstream master!
   ```
@@ -53,9 +53,9 @@ The remaining 10% will be dividing up work appropriately so that members of your
 ### When finished with a new feature
   1. Do the above commands for merging changes into your local feature-branch from the upstream master. You MUST do this first.
   1. Push your local feature-branch into your fork's feature-branch:
-    ```
-    > git push origin feature-branch
-    ```
+  ```
+  > git push origin feature-branch
+  ```
   1. Go to your fork's repo on github. From there, submit a pull request:
     Base fork: laudatory-flannel
     Base: master
@@ -63,8 +63,8 @@ The remaining 10% will be dividing up work appropriately so that members of your
     Compare: feature-branch
   1. Wait for someone to accept the pull request, thus merging your changes into the upstream master.
   1. **Only after your pull request has been merged**, you may delete ```feature-branch``` from your local repo:
-    ```
-    > git checkout master
-    > git pull --rebase upstream master
-    > git branch -d feature-branch
-    ```
+  ```
+  > git checkout master
+  > git pull --rebase upstream master
+  > git branch -d feature-branch
+  ```
