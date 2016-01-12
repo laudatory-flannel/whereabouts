@@ -38,6 +38,7 @@ The remaining 10% will be dividing up work appropriately so that members of your
   > git commit
   > (etc...)
   ```
+  
 ### Periodically as you work
   Keep your branch up to date with the upstream master!
   ```
