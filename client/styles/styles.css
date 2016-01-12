@@ -197,6 +197,28 @@ div {
 
 /* ---- Friends page ---- */
 
+.friend {
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-color: #ccc;
+  padding-top: 100px;
+  height: 150px;
+}
+
+.friend span {
+  margin-bottom: 2px;
+  color: black;
+  background-color: white;
+  opacity: .9;
+  padding: 1px;
+}
+
+.friend button {
+  color: red;
+  float: right;
+  margin: 1px;
+}
+/*
 .friendImage {
   position: relative;
   padding: 8px;
@@ -221,7 +243,7 @@ div {
 .friendName {
   position: absolute;
   bottom:   30px;
-}
+}*/
 
 .friendPreview {
   width: 50px;
@@ -229,7 +251,7 @@ div {
   border-radius: 50%;
   padding: 10px;
 }
-
+/*
 .col1 {
   width: 1%;
 }
@@ -241,4 +263,4 @@ td {
 
 .container {
   margin-left: 150px;
-}
+}*/
