@@ -54,9 +54,9 @@ The remaining 10% will be dividing up work appropriately so that members of your
 ### When finished with a new feature
   1. Do the above commands for merging changes into your local feature-branch from the upstream master. You MUST do this first.
   1. Push your local feature-branch into your fork's feature-branch:
-  ```
-  > git push origin feature-branch
-  ```
+```
+> git push origin feature-branch
+```
   1. Go to your fork's repo on github. From there, submit a pull request:
     Base fork: laudatory-flannel
     Base: master
