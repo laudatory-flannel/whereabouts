@@ -11,7 +11,7 @@
 
 
 	<!-- Map Column -->
-	<div class="col-md-6 mapContainer">
+	<div class="col-md-6 mapContainer" >
 	<!-- Map -->
 		<div class="col-md-12" id="map">
 		</div>
@@ -38,15 +38,15 @@
 			<li><span style="font-weight:bold;">{{data.userName}}</span><span style="float:right;">{{data.endedAt}} </span></li>
 			<!-- <li>Until: {{data.endedAt}}</li> -->
 			<li>{{data.description}}</li>
-			<button ng-click="callMarker($index)">Get event info</button>
+			<button class="btn btn-alt" ng-click="callMarker($index)">Get event info</button>
 		</div>
 	</div>
 
 
 <div ng-controller="EventController">
 	<!-- Create Event Column -->
-	<div class="col-md-3 createEvent" ng-controller="EventController">
-		<h2 class="columnHeader">Create Event Dropdown</h2>
+	<div class="col-md-3 createEvent" ng-controller="EventController" style="overflow: auto;">
+		<h2 class="columnHeader">Create Event </h2>
 	<!-- Create Event Form -->
 		<form>             
 			<label for="Title" ng-model="title">Title: </label><br>
@@ -61,6 +61,7 @@
             <input id="isPublic" type='checkbox' ng-model='isPublic' /><br>
             <input ng-click="sendForm()" type="submit"/>
 		</form>
+		<div ng-if="boxAppear" id="directions" style="float: left" border-top="2px" border-top="1px"> <h2> Directions </h2> </div>
 		<div id="contactLink"></div>
 	</div>
 </div>
