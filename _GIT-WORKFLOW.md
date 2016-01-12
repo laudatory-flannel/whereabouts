@@ -25,19 +25,19 @@ The remaining 10% will be dividing up work appropriately so that members of your
   - You should NEVER push or pull in any other way from your local master.
   - **The sole purpose of your local repo's and fork's master branches is to be copies of the upstream master.**
 
-## 2. Only add new code to a feature branch (we'll hereby call it ```feature-branch```) on your local repo.
+## 2. Add all new work using feature branches
 
 ### When starting a new feature
-    1. Do the above commands to update your local's and fork's master branches.
-    1. Then create a new branch to work from:
-      ```
-      > git checkout -b feature-branch
-      > git add .
-      > git commit
-      > git add .
-      > git commit
-      > (etc...)
-      ```
+  1. Do the above commands to update your local's and fork's master branches.
+  1. Then create a new branch to work from. You should name it appropriately for your feature. For this document, we'll use the name ```feature-branch```.
+    ```
+    > git checkout -b feature-branch
+    > git add .
+    > git commit
+    > git add .
+    > git commit
+    > (etc...)
+    ```
 ### Periodically as you work
   Keep your branch up to date with the upstream master!
   ```
