@@ -8,7 +8,7 @@
 
 ## The Two Holy Git Workflows
 
-### Keep master branches up-to-date with upstream's master
+### 1. Keep master branches up-to-date with upstream's master
   The master branches of both your **local repo** and your **fork** should be maintained regularly as copies of the upstream master:
   ```
   > git checkout master
@@ -22,7 +22,7 @@
   - You should NEVER push or pull in any other way from your local master.
   - The sole purpose of your local's and fork's master branches is to be copies of the upstream master.
 
-### Only add new code to a feature branch (we'll hereby call it ```feature-branch```) on your local repo.
+### 1. Only add new code to a feature branch (we'll hereby call it ```feature-branch```) on your local repo.
   #### Create a new feature branch:
     1. Do the above commands to update your local's and fork's master branches.
     1. Then create a new branch to work from:
