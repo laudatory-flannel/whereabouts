@@ -203,4 +203,20 @@ angular.module('greenfield.services', [])
     getFriends: getFriends
   }
 
+})
+.factory('DateFormat', function() {
+  var prettifyDate = function(dateStr) {
+    var dateObj = new Date(dateStr);
+    var hours = dateObj.getHours(); // 24 hour clock
+    var minutes = dateObj.getMinutes();
+
+    var hoursString = (hours % 12).toString();
+    var minutesString = ((minutes <= 10) ? '0' : '') + minutes.toString();
+    var suffix = (hours <= 12) ? 'am' : 'pm';
+    return hoursString + ":" + minutesString + suffix;
+  };
+
+  return {
+    prettifyDate: prettifyDate
+  }
 });
