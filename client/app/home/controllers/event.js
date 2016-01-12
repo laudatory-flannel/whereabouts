@@ -25,23 +25,16 @@ homeModule.controller('EventController', function($scope, HTTP, User) {
     });
   };
 
-  $scope.getAllPlaces = function(){
-  // Initialize location autocomplete
-    var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
-    google.maps.event.addListener(places, 'place_changed', function () {
-      var array = [];
-      var place = places.getPlace();
-      var address = place.formatted_address;
-      var latitude = place.geometry.location.lat();
-      var longitude = place.geometry.location.lng();
-      var mesg = "Address: " + address;
-      array.push(latitude);
-      array.push(longitude);
-      $scope.locations = array;
-      console.log(array);
-      });
-  }();
-
+  // Initializes location autocomplete
+  var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+  google.maps.event.addListener(places, 'place_changed', function () {
+    var place = places.getPlace();
+    var address = place.formatted_address;
+    var latitude = place.geometry.location.lat();
+    var longitude = place.geometry.location.lng();
+    $scope.locations = [ latitude, longitude ];
+    console.log($scope.locations);
+  });
 })
 .directive('formInput', function (){
   return {
