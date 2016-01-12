@@ -27,7 +27,7 @@ homeModule.factory('Markers', function() {
     var clickHandler = function() {
       infoWindow.setContent(
         "<h4>" + event.userName +
-        "</h4>" + event.description + 
+        "</h4>" + '<p style="color: green">' + event.title + '</p>' + event.description + 
         "<p>Will be there until " + event.endedAt + "</p>");
       infoWindow.open(map, marker);
     };
