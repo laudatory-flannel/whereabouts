@@ -1,7 +1,4 @@
-// MARKED FOR DELETION
-
-angular.module('greenfield.event', ['greenfield.services'])
-.controller('EventController', function($scope, $http, User) {
+homeModule.controller('EventController', function($scope, $http, User) {
   $scope.title;
   $scope.description;
   $scope.user;

@@ -1,7 +1,6 @@
 angular.module('greenfield', [
   'greenfield.services',
   'greenfield.auth',
-  'greenfield.event',
   'greenfield.friends',
   'greenfield.home',
   'ngRoute'])
