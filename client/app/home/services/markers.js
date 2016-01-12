@@ -1,4 +1,4 @@
-homeModule.factory('Markers', function() {
+homeModule.factory('Markers', function(DateFormat) {
   // Info window object that will change content/position to display info for last marker clicked
   var infoWindow = new google.maps.InfoWindow({ maxWidth: 160 });
 
@@ -18,7 +18,6 @@ homeModule.factory('Markers', function() {
     return addMarker(map, position, USER_ICON_URL);
   };
 
-
   //adds event marker to page
   var addEventMarker = function(map, event) {
     var latitude = event.location.coordinates[1];
@@ -28,7 +27,7 @@ homeModule.factory('Markers', function() {
       infoWindow.setContent(
         "<h4>" + event.userName +
         "</h4>" + '<p style="color: green">' + event.title + '</p>' + event.description + 
-        "<p>Will be there until " + event.endedAt + "</p>");
+        "<p>Will be there until " + DateFormat.prettifyDate(event.endedAt) + "</p>");
       infoWindow.open(map, marker);
     };
     google.maps.event.addListener(marker, 'click', clickHandler);

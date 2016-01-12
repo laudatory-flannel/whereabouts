@@ -2,7 +2,7 @@ var USER_ICON_URL = 'img/currentlocation.png';
 var EVENT_ICON_URL = 'img/flag.png';
 var DEFAULT_POSITION = [ 37.784, -122.409 ]; // Hack Reactor
 
-homeModule.controller('HomeController', function($scope, Map, Directions, Markers, HTTP, User, DummyData) {
+homeModule.controller('HomeController', function($scope, Map, Directions, Markers, HTTP, User, DummyData, DateFormat) {
   $scope.map; // google map object
 
   $scope.initMap = function(callback) {
@@ -108,6 +108,8 @@ homeModule.controller('HomeController', function($scope, Map, Directions, Marker
     });
   };
 
+  $scope.prettifyDate = DateFormat.prettifyDate;
+
   // Get user's friends, to be able to filter events
   // Assumes friends do not change during their visit to the page
   User.getFriends()
@@ -131,7 +133,7 @@ homeModule.controller('HomeController', function($scope, Map, Directions, Marker
       userName: "Greg Domorski",
       title: "Really bored",
       description: "I'm at Starbucks Bros!",
-      endedAt: "8 p.m.",
+      endedAt: '2016-12-31T04:00:00.000Z',
       location: { coordinates: [ -122.401268, 37.793686 ] },
       isPublic: true
     },
@@ -140,7 +142,7 @@ homeModule.controller('HomeController', function($scope, Map, Directions, Marker
       userName: "Max O'Connell",
       title: "Come hang out with me",
       description: "I'm at SF GreenSpace HACKING! YEAH HACK REACTOR",
-      endedAt: "10 p.m.",
+      endedAt: '2016-12-31T06:00:00.000Z',
       location: { coordinates: [ -122.400831, 37.786710 ] },
       isPublic: true
     },
@@ -149,7 +151,7 @@ homeModule.controller('HomeController', function($scope, Map, Directions, Marker
       userName: "Gloria Ma",
       title: "I'm going to the club!",
       description: "I'm  hanging out at the Hyatt!! Come join me",
-      endedAt: "8 p.m.",
+      endedAt: '2016-12-31T04:00:00.000Z',
       location: { coordinates: [ -122.39573, 37.794301 ] },
       isPublic: true
     },
@@ -158,7 +160,7 @@ homeModule.controller('HomeController', function($scope, Map, Directions, Marker
       userName: "Rachel RoseFigura",
       title: "Anyone want to get coffee!",
       description: "I'm at Starbucks Bros!",
-      endedAt: "8 p.m.",
+      endedAt: '2016-12-31T04:00:00.000Z',
       location: { coordinates: [ -122.406435, 37.784118 ] },
       isPublic: true
     },    

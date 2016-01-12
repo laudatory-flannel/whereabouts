@@ -35,7 +35,7 @@
 		<h2 class="columnHeader">Events Near You</h2>
 	<!-- Individual Events -->
 		<div class="event" ng-repeat="data in allEvents">
-			<li><span style="font-weight:bold;">{{data.userName}}</span><span style="float:right;">{{data.endedAt}} </span></li>
+			<li><span style="font-weight:bold;">{{data.userName}}</span><span style="float:right;">{{prettifyDate(data.endedAt)}} </span></li>
 			<!-- <li>Until: {{data.endedAt}}</li> -->
 			<li>{{data.description}}</li>
 			<button ng-click="callMarker($index)">Get event info</button>
