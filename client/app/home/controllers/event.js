@@ -1,22 +1,26 @@
 homeModule.controller('EventController', function($scope, HTTP, User) {
   $scope.title;
   $scope.description;
-  $scope.user;
   $scope.endedAt;     
-  $scope.locations;
+  $scope.position; // 2-tuple of [ latitude, longitude ]
+  $scope.isPublic;
   
-  $scope.sendForm = function(){
-    var inputs = $scope.locations;
-    console.log($scope.title, $scope.endedAt, $scope.address, $scope.description);
+  // Returns specific formatting of location to conform to Mongoose
+  var mongoosifyLocation = function(position) {
+    return { type: "Point", coordinates: [ $scope.position[1], $scope.position[0] ] };
+  };
 
+  // POSTs new event to server
+  $scope.sendForm = function(){
     var data = {
       userId: User.getId(),
       userName: User.getName(),
       title: $scope.title,
       description: $scope.description,
-      active: true,
-      location:{ type: "Point", coordinates: [ $scope.locations[1], $scope.locations[0] ] },
-      isPublic: !!$scope.isPublic
+      endedAt: $scope.endedAt,
+      location: mongoosifyLocation($scope.position),
+      isPublic: !!$scope.isPublic,
+      active: true
     };
 
     HTTP.sendRequest('POST', '/events', data)
@@ -26,14 +30,14 @@ homeModule.controller('EventController', function($scope, HTTP, User) {
   };
 
   // Initializes location autocomplete
-  var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
-  google.maps.event.addListener(places, 'place_changed', function () {
-    var place = places.getPlace();
-    var address = place.formatted_address;
+  var autocompleter = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+  google.maps.event.addListener(autocompleter, 'place_changed', function () {
+    var place = autocompleter.getPlace();
+    // var address = place.formatted_address;
     var latitude = place.geometry.location.lat();
     var longitude = place.geometry.location.lng();
-    $scope.locations = [ latitude, longitude ];
-    console.log($scope.locations);
+    $scope.position = [ latitude, longitude ];
+    console.log($scope.position);
   });
 })
 .directive('formInput', function (){
