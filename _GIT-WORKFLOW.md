@@ -1,14 +1,17 @@
 # Git Workflow
+Follow this document to a T and you will avoid 90% of git-related headaches.
 
-## The Trinity of Repos
+The remaining 10% will be dividing up work appropriately so that members of your team are never working on the same files.
+
+# The Trinity of Repos
 
 1. local repo
 1. origin (your fork)
 1. upstream (the source of truth)
 
-## The Two Holy Git Workflows
+# The Two Holy Git Workflows
 
-### 1. Keep master branches up-to-date with upstream's master
+## 1. Keep master branches up-to-date with upstream's master
   The master branches of both your **local repo** and your **fork** should be maintained regularly as copies of the upstream master:
   ```
   > git checkout master
@@ -22,8 +25,8 @@
   - You should NEVER push or pull in any other way from your local master.
   - The sole purpose of your local's and fork's master branches is to be copies of the upstream master.
 
-### 1. Only add new code to a feature branch (we'll hereby call it ```feature-branch```) on your local repo.
-  #### Create a new feature branch:
+## 2. Only add new code to a feature branch (we'll hereby call it ```feature-branch```) on your local repo.
+  ### Create a new feature branch:
     1. Do the above commands to update your local's and fork's master branches.
     1. Then create a new branch to work from:
       ```
@@ -34,7 +37,7 @@
       > git commit
       > (etc...)
       ```
-  #### Periodically as you work, you should keep your local feature-branch up-to-date with upstream's master:
+  ### Periodically as you work, you should keep your local feature-branch up-to-date with upstream's master:
     ```
     > git pull --rebase upstream master
     ```
@@ -45,7 +48,7 @@
     ```
     You may need to do this several times within one rebase. That's fine.
 
-  #### WHEN YOU ARE READY TO SUBMIT A PULL REQUEST:
+  ### **When you are ready to submit a pull request:**
     1. Do the above commands for merging changes into your local feature-branch from the upstream master. You MUST do this first.
     1. Push your local feature-branch into your fork's feature-branch:
       ```
